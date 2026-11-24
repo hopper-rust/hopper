@@ -1,0 +1,12 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.core.Direction"
+aliases = ["net.minecraft.util.math.Direction"]
+
+[to]
+api = "mod_api::Direction"
+
+[info]
+status = "direct"
+notes = "The same six directions."
+since_api = "0.2"

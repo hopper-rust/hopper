@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.util.Mth"
+aliases = ["net.minecraft.util.math.MathHelper"]
+
+[to]
+rust = "f32 / f64 methods"
+
+[info]
+status = "direct"
+notes = "Rust's number methods cover it: x.clamp(min, max), a + (b - a) * t for lerp, x.sin(), x.floor() as i32 and so on."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/skyblock-hud", "https://github.com/selfmonoraque5/living-hands"]

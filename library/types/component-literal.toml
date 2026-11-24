@@ -1,0 +1,14 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.network.chat.Component"
+member = "literal"
+aliases = ["net.minecraft.text.Text#literal"]
+
+[to]
+api = "mod_api::Text::literal"
+
+[info]
+status = "direct"
+notes = "Text::literal(\"...\")."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/first-person-body", "https://github.com/selfmonoraque5/earshot"]

@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.network.chat.MutableComponent"
+member = "append"
+aliases = ["net.minecraft.text.MutableText#append"]
+
+[to]
+api = "mod_api::Text::append"
+
+[info]
+status = "direct"
+notes = "text.append(child) takes and returns the Text, so calls chain the same way."
+since_api = "0.2"

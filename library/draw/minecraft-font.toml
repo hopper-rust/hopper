@@ -1,0 +1,14 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.Minecraft"
+member = "font"
+aliases = ["net.minecraft.client.MinecraftClient#textRenderer"]
+
+[to]
+host = "draw.text / host.text_width"
+
+[info]
+status = "partial"
+notes = "No font object: draw with draw.text and measure with host.text_width."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/skyblock-hud", "https://github.com/selfmonoraque5/earshot"]

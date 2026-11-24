@@ -151,6 +151,9 @@ pub fn scan(library: &Library, jar: &[u8]) -> Result<Scan, CheckError> {
     let Some(json) = fabric_json else {
         return Err(CheckError("no fabric.mod.json: this isn't a Fabric mod".into()));
     };
+    // Fabric Loader accepts line breaks and tabs inside strings; strict JSON doesn't. Outside
+    // strings they are whitespace either way, so spaces keep the file's meaning.
+    let json: String = json.trim_start_matches('\u{feff}').chars().map(|c| if c.is_control() { ' ' } else { c }).collect();
     let meta: serde_json::Value = serde_json::from_str(&json).map_err(|e| CheckError(format!("fabric.mod.json: {e}")))?;
     let text = |k: &str| meta.get(k).and_then(|v| v.as_str()).unwrap_or_default().to_string();
     scan.mod_id = text("id");

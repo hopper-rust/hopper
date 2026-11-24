@@ -1,7 +1,6 @@
 [from]
 loader = "fabric"
 class = "com.terraformersmc.modmenu.api.ModMenuApi"
-member = "getModConfigScreenFactory"
 
 [to]
 host = "Registrar.register_setting"

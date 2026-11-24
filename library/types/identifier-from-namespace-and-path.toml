@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.resources.Identifier"
+member = "fromNamespaceAndPath"
+aliases = ["net.minecraft.resources.ResourceLocation#fromNamespaceAndPath", "net.minecraft.util.Identifier#of"]
+
+[to]
+api = "mod_api::Identifier::from_parts"
+
+[info]
+status = "direct"
+notes = "Identifier::from_parts(namespace, path) returns a Result."
+since_api = "0.2"

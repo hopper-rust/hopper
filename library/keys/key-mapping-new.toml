@@ -1,0 +1,14 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.KeyMapping"
+member = "<init>"
+aliases = ["net.minecraft.client.option.KeyBinding#<init>"]
+
+[to]
+host = "Registrar.register_key_mapping"
+
+[info]
+status = "partial"
+notes = "Don't create a KeyMapping: describe it with KeyRegistration::new(id, default key) in the register hook."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/macro-keys", "https://github.com/selfmonoraque5/living-hands", "https://github.com/selfmonoraque5/first-person-body", "https://github.com/selfmonoraque5/earshot"]

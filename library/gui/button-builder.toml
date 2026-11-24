@@ -1,0 +1,12 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.gui.components.Button$Builder"
+aliases = ["net.minecraft.client.gui.widget.ButtonWidget$Builder"]
+
+[to]
+api = "mod_api::client::widgets::Button"
+
+[info]
+status = "partial"
+notes = "Button::new([x, y, w, h], label) instead of the builder; see the Button entry."
+since_api = "0.2"

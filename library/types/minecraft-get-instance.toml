@@ -1,0 +1,14 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.Minecraft"
+member = "getInstance"
+aliases = ["net.minecraft.client.MinecraftClient#getInstance"]
+
+[to]
+api = "the host argument"
+
+[info]
+status = "direct"
+notes = "There is no global instance: every hook gets host (&dyn ClientHost or &mut dyn ClientHost). Read and act through it."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/macro-keys", "https://github.com/selfmonoraque5/skyblock-hud", "https://github.com/selfmonoraque5/living-hands", "https://github.com/selfmonoraque5/first-person-body", "https://github.com/selfmonoraque5/earshot"]

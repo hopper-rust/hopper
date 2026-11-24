@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.network.chat.MutableComponent"
+member = "withStyle"
+aliases = ["net.minecraft.text.MutableText#formatted", "net.minecraft.text.MutableText#styled"]
+
+[to]
+api = "mod_api::Text::with_style"
+
+[info]
+status = "partial"
+notes = "text.with_style(mod_api::text::TextStyle { .. }) replaces the whole style; set the fields you need."
+since_api = "0.2"

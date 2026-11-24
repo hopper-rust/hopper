@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.fabricmc.fabric.api.event.Event"
+member = "register"
+
+[to]
+api = "Hooks (#[mod_api::horizon_mod])"
+
+[info]
+status = "partial"
+notes = "No listeners to register: implement the hook's method on the mod's Hooks impl. Each Fabric event's own entry names its hook."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/macro-keys", "https://github.com/selfmonoraque5/skyblock-hud", "https://github.com/selfmonoraque5/living-hands", "https://github.com/selfmonoraque5/first-person-body", "https://github.com/selfmonoraque5/earshot"]

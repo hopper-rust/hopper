@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.network.chat.Component"
+member = "translatable"
+aliases = ["net.minecraft.text.Text#translatable"]
+
+[to]
+api = "mod_api::Text::translate"
+
+[info]
+status = "direct"
+notes = "Text::translate(key, args): the arguments are a Vec<Text>, empty when there are none."
+since_api = "0.2"

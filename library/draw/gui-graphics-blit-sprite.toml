@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.gui.GuiGraphicsExtractor"
+member = "blitSprite"
+aliases = ["net.minecraft.client.gui.GuiGraphics#blitSprite", "net.minecraft.client.gui.DrawContext#drawGuiTexture"]
+
+[to]
+host = "draw.sprite"
+
+[info]
+status = "partial"
+notes = "draw.sprite(name, src, dst, tint): src is the part of the sprite in its own pixels, dst [x, y, width, height] in GUI pixels. Returns false when there is no such sprite."
+since_api = "0.2"

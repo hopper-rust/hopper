@@ -1,0 +1,14 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.Minecraft"
+member = "getWindow"
+aliases = ["net.minecraft.client.MinecraftClient#getWindow"]
+
+[to]
+host = "draw.size"
+
+[info]
+status = "partial"
+notes = "No window handle: in a drawing hook, draw.size() is the GUI size in GUI pixels."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/skyblock-hud"]

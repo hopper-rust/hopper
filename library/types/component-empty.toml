@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.network.chat.Component"
+member = "empty"
+aliases = ["net.minecraft.text.Text#empty"]
+
+[to]
+api = "mod_api::Text::literal"
+
+[info]
+status = "direct"
+notes = "Text::literal(\"\")."
+since_api = "0.2"

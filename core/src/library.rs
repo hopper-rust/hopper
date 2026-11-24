@@ -26,6 +26,10 @@ pub struct From {
 pub struct To {
     pub hook: Option<String>,
     pub host: Option<String>,
+    /// A mod API type or function that isn't a host call (`mod_api::Text::literal`).
+    pub api: Option<String>,
+    /// Plain Rust: nothing from Horizon is needed (`f32::clamp`).
+    pub rust: Option<String>,
     pub missing: Option<String>,
 }
 
@@ -61,8 +65,10 @@ impl Entry {
     pub fn target(&self) -> String {
         if let Some(h) = &self.to.hook {
             format!("hook {h}")
-        } else if let Some(h) = &self.to.host {
+        } else if let Some(h) = self.to.host.as_ref().or(self.to.api.as_ref()) {
             h.clone()
+        } else if let Some(r) = &self.to.rust {
+            format!("plain Rust: {r}")
         } else {
             match self.to.missing.as_deref() {
                 Some("unrequested") | None => "no Horizon API yet".to_string(),

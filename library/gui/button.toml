@@ -1,0 +1,12 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.gui.components.Button"
+aliases = ["net.minecraft.client.gui.widget.ButtonWidget"]
+
+[to]
+api = "mod_api::client::widgets::Button"
+
+[info]
+status = "partial"
+notes = "Keep a Widgets in the screen's state: widgets.add_button(Button::new([x, y, w, h], Text::literal(\"Done\"))). Draw them in screen_render_post and pass them the screen hooks' input; set the hook's canceled when the Outcome is handled. Only on the mod's own screen (host.mod_screen_open)."
+since_api = "0.2"

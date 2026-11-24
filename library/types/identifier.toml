@@ -1,0 +1,12 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.resources.Identifier"
+aliases = ["net.minecraft.resources.ResourceLocation", "net.minecraft.util.Identifier"]
+
+[to]
+api = "mod_api::Identifier"
+
+[info]
+status = "direct"
+notes = "Identifier::parse(\"ns:path\") and Identifier::from_parts(ns, path) return a Result; .namespace() and .path() read it."
+since_api = "0.2"

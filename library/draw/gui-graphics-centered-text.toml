@@ -1,0 +1,14 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.gui.GuiGraphicsExtractor"
+member = "centeredText"
+aliases = ["net.minecraft.client.gui.GuiGraphics#drawCenteredString", "net.minecraft.client.gui.DrawContext#drawCenteredTextWithShadow"]
+
+[to]
+host = "draw.text"
+
+[info]
+status = "partial"
+notes = "No centred call: draw.text at x - host.text_width(&text) / 2."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/skyblock-hud"]

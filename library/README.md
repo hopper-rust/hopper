@@ -9,6 +9,8 @@ One TOML file per mapping. The folder says what kind of thing it maps:
 | `keys/` | key bindings |
 | `config/` | config screens (Cloth Config, YACL, ModMenu) → Horizon settings |
 | `draw/` | drawing and other client calls → Horizon host functions |
+| `types/` | basic Minecraft types (text, ids, positions) → mod API types or plain Rust |
+| `gui/` | buttons, text boxes and other screen widgets |
 | `missing/` | things Horizon has no API for yet |
 
 Name the file after the Fabric side, in kebab case: `events/hud-render-callback.toml`.
@@ -24,7 +26,7 @@ member = "EVENT"            # field or method; leave out for the whole class
 # For Minecraft classes, the Yarn names older mods use (optional), member after #.
 # aliases = ["net.minecraft.client.gui.DrawContext#fill"]
 
-# What it becomes on Horizon. Exactly one of: hook, host, missing.
+# What it becomes on Horizon. Exactly one of: hook, host, api, rust, missing.
 [to]
 hook = "render_gui_post"
 # host = "draw.fill"
@@ -45,6 +47,8 @@ seen_in = ["https://github.com/selfmonoraque5/skyblock-hud"]   # a tested port t
 - `to`: exactly one of
   - `hook`: a Horizon hook name, as in the mod API's `hooks/` folder.
   - `host`: a Horizon host function or draw call, like `draw.fill` or `host.send_chat`.
+  - `api`: a mod API type or function that isn't a host call, like `mod_api::Text::literal`.
+  - `rust`: plain Rust, when nothing from Horizon is needed, like `f32::clamp`.
   - `missing`: a link to the request for that API, or `"unrequested"` when nobody has asked yet. Use this when Horizon has nothing for it.
 - `info.status`:
   - `direct`: same idea, a port only changes names.

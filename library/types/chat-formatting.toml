@@ -1,0 +1,12 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.ChatFormatting"
+aliases = ["net.minecraft.util.Formatting"]
+
+[to]
+api = "mod_api::text::TextStyle"
+
+[info]
+status = "partial"
+notes = "Formatting codes become TextStyle fields: color (a named colour such as \"red\", or #RRGGBB), bold, italic, underlined, strikethrough, obfuscated."
+since_api = "0.2"

@@ -1,0 +1,12 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.core.BlockPos"
+aliases = ["net.minecraft.util.math.BlockPos"]
+
+[to]
+api = "mod_api::BlockPos"
+
+[info]
+status = "partial"
+notes = "Host calls take block positions as [i32; 3] (host.level_block_state(level, [x, y, z])); mod_api::BlockPos exists for maths on them."
+since_api = "0.2"
