@@ -1,4 +1,5 @@
-//! `hopper check <modrinth link | slug | file.jar>`: Hopper's checker on the command line.
+//! Hopper on the command line: `hopper check` reports what of a Fabric mod maps to Horizon;
+//! `hopper port` also writes a starting Horizon project for it.
 
 use hopper_core::library::{Library, Status};
 use hopper_core::{Overall, Report};
@@ -10,8 +11,10 @@ const MAX_JAR: u64 = 200 << 20;
 
 const USAGE: &str = "\
 Usage: hopper check <modrinth link | slug | file.jar> [options]
+       hopper port <modrinth link | slug> --out <folder> [options]
 
 Options:
+  --out <folder>      where `port` writes the project (must not exist yet)
   --license <SPDX>    the license of a local jar (required for a jar)
   --game <version>    check the newest Fabric file for this Minecraft version
   --library <dir>     the library folder (default: ./library, or the repo's)
@@ -19,6 +22,8 @@ Options:
   --all               list every unknown class, not just the first 15";
 
 struct Args {
+    port: bool,
+    out: Option<PathBuf>,
     target: String,
     license: Option<String>,
     game: Option<String>,
@@ -29,15 +34,18 @@ struct Args {
 
 fn args() -> Result<Args, String> {
     let mut it = std::env::args().skip(1);
-    if it.next().as_deref() != Some("check") {
-        return Err(USAGE.into());
-    }
-    let mut a = Args { target: String::new(), license: None, game: None, library: None, json: false, all: false };
+    let port = match it.next().as_deref() {
+        Some("check") => false,
+        Some("port") => true,
+        _ => return Err(USAGE.into()),
+    };
+    let mut a = Args { port, out: None, target: String::new(), license: None, game: None, library: None, json: false, all: false };
     while let Some(arg) = it.next() {
         let mut value = || it.next().ok_or(format!("{arg} needs a value"));
         match arg.as_str() {
             "--license" => a.license = Some(value()?),
             "--game" => a.game = Some(value()?),
+            "--out" => a.out = Some(value()?.into()),
             "--library" => a.library = Some(value()?.into()),
             "--json" => a.json = true,
             "--all" => a.all = true,
@@ -130,8 +138,11 @@ fn print(title: &str, file: Option<&str>, report: &Report, all: bool) {
 
 fn run() -> Result<(), String> {
     let a = args()?;
-    let dir = library_dir(a.library);
+    let dir = library_dir(a.library.clone());
     let library = Library::load(&dir)?;
+    if a.port {
+        return port(&library, &a);
+    }
     let local = Path::new(&a.target);
     let (title, file, report) = if a.target.ends_with(".jar") && local.is_file() {
         let license = a.license.ok_or("a local jar needs --license <SPDX id>")?;
@@ -147,6 +158,33 @@ fn run() -> Result<(), String> {
     } else {
         print(&title, file.as_deref(), &report, a.all);
     }
+    Ok(())
+}
+
+/// `hopper port`: checks the mod, then writes the project.
+fn port(library: &Library, a: &Args) -> Result<(), String> {
+    let out = a.out.as_ref().ok_or("port needs --out <folder>")?;
+    if out.exists() {
+        return Err(format!("{} already exists", out.display()));
+    }
+    let f = hopper_core::modrinth::fetch(library, &a.target, a.game.as_deref(), MAX_JAR)?;
+    let c = &f.checked;
+    let Some(jar) = &f.jar else {
+        return Err(c.report.summary.clone());
+    };
+    let url = format!("https://modrinth.com/mod/{}", c.slug);
+    let source = hopper_core::generate::Source { title: &c.title, url: &url, license: &f.license };
+    let project = hopper_core::generate::generate(library, &source, jar)?;
+    for (path, bytes) in &project.files {
+        let path = out.join(path);
+        if let Some(dir) = path.parent() {
+            std::fs::create_dir_all(dir).map_err(|e| format!("{}: {e}", dir.display()))?;
+        }
+        std::fs::write(&path, bytes).map_err(|e| format!("{}: {e}", path.display()))?;
+    }
+    print(&c.title, c.file.as_deref(), &c.report, false);
+    println!();
+    println!("Wrote {} ({} files) to {}. Start with its README.md.", project.id, project.files.len(), out.display());
     Ok(())
 }
 

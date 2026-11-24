@@ -24,7 +24,17 @@ On top of the library, Hopper will have:
 2. **Generator:** makes the Horizon mod project (`Cargo.toml`, `horizon-mod.toml`, hooks, settings, key binds, lang file, credits), with TODOs where the logic goes.
 3. **Converter (later):** turns common Java patterns inside those hooks into Rust. It gets better as the library grows.
 
-**Status:** early. The library format is set and the first entries are being added. The checker, generator and converter are not written yet.
+**Status:** early, and working.
+
+- The library has about 150 mappings, each checked against Horizon's SDK and Minecraft 26.3.
+- The checker works on the command line and as a website (`server/`, not online yet).
+- The generator writes a starting project that builds against Horizon's SDK, with TODOs where the logic goes.
+- The converter isn't started.
+
+```sh
+cargo run -q -p hopper-cli -- check https://modrinth.com/mod/commandkeys
+cargo run -q -p hopper-cli -- port https://modrinth.com/mod/commandkeys --out commandkeys-horizon
+```
 
 ## No AI inside
 

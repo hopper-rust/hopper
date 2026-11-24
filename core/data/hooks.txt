@@ -1,0 +1,778 @@
+# Hook signatures from Horizon SDK f1bb66f353cf67f2aa4665293fc75c8d91186fc7, written by scripts/update_hooks.py.
+add_attribute_tooltips	fn add_attribute_tooltips(&self, host: &dyn ClientHost, event: &mut AddAttributeTooltipsEvent<'_>)
+add_client_reload_listeners	fn add_client_reload_listeners(&self, host: &dyn ClientHost, event: &mut AddClientReloadListenersEvent<'_>)
+add_pack_finders	fn add_pack_finders(&self, host: HostSide, event: &mut AddPackFindersEvent<'_>)
+add_section_geometry	fn add_section_geometry(&self, context: &RegistrationContext, event: &mut AddSectionGeometryEvent<'_>)
+add_server_reload_listeners	fn add_server_reload_listeners(&self, host: &dyn Host, event: &mut AddServerReloadListenersEvent<'_>)
+adjacent_block_path_type	fn adjacent_block_path_type(&self, host: &dyn Host, event: &mut AdjacentBlockPathTypeEvent) -> Option < mod_api :: PathType >
+affect_neighbors_after_removal	fn affect_neighbors_after_removal(&self, level: &dyn LevelHost, event: &mut AffectNeighborsAfterRemovalEvent<'_>)
+alter_ground	fn alter_ground(&self, context: &dyn WorldgenHost, event: &mut AlterGroundEvent<'_>)
+analog_output	fn analog_output(&self, level: &dyn LevelHost, event: &mut AnalogOutputEvent)
+animal_tame	fn animal_tame(&self, host: &mut dyn ServerHost, event: &mut AnimalTameEvent<'_>) -> Flow
+anvil_craft_post	fn anvil_craft_post(&self, host: &mut dyn ServerHost, event: &mut AnvilCraftPostEvent<'_>)
+anvil_craft_pre	fn anvil_craft_pre(&self, host: &mut dyn ServerHost, event: &mut AnvilCraftPreEvent<'_>) -> Flow
+anvil_damaged	fn anvil_damaged(&self, host: &mut dyn ServerHost, event: &mut AnvilDamagedEvent<'_>)
+anvil_update	fn anvil_update(&self, host: HostSide, event: &mut AnvilUpdateEvent<'_>) -> Flow
+apply_effect_tick	fn apply_effect_tick(&self, host: &dyn Host, event: &mut ApplyEffectTickEvent<'_>)
+apply_enchantments	fn apply_enchantments(&self, host: &dyn Host, event: &mut ApplyEnchantmentsEvent<'_>)
+arm_pose_transform	fn arm_pose_transform(&self, host: &dyn ClientHost, event: &mut ArmPoseTransformEvent<'_>)
+armor_hurt	fn armor_hurt(&self, host: &mut dyn ServerHost, event: &mut ArmorHurtEvent<'_>) -> Flow
+armor_stand_manipulate	fn armor_stand_manipulate(&self, host: &mut dyn ServerHost, event: &mut ArmorStandManipulateEvent<'_>) -> Flow
+arrow_loose	fn arrow_loose(&self, host: &mut dyn ServerHost, event: &mut ArrowLooseEvent<'_>) -> Flow
+arrow_nock	fn arrow_nock(&self, host: &mut dyn ServerHost, event: &mut ArrowNockEvent<'_>) -> Flow
+attack_entity	fn attack_entity(&self, host: &mut dyn ServerHost, event: &mut AttackEntityEvent<'_>) -> Flow
+baby_entity_spawn	fn baby_entity_spawn(&self, host: &mut dyn ServerHost, event: &mut BabyEntitySpawnEvent<'_>) -> Flow
+bake_model_loader	fn bake_model_loader(&self, context: &RegistrationContext, event: &mut BakeModelLoaderEvent<'_>)
+beacon_color_multiplier	fn beacon_color_multiplier(&self, host: &dyn Host, event: &mut BeaconColorMultiplierEvent<'_>)
+beacon_state_change	fn beacon_state_change(&self, host: &mut dyn ServerHost, event: &mut BeaconStateChangeEvent<'_>)
+bell_ring	fn bell_ring(&self, level: &dyn LevelHost, event: &mut BellRingEvent) -> Flow
+biome_colors	fn biome_colors(&self, host: &dyn ClientHost, event: &mut BiomeColorsEvent<'_>)
+block_break_progress_update	fn block_break_progress_update(&self, host: &mut dyn ServerHost, event: &mut BlockBreakProgressUpdateEvent<'_>)
+block_burn	fn block_burn(&self, level: &dyn LevelHost, event: &mut BlockBurnEvent) -> Flow
+block_changed	fn block_changed(&self, level: &dyn LevelHost, event: &mut BlockChangedEvent)
+block_cook	fn block_cook(&self, host: &mut dyn ServerHost, event: &mut BlockCookEvent<'_>)
+block_damage_abort	fn block_damage_abort(&self, host: &mut dyn ServerHost, event: &mut BlockDamageAbortEvent<'_>)
+block_dispense_armor	fn block_dispense_armor(&self, host: &mut dyn ServerHost, event: &mut BlockDispenseArmorEvent<'_>)
+block_drops	fn block_drops(&self, level: &dyn LevelHost, event: &mut BlockDropsEvent<'_>) -> Flow
+block_entity	fn block_entity(&self, level: LevelSide, event: &mut BlockEntityEvent<'_>) -> Option < Compound >
+block_entity_client_tick	fn block_entity_client_tick(&self, host: &mut dyn ClientHost, event: &mut BlockEntityClientTickEvent<'_>)
+block_entity_client_ticks	fn block_entity_client_ticks(&self, host: &dyn ClientHost, event: &mut BlockEntityClientTicksEvent<'_>)
+block_entity_data_received	fn block_entity_data_received(&self, host: &dyn ClientHost, event: &mut BlockEntityDataReceivedEvent<'_>)
+block_entity_on_load	fn block_entity_on_load(&self, host: HostSide, event: &mut BlockEntityOnLoadEvent)
+block_entity_render_bounding_box	fn block_entity_render_bounding_box(&self, host: &dyn ClientHost, event: &mut BlockEntityRenderBoundingBoxEvent<'_>)
+block_entity_submit	fn block_entity_submit(&self, host: &dyn ClientHost, event: &mut BlockEntitySubmitEvent<'_>)
+block_entity_tick	fn block_entity_tick(&self, host: &mut dyn ServerHost, event: &mut BlockEntityTickEvent<'_>)
+block_entity_ticks	fn block_entity_ticks(&self, host: &dyn Host, event: &mut BlockEntityTicksEvent<'_>)
+block_entity_type_add_blocks	fn block_entity_type_add_blocks(&self, context: &RegistrationContext, event: &mut BlockEntityTypeAddBlocksEvent<'_>)
+block_entity_update_tag	fn block_entity_update_tag(&self, event: &mut BlockEntityUpdateTagEvent<'_>) -> Option < Compound >
+block_entity_view_distance	fn block_entity_view_distance(&self, host: &dyn ClientHost, event: &mut BlockEntityViewDistanceEvent<'_>)
+block_fade	fn block_fade(&self, level: &dyn LevelHost, event: &mut BlockFadeEvent) -> Flow
+block_failed_dispense	fn block_failed_dispense(&self, host: &mut dyn ServerHost, event: &mut BlockFailedDispenseEvent<'_>)
+block_form	fn block_form(&self, level: &dyn LevelHost, event: &mut BlockFormEvent) -> Flow
+block_grow_feature	fn block_grow_feature(&self, level: &mut dyn LevelRandomHost, event: &mut BlockGrowFeatureEvent<'_>) -> Flow
+block_highlight	fn block_highlight(&self, host: &dyn ClientHost, event: &mut BlockHighlightEvent) -> Flow
+block_ignite	fn block_ignite(&self, level: &dyn LevelHost, event: &mut BlockIgniteEvent<'_>) -> Flow
+block_jump_factor	fn block_jump_factor(&self, context: &dyn LoopContext, event: &mut BlockJumpFactorEvent)
+block_lock_check	fn block_lock_check(&self, host: &mut dyn ServerHost, event: &mut BlockLockCheckEvent<'_>) -> Flow
+block_path_type	fn block_path_type(&self, host: &dyn Host, event: &mut BlockPathTypeEvent) -> Option < mod_api :: PathType >
+block_receive_game	fn block_receive_game(&self, host: &mut dyn ServerHost, event_: &mut BlockReceiveGameEvent<'_>) -> Flow
+block_render_visibility	fn block_render_visibility(&self, host: &dyn ClientHost, event: &mut BlockRenderVisibilityEvent)
+block_screen_effect_draw	fn block_screen_effect_draw(&self, host: &dyn ClientHost, event: &mut BlockScreenEffectDrawEvent<'_>)
+block_shear_entity	fn block_shear_entity(&self, host: &mut dyn ServerHost, event: &mut BlockShearEntityEvent<'_>)
+block_signal	fn block_signal(&self, level: &dyn LevelHost, event: &mut BlockSignalEvent)
+block_speed_factor	fn block_speed_factor(&self, context: &dyn LoopContext, event: &mut BlockSpeedFactorEvent)
+block_spread	fn block_spread(&self, level: &dyn LevelHost, event: &mut BlockSpreadEvent<'_>) -> Flow
+block_step_on	fn block_step_on(&self, event: &mut BlockStepOnEvent<'_>)
+block_tool_modification	fn block_tool_modification(&self, host: &dyn Host, event: &mut BlockToolModificationEvent<'_>) -> Flow
+blocks	fn blocks(&self, context: &RegistrationContext, event: &mut BlocksEvent<'_>)
+bonemeal	fn bonemeal(&self, host: HostSide, event: &mut BonemealEvent<'_>) -> Flow
+bounce_on	fn bounce_on(&self, level: &mut dyn LevelRandomHost, event: &mut BounceOnEvent<'_>)
+bounce_restitution	fn bounce_restitution(&self, level: LevelSide, event: &mut BounceRestitutionEvent<'_>)
+break_block	fn break_block(&self, host: &mut dyn ServerHost, event: &mut BreakBlockEvent<'_>) -> Flow
+brewing_complete	fn brewing_complete(&self, host: &mut dyn ServerHost, event: &mut BrewingCompleteEvent)
+brewing_fuel	fn brewing_fuel(&self, host: &mut dyn ServerHost, event: &mut BrewingFuelEvent<'_>)
+brewing_start	fn brewing_start(&self, host: &mut dyn ServerHost, event: &mut BrewingStartEvent<'_>)
+broadcast_message	fn broadcast_message(&self, host: &dyn Host, event: &mut BroadcastMessageEvent<'_>) -> Flow
+bucket_empty	fn bucket_empty(&self, host: &mut dyn ServerHost, event: &mut BucketEmptyEvent<'_>) -> Flow
+build_creative_mode_tab_contents	fn build_creative_mode_tab_contents(&self, host: &mut dyn ClientHost, event: &mut BuildCreativeModeTabContentsEvent<'_>)
+calculate_player_turn	fn calculate_player_turn(&self, host: &dyn ClientHost, event: &mut CalculatePlayerTurnEvent)
+camera_distance	fn camera_distance(&self, host: &dyn ClientHost, event: &mut CameraDistanceEvent<'_>)
+camera_pose	fn camera_pose(&self, host: &dyn ClientHost, event: &mut CameraPoseEvent<'_>)
+camera_roll	fn camera_roll(&self, host: &dyn ClientHost, event: &mut CameraRollEvent)
+camera_shake	fn camera_shake(&self, host: &dyn ClientHost, event: &mut CameraShakeEvent<'_>)
+camera_submersion	fn camera_submersion(&self, host: &dyn ClientHost, event: &mut CameraSubmersionEvent<'_>)
+camera_type_cycle	fn camera_type_cycle(&self, host: &mut dyn ClientHost, event: &mut CameraTypeCycleEvent<'_>)
+campfire_start	fn campfire_start(&self, host: &mut dyn ServerHost, event: &mut CampfireStartEvent<'_>)
+can_be_connected_to	fn can_be_connected_to(&self, level: &dyn LevelHost, event: &mut CanBeConnectedToEvent) -> Option < bool >
+can_be_hydrated	fn can_be_hydrated(&self, level: &dyn LevelHost, event: &mut CanBeHydratedEvent) -> Option < bool >
+can_continue_sleeping	fn can_continue_sleeping(&self, host: &mut dyn ServerHost, event: &mut CanContinueSleepingEvent<'_>) -> Option < bool >
+can_drop_from_explosion	fn can_drop_from_explosion(&self, level: &dyn LevelHost, event: &mut CanDropFromExplosionEvent<'_>) -> Option < bool >
+can_eat	fn can_eat(&self, host: &dyn Host, event: &mut CanEatEvent<'_>) -> Option < bool >
+can_entity_destroy	fn can_entity_destroy(&self, host: &dyn Host, event: &mut CanEntityDestroyEvent) -> Option < bool >
+can_equip	fn can_equip(&self, host: &dyn Host, event: &mut CanEquipEvent<'_>)
+can_fit_inside_container_items	fn can_fit_inside_container_items(&self, context: &dyn LoopContext, event: &mut CanFitInsideContainerItemsEvent<'_>)
+can_grindstone_repair	fn can_grindstone_repair(&self, context: &dyn LoopContext, event: &mut CanGrindstoneRepairEvent<'_>)
+can_harvest_block	fn can_harvest_block(&self, host: HostSide, event: &mut CanHarvestBlockEvent)
+can_perform_action	fn can_perform_action(&self, host: &dyn Host, event: &mut CanPerformActionEvent<'_>)
+can_player_sleep	fn can_player_sleep(&self, host: &mut dyn ServerHost, event: &mut CanPlayerSleepEvent<'_>)
+can_stick_to	fn can_stick_to(&self, level: &dyn LevelHost, event: &mut CanStickToEvent)
+can_survive	fn can_survive(&self, level: &dyn LevelHost, event: &mut CanSurviveEvent) -> Option < bool >
+can_survive_v2	fn can_survive_v2(&self, context: &dyn WorldgenHost, event: &mut CanSurviveV2Event) -> Option < bool >
+can_sustain_plant	fn can_sustain_plant(&self, level: &dyn LevelHost, event: &mut CanSustainPlantEvent) -> Option < bool >
+can_sustain_plant_v2	fn can_sustain_plant_v2(&self, context: &dyn WorldgenHost, event: &mut CanSustainPlantV2Event) -> Option < bool >
+cauldron_level_changed	fn cauldron_level_changed(&self, level: &dyn LevelHost, event: &mut CauldronLevelChangedEvent<'_>) -> Flow
+chat_recipient	fn chat_recipient(&self, host: &mut dyn ServerHost, event: &mut ChatRecipientEvent<'_>) -> Flow
+chat_suggestion_applied	fn chat_suggestion_applied(&self, host: &dyn ClientHost, event: &mut ChatSuggestionAppliedEvent<'_>)
+chunk_load	fn chunk_load(&self, host: &mut dyn ServerHost, event: &mut ChunkLoadEvent<'_>)
+chunk_sent	fn chunk_sent(&self, host: &mut dyn ServerHost, event: &mut ChunkSentEvent)
+chunk_ticket_level_updated	fn chunk_ticket_level_updated(&self, host: &mut dyn ServerHost, event: &mut ChunkTicketLevelUpdatedEvent)
+chunk_unload	fn chunk_unload(&self, host: &mut dyn ServerHost, event: &mut ChunkUnloadEvent<'_>)
+chunk_unwatch	fn chunk_unwatch(&self, host: &mut dyn ServerHost, event: &mut ChunkUnwatchEvent)
+chunk_watch	fn chunk_watch(&self, host: &mut dyn ServerHost, event: &mut ChunkWatchEvent)
+client_attack_target	fn client_attack_target(&self, host: &mut dyn ClientHost, event: &mut ClientAttackTargetEvent<'_>) -> Flow
+client_chat	fn client_chat(&self, host: &mut dyn ClientHost, event: &mut ClientChatEvent<'_>) -> Flow
+client_chat_received	fn client_chat_received(&self, host: &mut dyn ClientHost, event: &mut ClientChatReceivedEvent<'_>) -> Flow
+client_chunk_load	fn client_chunk_load(&self, host: &mut dyn ClientHost, event: &mut ClientChunkLoadEvent<'_>)
+client_chunk_unload	fn client_chunk_unload(&self, host: &mut dyn ClientHost, event: &mut ClientChunkUnloadEvent<'_>)
+client_disconnecting	fn client_disconnecting(&self, host: &dyn ClientHost, event: &mut ClientDisconnectingEvent)
+client_information_updated	fn client_information_updated(&self, host: &mut dyn ServerHost, event: &mut ClientInformationUpdatedEvent<'_>)
+client_level_load	fn client_level_load(&self, host: &mut dyn ClientHost, event: &mut ClientLevelLoadEvent<'_>)
+client_level_unload	fn client_level_unload(&self, host: &mut dyn ClientHost, event: &mut ClientLevelUnloadEvent<'_>)
+client_mining_predict	fn client_mining_predict(&self, host: &dyn ClientHost, event: &mut ClientMiningPredictEvent) -> Flow
+client_packet	fn client_packet(&self, host: &mut dyn ClientHost, event: &mut ClientPacketEvent<'_>)
+client_packet_send	fn client_packet_send(&self, host: &dyn ClientHost, event: &mut ClientPacketSendEvent<'_>) -> Flow
+client_pause_change_post	fn client_pause_change_post(&self, host: &mut dyn ClientHost, event: &mut ClientPauseChangePostEvent)
+client_pause_change_pre	fn client_pause_change_pre(&self, host: &mut dyn ClientHost, event: &mut ClientPauseChangePreEvent) -> Flow
+client_player_change_game_type	fn client_player_change_game_type(&self, host: &mut dyn ClientHost, event: &mut ClientPlayerChangeGameTypeEvent)
+client_player_clone	fn client_player_clone(&self, host: &mut dyn ClientHost, event: &mut ClientPlayerCloneEvent)
+client_player_logging_in	fn client_player_logging_in(&self, host: &mut dyn ClientHost, event: &mut ClientPlayerLoggingInEvent)
+client_player_logging_out	fn client_player_logging_out(&self, host: &mut dyn ClientHost, event: &mut ClientPlayerLoggingOutEvent)
+client_resources_reloaded	fn client_resources_reloaded(&self, host: &mut dyn ClientHost, event: &mut ClientResourcesReloadedEvent)
+client_setup	fn client_setup(&self, host: &mut dyn ClientHost, event: &mut ClientSetupEvent)
+client_stopped	fn client_stopped(&self, host: &mut dyn ClientHost, event: &mut ClientStoppedEvent)
+client_stopping	fn client_stopping(&self, host: &mut dyn ClientHost, event: &mut ClientStoppingEvent)
+client_tick_post	fn client_tick_post(&self, host: &mut dyn ClientHost, event: &mut ClientTickPostEvent)
+client_tick_pre	fn client_tick_pre(&self, host: &mut dyn ClientHost, event: &mut ClientTickPreEvent)
+clone_item_stack	fn clone_item_stack(&self, host: &dyn Host, event: &mut CloneItemStackEvent<'_>) -> Option < ItemStack >
+command	fn command(&self, host: &mut dyn ClientHost, event: &mut CommandEvent<'_>) -> Flow
+component_hover	fn component_hover(&self, host: &dyn ClientHost, event: &mut ComponentHoverEvent<'_>) -> Flow
+component_types	fn component_types(&self, context: &RegistrationContext, event: &mut ComponentTypesEvent<'_>)
+compost_item	fn compost_item(&self, host: &mut dyn ServerHost, event: &mut CompostItemEvent<'_>)
+compute_fog_color	fn compute_fog_color(&self, host: &dyn ClientHost, event: &mut ComputeFogColorEvent<'_>)
+compute_fov	fn compute_fov(&self, host: &dyn ClientHost, event: &mut ComputeFovEvent)
+compute_fov_modifier	fn compute_fov_modifier(&self, host: &dyn ClientHost, event: &mut ComputeFovModifierEvent<'_>)
+config_loading	fn config_loading(&self, host: HostSide, event: &mut ConfigLoadingEvent<'_>)
+config_reloading	fn config_reloading(&self, host: HostSide, event: &mut ConfigReloadingEvent<'_>)
+config_unloading	fn config_unloading(&self, host: &mut dyn ServerHost, event: &mut ConfigUnloadingEvent<'_>)
+connects_to	fn connects_to(&self, level: &dyn LevelHost, event: &mut ConnectsToEvent)
+console_line	fn console_line(&self, host: &mut dyn ServerHost, event: &mut ConsoleLineEvent<'_>)
+consume_effect	fn consume_effect(&self, host: &mut dyn ServerHost, event: &mut ConsumeEffectEvent<'_>)
+contained_fluid	fn contained_fluid(&self, host: &dyn ClientHost, event: &mut ContainedFluidEvent<'_>)
+container_loot_filled	fn container_loot_filled(&self, level: &dyn LevelHost, event: &mut ContainerLootFilledEvent<'_>)
+container_opened	fn container_opened(&self, host: &mut dyn ServerHost, event: &mut ContainerOpenedEvent<'_>) -> Flow
+contents_changed	fn contents_changed(&self, host: &mut dyn ServerHost, event: &mut ContentsChangedEvent)
+crafter_craft	fn crafter_craft(&self, host: &mut dyn ServerHost, event: &mut CrafterCraftEvent<'_>)
+crafting_remainder	fn crafting_remainder(&self, host: &dyn Host, event: &mut CraftingRemainderEvent<'_>)
+create_fluid_source	fn create_fluid_source(&self, level: &dyn LevelHost, event: &mut CreateFluidSourceEvent)
+create_skull_models	fn create_skull_models(&self, context: &RegistrationContext, event: &mut CreateSkullModelsEvent<'_>)
+create_spawn_position	fn create_spawn_position(&self, host: &mut dyn ServerHost, event: &mut CreateSpawnPositionEvent<'_>) -> Flow
+creative_slot	fn creative_slot(&self, host: &mut dyn ServerHost, event: &mut CreativeSlotEvent<'_>) -> Flow
+creator_mod_id	fn creator_mod_id(&self, host: &dyn Host, event: &mut CreatorModIdEvent<'_>)
+creeper_ignite	fn creeper_ignite(&self, host: &mut dyn ServerHost, event: &mut CreeperIgniteEvent<'_>)
+creeper_power	fn creeper_power(&self, host: &mut dyn ServerHost, event: &mut CreeperPowerEvent)
+critical_hit	fn critical_hit(&self, host: &mut dyn ServerHost, event: &mut CriticalHitEvent<'_>)
+crop_grow_post	fn crop_grow_post(&self, level: &mut dyn LevelRandomHost, event: &mut CropGrowPostEvent)
+crop_grow_pre	fn crop_grow_pre(&self, level: &mut dyn LevelRandomHost, event: &mut CropGrowPreEvent<'_>)
+custom_click_action	fn custom_click_action(&self, host: &mut dyn ServerHost, event: &mut CustomClickActionEvent<'_>) -> Flow
+custom_spawner_tick	fn custom_spawner_tick(&self, host: &mut dyn ServerHost, event: &mut CustomSpawnerTickEvent<'_>)
+customize_boss_event_progress	fn customize_boss_event_progress(&self, host: &dyn ClientHost, event: &mut CustomizeBossEventProgressEvent<'_>) -> Flow
+customize_chat_overlay	fn customize_chat_overlay(&self, host: &mut dyn ClientHost, event: &mut CustomizeChatOverlayEvent)
+damage_item	fn damage_item(&self, host: &mut dyn ServerHost, event: &mut DamageItemEvent<'_>) -> Flow
+data_map_types	fn data_map_types(&self, host: &mut dyn ServerHost, event: &mut DataMapTypesEvent<'_>)
+data_maps_updated	fn data_maps_updated(&self, host: HostSide, event: &mut DataMapsUpdatedEvent<'_>)
+data_pack_files	fn data_pack_files(&self, host: &mut dyn ServerHost, event: &mut DataPackFilesEvent<'_>)
+datapack_sync	fn datapack_sync(&self, host: &mut dyn ServerHost, event: &mut DatapackSyncEvent<'_>)
+debug_entry_lines	fn debug_entry_lines(&self, host: &dyn ClientHost, event: &mut DebugEntryLinesEvent<'_>)
+debug_renderer_draw	fn debug_renderer_draw(&self, host: &dyn ClientHost, event: &mut DebugRendererDrawEvent<'_>)
+default_components_bound	fn default_components_bound(&self, host: HostSide, event: &mut DefaultComponentsBoundEvent)
+difficulty_changed	fn difficulty_changed(&self, host: &mut dyn ServerHost, event: &mut DifficultyChangedEvent<'_>)
+dimension_transition_screen_draw	fn dimension_transition_screen_draw(&self, host: &dyn ClientHost, event: &mut DimensionTransitionScreenDrawEvent<'_>)
+dispense_item	fn dispense_item(&self, host: &mut dyn ServerHost, event: &mut DispenseItemEvent<'_>) -> Option < mod_api :: Dispensed >
+dispense_method	fn dispense_method(&self, host: &mut dyn ServerHost, event: &mut DispenseMethodEvent<'_>) -> Option < mod_api :: Dispensed >
+dispenser_acts	fn dispenser_acts(&self, host: &mut dyn ServerHost, event: &mut DispenserActsEvent<'_>) -> Option < mod_api :: Dispensed >
+dragon_egg_form	fn dragon_egg_form(&self, level: &dyn LevelHost, event: &mut DragonEggFormEvent) -> Flow
+dragon_fight_won	fn dragon_fight_won(&self, level: &dyn LevelHost, event: &mut DragonFightWonEvent) -> Option < bool >
+effect_particle_modification	fn effect_particle_modification(&self, host: &dyn Host, event: &mut EffectParticleModificationEvent<'_>)
+emissive	fn emissive(&self, host: &dyn ClientHost, event: &mut EmissiveEvent<'_>)
+empty_contents	fn empty_contents(&self, host: &mut dyn ServerHost, event: &mut EmptyContentsEvent<'_>) -> Option < bool >
+enchant_effect	fn enchant_effect(&self, host: &mut dyn ServerHost, event: &mut EnchantEffectEvent<'_>)
+enchant_item	fn enchant_item(&self, host: &mut dyn ServerHost, event: &mut EnchantItemEvent<'_>)
+enchant_power_bonus	fn enchant_power_bonus(&self, host: &dyn Host, event: &mut EnchantPowerBonusEvent)
+enchanted_block_loot	fn enchanted_block_loot(&self, level_: &dyn LevelHost, event: &mut EnchantedBlockLootEvent<'_>)
+enchanted_entity_loot	fn enchanted_entity_loot(&self, host: &mut dyn ServerHost, event: &mut EnchantedEntityLootEvent<'_>)
+enchantment_level_set	fn enchantment_level_set(&self, host: &mut dyn ServerHost, event: &mut EnchantmentLevelSetEvent<'_>)
+ender_chest_opened	fn ender_chest_opened(&self, host: &mut dyn ServerHost, event: &mut EnderChestOpenedEvent)
+ender_entity_teleport	fn ender_entity_teleport(&self, context: &dyn LoopContext, event: &mut EnderEntityTeleportEvent<'_>) -> Flow
+ender_pearl_teleport	fn ender_pearl_teleport(&self, host: &mut dyn ServerHost, event: &mut EnderPearlTeleportEvent<'_>) -> Flow
+enderman_anger	fn enderman_anger(&self, host: &dyn Host, event: &mut EndermanAngerEvent) -> Flow
+entities_load	fn entities_load(&self, host: &mut dyn ServerHost, event: &mut EntitiesLoadEvent<'_>)
+entities_unload	fn entities_unload(&self, host: &mut dyn ServerHost, event: &mut EntitiesUnloadEvent<'_>)
+entity_break_door	fn entity_break_door(&self, host: &mut dyn ServerHost, event: &mut EntityBreakDoorEvent<'_>)
+entity_breed	fn entity_breed(&self, host: &mut dyn ServerHost, event: &mut EntityBreedEvent)
+entity_change_block	fn entity_change_block(&self, host: &mut dyn ServerHost, event: &mut EntityChangeBlockEvent<'_>)
+entity_change_block_pre	fn entity_change_block_pre(&self, host: &mut dyn ServerHost, event: &mut EntityChangeBlockPreEvent<'_>) -> Flow
+entity_constructing	fn entity_constructing(&self, host: HostSide, event: &mut EntityConstructingEvent<'_>)
+entity_drop_item	fn entity_drop_item(&self, host: &mut dyn ServerHost, event: &mut EntityDropItemEvent<'_>)
+entity_enter_block	fn entity_enter_block(&self, host: &mut dyn ServerHost, event: &mut EntityEnterBlockEvent<'_>)
+entity_enter_love_mode	fn entity_enter_love_mode(&self, host: &mut dyn ServerHost, event: &mut EntityEnterLoveModeEvent<'_>)
+entity_entering_section	fn entity_entering_section(&self, host: HostSide, event: &mut EntityEnteringSectionEvent)
+entity_inside	fn entity_inside(&self, level: &mut dyn LevelRandomHost, event: &mut EntityInsideEvent<'_>)
+entity_interact	fn entity_interact(&self, host: HostSide, event: &mut EntityInteractEvent<'_>) -> Option < mod_api :: InteractionResult >
+entity_interact_specific	fn entity_interact_specific(&self, host: &mut dyn ServerHost, event: &mut EntityInteractSpecificEvent<'_>) -> Flow
+entity_invulnerability_check	fn entity_invulnerability_check(&self, level: LevelSide, event: &mut EntityInvulnerabilityCheckEvent<'_>)
+entity_join_level	fn entity_join_level(&self, host: &mut dyn ServerHost, event: &mut EntityJoinLevelEvent<'_>) -> Flow
+entity_leave_level	fn entity_leave_level(&self, host: &mut dyn ServerHost, event: &mut EntityLeaveLevelEvent<'_>)
+entity_mob_griefing	fn entity_mob_griefing(&self, host: &dyn Host, event: &mut EntityMobGriefingEvent)
+entity_mount	fn entity_mount(&self, host: &mut dyn ServerHost, event: &mut EntityMountEvent<'_>) -> Flow
+entity_move	fn entity_move(&self, context: &dyn LoopContext, event: &mut EntityMoveEvent<'_>) -> Flow
+entity_outline	fn entity_outline(&self, host: &dyn ClientHost, event: &mut EntityOutlineEvent<'_>)
+entity_place	fn entity_place(&self, host: &mut dyn ServerHost, event: &mut EntityPlaceEvent) -> Flow
+entity_portal	fn entity_portal(&self, host: &mut dyn ServerHost, event: &mut EntityPortalEvent<'_>)
+entity_pose_change	fn entity_pose_change(&self, host: &mut dyn ServerHost, event: &mut EntityPoseChangeEvent<'_>)
+entity_shoot_bow	fn entity_shoot_bow(&self, host: &mut dyn ServerHost, event: &mut EntityShootBowEvent<'_>)
+entity_size	fn entity_size(&self, host: &dyn Host, event: &mut EntitySizeEvent<'_>)
+entity_struck_by_lightning	fn entity_struck_by_lightning(&self, host: &mut dyn ServerHost, event: &mut EntityStruckByLightningEvent) -> Flow
+entity_tame	fn entity_tame(&self, host: &mut dyn ServerHost, event: &mut EntityTameEvent<'_>)
+entity_teleport	fn entity_teleport(&self, host: &mut dyn ServerHost, event: &mut EntityTeleportEvent<'_>)
+entity_tick_listened	fn entity_tick_listened(&self, host: &mut dyn ServerHost, event: &mut EntityTickListenedEvent)
+entity_tick_post	fn entity_tick_post(&self, host: &mut dyn ServerHost, event: &mut EntityTickPostEvent<'_>)
+entity_tick_pre	fn entity_tick_pre(&self, host: &mut dyn ServerHost, event: &mut EntityTickPreEvent<'_>) -> Flow
+entity_toggle_glide	fn entity_toggle_glide(&self, host: &mut dyn ServerHost, event: &mut EntityToggleGlideEvent<'_>)
+entity_travel_to_dimension	fn entity_travel_to_dimension(&self, host: &mut dyn ServerHost, event: &mut EntityTravelToDimensionEvent<'_>) -> Flow
+entity_unleash	fn entity_unleash(&self, host: &mut dyn ServerHost, event: &mut EntityUnleashEvent<'_>)
+exp_bottle	fn exp_bottle(&self, host: &mut dyn ServerHost, event: &mut ExpBottleEvent)
+exp_drop	fn exp_drop(&self, level: &dyn LevelHost, event: &mut ExpDropEvent<'_>) -> Option < i32 >
+experience_orb_can_merge	fn experience_orb_can_merge(&self, host: &mut dyn ServerHost, event: &mut ExperienceOrbCanMergeEvent<'_>)
+experience_orb_merge	fn experience_orb_merge(&self, host: &mut dyn ServerHost, event: &mut ExperienceOrbMergeEvent<'_>) -> Flow
+explosion_detonate	fn explosion_detonate(&self, host: &mut dyn ServerHost, event: &mut ExplosionDetonateEvent<'_>)
+explosion_knockback	fn explosion_knockback(&self, host: &mut dyn ServerHost, event: &mut ExplosionKnockbackEvent<'_>)
+explosion_prime	fn explosion_prime(&self, host: &mut dyn ServerHost, event: &mut ExplosionPrimeEvent)
+explosion_resistance	fn explosion_resistance(&self, level: &dyn LevelHost, event: &mut ExplosionResistanceEvent<'_>) -> Option < f32 >
+explosion_resistance_is_pure	fn explosion_resistance_is_pure(&self) -> bool
+explosion_start	fn explosion_start(&self, host: &mut dyn ServerHost, event: &mut ExplosionStartEvent<'_>) -> Flow
+export_ended	fn export_ended(&self, host: &mut dyn ClientHost, event: &mut ExportEndedEvent)
+extend_poi_types	fn extend_poi_types(&self, context: &RegistrationContext, event: &mut ExtendPoiTypesEvent<'_>)
+extract_block_screen_effect	fn extract_block_screen_effect(&self, host: &dyn ClientHost, event: &mut ExtractBlockScreenEffectEvent) -> Flow
+fall_on	fn fall_on(&self, level: &mut dyn LevelRandomHost, event: &mut FallOnEvent<'_>)
+falling_tick	fn falling_tick(&self, host: &mut dyn ServerHost, event: &mut FallingTickEvent)
+farmland_trample	fn farmland_trample(&self, context: &dyn LoopContext, event: &mut FarmlandTrampleEvent) -> Flow
+fill_bucket	fn fill_bucket(&self, host: &mut dyn ServerHost, event: &mut FillBucketEvent<'_>) -> Flow
+finalize_spawn	fn finalize_spawn(&self, host: &dyn Host, event: &mut FinalizeSpawnEvent<'_>) -> Flow
+fire_odds	fn fire_odds(&self, level: &dyn LevelHost, event: &mut FireOddsEvent) -> Option < (i32 , i32) >
+firework_explode	fn firework_explode(&self, host: &mut dyn ServerHost, event: &mut FireworkExplodeEvent)
+flip_frame	fn flip_frame(&self, host: &mut dyn ClientHost, event: &mut FlipFrameEvent)
+fluid_flow	fn fluid_flow(&self, context: &dyn LoopContext, event: &mut FluidFlowEvent<'_>)
+fluid_level_change	fn fluid_level_change(&self, level: &dyn LevelHost, event: &mut FluidLevelChangeEvent<'_>) -> Flow
+fluid_place_block	fn fluid_place_block(&self, level: &dyn LevelHost, event: &mut FluidPlaceBlockEvent<'_>) -> Flow
+fluid_rules	fn fluid_rules(&self, level: &dyn LevelHost, event: &mut FluidRulesEvent<'_>)
+fluid_tick	fn fluid_tick(&self, level: &dyn LevelHost, event: &mut FluidTickEvent<'_>) -> Flow
+fluid_tooltip	fn fluid_tooltip(&self, host: &dyn ClientHost, event: &mut FluidTooltipEvent<'_>)
+food_level_changed	fn food_level_changed(&self, host: &mut dyn ServerHost, event: &mut FoodLevelChangedEvent<'_>) -> Flow
+framerate_limit	fn framerate_limit(&self, host: &dyn ClientHost, event: &mut FramerateLimitEvent)
+friction	fn friction(&self, context: &dyn LoopContext, event: &mut FrictionEvent<'_>)
+furnace_burn	fn furnace_burn(&self, host: &mut dyn ServerHost, event: &mut FurnaceBurnEvent<'_>)
+furnace_extract	fn furnace_extract(&self, host: &mut dyn ServerHost, event: &mut FurnaceExtractEvent<'_>)
+furnace_smelt	fn furnace_smelt(&self, host: &mut dyn ServerHost, event: &mut FurnaceSmeltEvent<'_>)
+furnace_start_smelt	fn furnace_start_smelt(&self, host: &mut dyn ServerHost, event: &mut FurnaceStartSmeltEvent<'_>)
+game_rule_changed	fn game_rule_changed(&self, host: &mut dyn ServerHost, event: &mut GameRuleChangedEvent<'_>)
+game_shutting_down	fn game_shutting_down(&self, host: HostSide, event: &mut GameShuttingDownEvent)
+gather_effect_screen_tooltips	fn gather_effect_screen_tooltips(&self, host: &dyn ClientHost, event: &mut GatherEffectScreenTooltipsEvent<'_>)
+gather_skipped_attribute_tooltips	fn gather_skipped_attribute_tooltips(&self, host: &dyn ClientHost, event: &mut GatherSkippedAttributeTooltipsEvent<'_>)
+general_entity_tick	fn general_entity_tick(&self, host: &mut dyn ServerHost, event: &mut GeneralEntityTickEvent<'_>)
+get_arm_pose	fn get_arm_pose(&self, host: &dyn ClientHost, event: &mut GetArmPoseEvent<'_>) -> Option < mod_api :: ArmPose >
+get_enchantment_level	fn get_enchantment_level(&self, event: &mut GetEnchantmentLevelEvent<'_>)
+get_enchantment_level_for	fn get_enchantment_level_for(&self, host: &dyn Host, event: &mut GetEnchantmentLevelForEvent<'_>)
+get_equip_sound	fn get_equip_sound(&self, host: &dyn Host, event: &mut GetEquipSoundEvent<'_>)
+get_equipment_drop_chance	fn get_equipment_drop_chance(&self, host: &mut dyn ServerHost, event: &mut GetEquipmentDropChanceEvent<'_>)
+grindstone_place	fn grindstone_place(&self, host: &mut dyn ServerHost, event: &mut GrindstonePlaceEvent<'_>) -> Flow
+grindstone_take	fn grindstone_take(&self, host: &mut dyn ServerHost, event: &mut GrindstoneTakeEvent<'_>) -> Flow
+gui_layer_draw	fn gui_layer_draw(&self, host: &dyn ClientHost, event: &mut GuiLayerDrawEvent<'_>)
+gui_layer_post	fn gui_layer_post(&self, host: &dyn ClientHost, event: &mut GuiLayerPostEvent<'_>)
+gui_layer_pre	fn gui_layer_pre(&self, host: &dyn ClientHost, event: &mut GuiLayerPreEvent<'_>) -> Flow
+gui_render_post	fn gui_render_post(&self, host: &dyn ClientHost, event: &mut GuiRenderPostEvent<'_>)
+hanging_break	fn hanging_break(&self, host: &mut dyn ServerHost, event: &mut HangingBreakEvent<'_>) -> Flow
+hanging_place	fn hanging_place(&self, host: &mut dyn ServerHost, event: &mut HangingPlaceEvent<'_>) -> Flow
+has_analog_output	fn has_analog_output(&self, level: &dyn LevelHost, event: &mut HasAnalogOutputEvent)
+health_hud	fn health_hud(&self, host: &mut dyn ClientHost, event: &mut HealthHudEvent<'_>) -> Option < Vec < GuiDraw > >
+hears_projectile_impacts	fn hears_projectile_impacts(&self, host: &dyn Host, event: &mut HearsProjectileImpactsEvent)
+highlight_tip	fn highlight_tip(&self, host: &dyn ClientHost, event: &mut HighlightTipEvent<'_>)
+hopper_inventory_search	fn hopper_inventory_search(&self, host: &mut dyn ServerHost, event: &mut HopperInventorySearchEvent)
+hopper_pickup_item	fn hopper_pickup_item(&self, level: &dyn LevelHost, event: &mut HopperPickupItemEvent<'_>) -> Flow
+hotbar_attack_indicator_progress	fn hotbar_attack_indicator_progress(&self, host: &dyn ClientHost, event: &mut HotbarAttackIndicatorProgressEvent)
+hurt_enemy	fn hurt_enemy(&self, host: &mut dyn ServerHost, event: &mut HurtEnemyEvent<'_>)
+ignited_by_lava	fn ignited_by_lava(&self, level: &dyn LevelHost, event: &mut IgnitedByLavaEvent) -> Option < bool >
+ingredient	fn ingredient(&self, context: &dyn DataLoadContext, event: &mut IngredientEvent<'_>)
+ingredient_test	fn ingredient_test(&self, context: &dyn LoopContext, event: &mut IngredientTestEvent<'_>)
+input_key	fn input_key(&self, host: &mut dyn ClientHost, event: &mut InputKeyEvent<'_>)
+instantiate_block_state_definition	fn instantiate_block_state_definition(&self, context: &RegistrationContext, event: &mut InstantiateBlockStateDefinitionEvent<'_>)
+interaction_key_mapping_triggered	fn interaction_key_mapping_triggered(&self, host: &mut dyn ClientHost, event: &mut InteractionKeyMappingTriggeredEvent) -> Flow
+inventory_block_start	fn inventory_block_start(&self, host: &mut dyn ServerHost, event: &mut InventoryBlockStartEvent<'_>) -> Flow
+inventory_move_item	fn inventory_move_item(&self, host: &dyn Host, event: &mut InventoryMoveItemEvent<'_>) -> Flow
+inventory_tick	fn inventory_tick(&self, host: &mut dyn ServerHost, event: &mut InventoryTickEvent<'_>)
+is_bonemeal_success	fn is_bonemeal_success(&self, level: &mut dyn LevelRandomHost, event: &mut IsBonemealSuccessEvent)
+is_combine_repairable	fn is_combine_repairable(&self, context: &dyn LoopContext, event: &mut IsCombineRepairableEvent<'_>)
+is_fertile	fn is_fertile(&self, level: &dyn LevelHost, event: &mut IsFertileEvent)
+is_fire_source	fn is_fire_source(&self, level: &dyn LevelHost, event: &mut IsFireSourceEvent) -> Option < bool >
+is_ladder	fn is_ladder(&self, context: &dyn LoopContext, event: &mut IsLadderEvent)
+is_not_replaceable_by_pick_action	fn is_not_replaceable_by_pick_action(&self, host: &dyn Host, event: &mut IsNotReplaceableByPickActionEvent<'_>)
+is_pathfindable	fn is_pathfindable(&self, host: &dyn Host, event: &mut IsPathfindableEvent)
+is_piglin_currency	fn is_piglin_currency(&self, host: &dyn Host, event: &mut IsPiglinCurrencyEvent<'_>)
+is_primary_item_for	fn is_primary_item_for(&self, host: &dyn Host, event: &mut IsPrimaryItemForEvent<'_>)
+is_shearable	fn is_shearable(&self, host: &dyn Host, entity: EntityRef, player: Option<PlayerRef>, shears: &ItemStack) -> Option<bool>
+is_signal_source	fn is_signal_source(&self, level: &dyn LevelHost, event: &mut IsSignalSourceEvent)
+is_slime_block	fn is_slime_block(&self, level: &dyn LevelHost, event: &mut IsSlimeBlockEvent)
+is_sticky_block	fn is_sticky_block(&self, level: &dyn LevelHost, event: &mut IsStickyBlockEvent)
+is_valid_bonemeal_target	fn is_valid_bonemeal_target(&self, level: LevelSide, event: &mut IsValidBonemealTargetEvent) -> Option < bool >
+item_after_vertical_collision	fn item_after_vertical_collision(&self, host: HostSide, event: &mut ItemAfterVerticalCollisionEvent<'_>) -> Flow
+item_attribute_modifier	fn item_attribute_modifier(&self, event: &mut ItemAttributeModifierEvent<'_>)
+item_bar	fn item_bar(&self, host: &dyn ClientHost, event: &mut ItemBarEvent<'_>)
+item_consumption_teleport	fn item_consumption_teleport(&self, host: &mut dyn ServerHost, event: &mut ItemConsumptionTeleportEvent<'_>) -> Flow
+item_crafted	fn item_crafted(&self, host: &mut dyn ServerHost, event: &mut ItemCraftedEvent<'_>)
+item_decorations	fn item_decorations(&self, host: &dyn ClientHost, event: &mut ItemDecorationsEvent<'_>)
+item_despawn	fn item_despawn(&self, host: &mut dyn ServerHost, event: &mut ItemDespawnEvent<'_>)
+item_expire	fn item_expire(&self, host: &mut dyn ServerHost, event: &mut ItemExpireEvent<'_>)
+item_fished	fn item_fished(&self, host: &mut dyn ServerHost, event: &mut ItemFishedEvent<'_>) -> Flow
+item_interact_mob	fn item_interact_mob(&self, host: HostSide, event: &mut ItemInteractMobEvent<'_>) -> Option < mod_api :: InteractionResult >
+item_model_property	fn item_model_property(&self, host: &dyn ClientHost, event: &mut ItemModelPropertyEvent<'_>)
+item_model_range_property	fn item_model_range_property(&self, host: &dyn ClientHost, event: &mut ItemModelRangePropertyEvent<'_>)
+item_model_select_property	fn item_model_select_property(&self, host: &dyn ClientHost, event: &mut ItemModelSelectPropertyEvent<'_>)
+item_model_update	fn item_model_update(&self, host: &dyn ClientHost, event: &mut ItemModelUpdateEvent<'_>)
+item_picked_up	fn item_picked_up(&self, host: &mut dyn ServerHost, event: &mut ItemPickedUpEvent<'_>)
+item_picked_up_partial	fn item_picked_up_partial(&self, host: &mut dyn ServerHost, event: &mut ItemPickedUpPartialEvent<'_>)
+item_picked_up_post	fn item_picked_up_post(&self, host: &mut dyn ServerHost, event: &mut ItemPickedUpPostEvent<'_>)
+item_smelted	fn item_smelted(&self, host: &mut dyn ServerHost, event: &mut ItemSmeltedEvent<'_>)
+item_spawn	fn item_spawn(&self, host: &mut dyn ServerHost, event: &mut ItemSpawnEvent<'_>)
+item_stacked_on_other	fn item_stacked_on_other(&self, context: &dyn LoopContext, event_: &mut ItemStackedOnOtherEvent<'_, '_>) -> Flow
+item_tint_source	fn item_tint_source(&self, host: &dyn ClientHost, event: &mut ItemTintSourceEvent<'_>)
+item_tooltip	fn item_tooltip(&self, host: &dyn ClientHost, event: &mut ItemTooltipEvent<'_>)
+item_toss	fn item_toss(&self, host: &mut dyn ServerHost, event: &mut ItemTossEvent) -> Flow
+items	fn items(&self, context: &RegistrationContext, event: &mut ItemsEvent<'_>)
+key_mapping_pre	fn key_mapping_pre(&self, host: &mut dyn ClientHost, event: &mut KeyMappingPreEvent<'_>) -> Flow
+leaves_decay	fn leaves_decay(&self, level: &dyn LevelHost, event: &mut LeavesDecayEvent) -> Flow
+left_click_block	fn left_click_block(&self, host: &mut dyn ServerHost, event: &mut LeftClickBlockEvent) -> Flow
+left_click_empty	fn left_click_empty(&self, host: &mut dyn ClientHost, event: &mut LeftClickEmptyEvent)
+level_load	fn level_load(&self, host: &mut dyn ServerHost, event: &mut LevelLoadEvent<'_>)
+level_save	fn level_save(&self, host: &mut dyn ServerHost, event: &mut LevelSaveEvent<'_>)
+level_tick_post	fn level_tick_post(&self, host: HostSide, event: &mut LevelTickPostEvent)
+level_tick_pre	fn level_tick_pre(&self, host: HostSide, event: &mut LevelTickPreEvent)
+level_unload	fn level_unload(&self, host: &mut dyn ServerHost, event: &mut LevelUnloadEvent<'_>)
+levels_reset	fn levels_reset(&self, host: &mut dyn ServerHost, event: &mut LevelsResetEvent)
+light_emission	fn light_emission(&self, host: &dyn Host, event: &mut LightEmissionEvent) -> Option < u8 >
+lightning_strike	fn lightning_strike(&self, host: &mut dyn ServerHost, event: &mut LightningStrikeEvent<'_>) -> Flow
+living_breathe	fn living_breathe(&self, context: &dyn LoopContext, event: &mut LivingBreatheEvent<'_>)
+living_change_target	fn living_change_target(&self, host: &dyn Host, event: &mut LivingChangeTargetEvent<'_>) -> Flow
+living_conversion_post	fn living_conversion_post(&self, host: &mut dyn ServerHost, event: &mut LivingConversionPostEvent<'_>)
+living_conversion_pre	fn living_conversion_pre(&self, host: &mut dyn ServerHost, event: &mut LivingConversionPreEvent<'_>) -> Flow
+living_damage_post	fn living_damage_post(&self, level: &mut dyn LevelRandomHost, event: &mut LivingDamagePostEvent<'_>)
+living_damage_pre	fn living_damage_pre(&self, level: &mut dyn LevelRandomHost, event: &mut LivingDamagePreEvent<'_>)
+living_death	fn living_death(&self, host: &mut dyn ServerHost, event: &mut LivingDeathEvent<'_>) -> Flow
+living_death_message	fn living_death_message(&self, host: &mut dyn ServerHost, event: &mut LivingDeathMessageEvent<'_>)
+living_death_post	fn living_death_post(&self, host: &mut dyn ServerHost, event: &mut LivingDeathPostEvent<'_>)
+living_destroy_block	fn living_destroy_block(&self, host: &mut dyn ServerHost, event: &mut LivingDestroyBlockEvent<'_>) -> Flow
+living_drops	fn living_drops(&self, host: &mut dyn ServerHost, event: &mut LivingDropsEvent<'_>) -> Flow
+living_drown	fn living_drown(&self, context: &dyn LoopContext, event: &mut LivingDrownEvent<'_>) -> Flow
+living_entity_use_item_finish	fn living_entity_use_item_finish(&self, host: HostSide, event: &mut LivingEntityUseItemFinishEvent<'_>)
+living_entity_use_item_start	fn living_entity_use_item_start(&self, host: HostSide, event: &mut LivingEntityUseItemStartEvent<'_>) -> Flow
+living_entity_use_item_stop	fn living_entity_use_item_stop(&self, host: HostSide, event: &mut LivingEntityUseItemStopEvent<'_>) -> Flow
+living_entity_use_item_tick	fn living_entity_use_item_tick(&self, host: HostSide, event: &mut LivingEntityUseItemTickEvent<'_>) -> Flow
+living_equipment_change	fn living_equipment_change(&self, host: &mut dyn ServerHost, event: &mut LivingEquipmentChangeEvent<'_>)
+living_equipment_listened	fn living_equipment_listened(&self, host: &mut dyn ServerHost, event: &mut LivingEquipmentListenedEvent)
+living_experience_drop	fn living_experience_drop(&self, host: &mut dyn ServerHost, event: &mut LivingExperienceDropEvent<'_>) -> Flow
+living_fall	fn living_fall(&self, context: &dyn LoopContext, event: &mut LivingFallEvent<'_>) -> Flow
+living_flying_speed	fn living_flying_speed(&self, context: &dyn LoopContext, event: &mut LivingFlyingSpeedEvent<'_>)
+living_get_projectile	fn living_get_projectile(&self, host: HostSide, event: &mut LivingGetProjectileEvent<'_>)
+living_heal	fn living_heal(&self, context: &dyn LoopContext, event: &mut LivingHealEvent) -> Flow
+living_incoming_damage	fn living_incoming_damage(&self, level: &mut dyn LevelRandomHost, event: &mut LivingIncomingDamageEvent<'_>) -> Flow
+living_jump	fn living_jump(&self, context: &dyn LoopContext, event: &mut LivingJumpEvent<'_>)
+living_jump_power	fn living_jump_power(&self, context: &dyn LoopContext, event: &mut LivingJumpPowerEvent<'_>)
+living_knockback	fn living_knockback(&self, level: &mut dyn LevelRandomHost, event: &mut LivingKnockbackEvent<'_>) -> Flow
+living_shield_block	fn living_shield_block(&self, level: &mut dyn LevelRandomHost, event: &mut LivingShieldBlockEvent<'_>)
+living_speed	fn living_speed(&self, context: &dyn LoopContext, event: &mut LivingSpeedEvent<'_>)
+living_use_totem	fn living_use_totem(&self, level: &mut dyn LevelRandomHost, event: &mut LivingUseTotemEvent<'_>) -> Flow
+living_visibility	fn living_visibility(&self, host: &dyn Host, event: &mut LivingVisibilityEvent)
+loot_condition	fn loot_condition(&self, event: &mut LootConditionEvent<'_>)
+loot_drops	fn loot_drops(&self, host: &mut dyn ServerHost, event: &mut LootDropsEvent<'_>)
+loot_function	fn loot_function(&self, event: &mut LootFunctionEvent<'_>)
+loot_table_load	fn loot_table_load(&self, context: &dyn DataLoadContext, event: &mut LootTableLoadEvent<'_>)
+makes_open_trapdoor_above_climbable	fn makes_open_trapdoor_above_climbable(&self, context: &dyn LoopContext, event: &mut MakesOpenTrapdoorAboveClimbableEvent)
+makes_piglins_neutral	fn makes_piglins_neutral(&self, host: &dyn Host, event: &mut MakesPiglinsNeutralEvent<'_>)
+map_decoration_types	fn map_decoration_types(&self, context: &RegistrationContext, event: &mut MapDecorationTypesEvent<'_>)
+map_decorations	fn map_decorations(&self, host: &dyn ClientHost, event: &mut MapDecorationsEvent<'_>)
+may_place_on	fn may_place_on(&self, level: &dyn LevelHost, event: &mut MayPlaceOnEvent) -> Option < bool >
+may_place_on_v2	fn may_place_on_v2(&self, context: &dyn WorldgenHost, event: &mut MayPlaceOnV2Event) -> Option < bool >
+menu_background	fn menu_background(&self, host: &dyn ClientHost, event: &mut MenuBackgroundEvent<'_>)
+menu_button	fn menu_button(&self, host: &mut dyn ServerHost, event: &mut MenuButtonEvent<'_>)
+menu_clicked	fn menu_clicked(&self, host: &mut dyn ServerHost, event: &mut MenuClickedEvent)
+menu_closed	fn menu_closed(&self, host: &mut dyn ServerHost, event: &mut MenuClosedEvent)
+menu_extra_data	fn menu_extra_data(&self, host: &mut dyn ServerHost, event: &mut MenuExtraDataEvent<'_>) -> Option < Vec < u8 > >
+menu_links	fn menu_links(&self, host: &mut dyn ServerHost, event: &mut MenuLinksEvent<'_>)
+menu_quick_move	fn menu_quick_move(&self, host: &mut dyn ServerHost, event: &mut MenuQuickMoveEvent<'_>) -> Flow
+menu_slot_rules	fn menu_slot_rules(&self, host: &dyn Host, event: &mut MenuSlotRulesEvent<'_>)
+menu_still_valid	fn menu_still_valid(&self, context: &dyn LoopContext, event: &mut MenuStillValidEvent<'_>)
+menu_transfer	fn menu_transfer(&self, host: &mut dyn ServerHost, event: &mut MenuTransferEvent<'_>) -> Option < RecipeTransferResult >
+minecart_pass	fn minecart_pass(&self, host: &mut dyn ServerHost, event: &mut MinecartPassEvent)
+minimap	fn minimap(&self, host: &dyn ClientHost, event: &mut MinimapEvent) -> Option < mod_api :: Minimap >
+mob_despawn	fn mob_despawn(&self, host: &dyn Host, event: &mut MobDespawnEvent<'_>)
+mob_effect_added	fn mob_effect_added(&self, host: &mut dyn ServerHost, event: &mut MobEffectAddedEvent)
+mob_effect_applicable	fn mob_effect_applicable(&self, host: &mut dyn ServerHost, event: &mut MobEffectApplicableEvent) -> Option < mod_api :: EffectApplicable >
+mob_effect_expired	fn mob_effect_expired(&self, host: &dyn Host, event: &mut MobEffectExpiredEvent) -> Flow
+mob_effect_remove	fn mob_effect_remove(&self, host: &mut dyn ServerHost, event: &mut MobEffectRemoveEvent) -> Flow
+mob_killed	fn mob_killed(&self, host: &mut dyn ServerHost, event: &mut MobKilledEvent<'_>)
+mob_spawn_placement_check	fn mob_spawn_placement_check(&self, host: &dyn Host, event: &mut MobSpawnPlacementCheckEvent<'_>)
+mob_spawn_position_check	fn mob_spawn_position_check(&self, host: &dyn Host, event: &mut MobSpawnPositionCheckEvent<'_>)
+mob_spawned	fn mob_spawned(&self, host: &mut dyn ServerHost, event: &mut MobSpawnedEvent<'_>)
+mob_split	fn mob_split(&self, host: &mut dyn ServerHost, event: &mut MobSplitEvent<'_>) -> Flow
+mod_container_viewers	fn mod_container_viewers(&self, host: &mut dyn ServerHost, event: &mut ModContainerViewersEvent<'_>)
+mod_mismatch	fn mod_mismatch(&self, host: HostSide, event: &mut ModMismatchEvent<'_>)
+mod_slot_changed	fn mod_slot_changed(&self, host: &dyn Host, event: &mut ModSlotChangedEvent<'_>)
+mod_slot_will_change	fn mod_slot_will_change(&self, host: &dyn Host, event: &mut ModSlotWillChangeEvent<'_>) -> Flow
+model_baking_completed	fn model_baking_completed(&self, host: &mut dyn ClientHost, event: &mut ModelBakingCompletedEvent)
+modify_custom_spawners	fn modify_custom_spawners(&self, host: &dyn Host, event: &mut ModifyCustomSpawnersEvent<'_>)
+modify_default_components	fn modify_default_components(&self, context: &dyn DataLoadContext, event: &mut ModifyDefaultComponentsEvent<'_>)
+moisture_change	fn moisture_change(&self, level: &dyn LevelHost, event: &mut MoistureChangeEvent) -> Flow
+mouse_button_post	fn mouse_button_post(&self, host: &mut dyn ClientHost, event: &mut MouseButtonPostEvent)
+mouse_button_pre	fn mouse_button_pre(&self, host: &mut dyn ClientHost, event: &mut MouseButtonPreEvent) -> Flow
+mouse_scrolling	fn mouse_scrolling(&self, host: &mut dyn ClientHost, event: &mut MouseScrollingEvent) -> Flow
+movement_input	fn movement_input(&self, host: &dyn ClientHost, event: &mut MovementInputEvent)
+music	fn music(&self, host: &dyn ClientHost, event: &mut MusicEvent<'_>)
+music_layers	fn music_layers(&self, host: &dyn ClientHost, event: &mut MusicLayersEvent<'_>)
+neighbor_changed	fn neighbor_changed(&self, level: &mut dyn LevelTicksHost, event: &mut NeighborChangedEvent)
+neighbor_notify	fn neighbor_notify(&self, level: &dyn LevelHost, event: &mut NeighborNotifyEvent) -> Flow
+note_block_change	fn note_block_change(&self, level: &dyn LevelHost, event: &mut NoteBlockChangeEvent<'_>) -> Flow
+note_block_play	fn note_block_play(&self, level: &dyn LevelHost, event: &mut NoteBlockPlayEvent<'_>) -> Flow
+on_block_exploded	fn on_block_exploded(&self, host: &mut dyn ServerHost, event: &mut OnBlockExplodedEvent<'_>)
+on_block_placed_by	fn on_block_placed_by(&self, host: &mut dyn ServerHost, event: &mut OnBlockPlacedByEvent<'_>)
+on_block_state_change	fn on_block_state_change(&self, level: LevelSide, event: &mut OnBlockStateChangeEvent)
+on_caught_fire	fn on_caught_fire(&self, level: &mut dyn LevelWriteHost, event: &mut OnCaughtFireEvent)
+on_chunk_unloaded	fn on_chunk_unloaded(&self, host: HostSide, event: &mut OnChunkUnloadedEvent<'_>)
+on_destroyed_by_player	fn on_destroyed_by_player(&self, host: &mut dyn ServerHost, event: &mut OnDestroyedByPlayerEvent<'_>) -> Option < bool >
+on_destroyed_by_push_reaction	fn on_destroyed_by_push_reaction(&self, level: &mut dyn LevelWriteHost, event: &mut OnDestroyedByPushReactionEvent)
+on_dropped_by_player	fn on_dropped_by_player(&self, host: &dyn Host, event: &mut OnDroppedByPlayerEvent<'_>) -> Flow
+on_effect_added	fn on_effect_added(&self, host: &mut dyn ServerHost, event: &mut OnEffectAddedEvent)
+on_entity_item_update	fn on_entity_item_update(&self, host: &mut dyn ServerHost, event: &mut OnEntityItemUpdateEvent<'_>) -> Flow
+on_entity_swing	fn on_entity_swing(&self, host: HostSide, event: &mut OnEntitySwingEvent<'_>) -> Flow
+on_equip	fn on_equip(&self, host: &mut dyn ServerHost, event: &mut OnEquipEvent<'_>)
+on_item_use_first	fn on_item_use_first(&self, host: &mut dyn ServerHost, event: &mut OnItemUseFirstEvent<'_>) -> Option < mod_api :: InteractionResult >
+on_left_click_entity	fn on_left_click_entity(&self, host: &mut dyn ServerHost, event: &mut OnLeftClickEntityEvent<'_>) -> Flow
+on_neighbor_change	fn on_neighbor_change(&self, level: &dyn LevelHost, event: &mut OnNeighborChangeEvent)
+on_sheared	fn on_sheared(&self, host: &mut dyn ServerHost, entity: EntityRef, player: Option<PlayerRef>, shears: &ItemStack) -> Vec<ItemStack>
+on_tree_grow	fn on_tree_grow(&self, context: &dyn WorldgenHost, event: &mut OnTreeGrowEvent<'_>) -> Option < Option < BlockState > >
+on_use_tick	fn on_use_tick(&self, host: HostSide, event: &mut OnUseTickEvent<'_>)
+panel_event	fn panel_event(&self, host: &mut dyn ClientHost, event_: &mut PanelEventEvent<'_>)
+perform_bonemeal	fn perform_bonemeal(&self, level: &mut dyn LevelWriteHost, event: &mut PerformBonemealEvent)
+permissions_changed	fn permissions_changed(&self, host: &mut dyn ServerHost, event: &mut PermissionsChangedEvent<'_>) -> Flow
+pickup_xp	fn pickup_xp(&self, host: &mut dyn ServerHost, event: &mut PickupXpEvent<'_>) -> Flow
+piston_carries_block_entity	fn piston_carries_block_entity(&self, level: LevelSide, event: &mut PistonCarriesBlockEntityEvent) -> Option < bool >
+piston_post	fn piston_post(&self, level: &dyn LevelHost, event: &mut PistonPostEvent<'_>)
+piston_pre	fn piston_pre(&self, level: &dyn LevelHost, event: &mut PistonPreEvent<'_>) -> Flow
+piston_push_reaction	fn piston_push_reaction(&self, event: &mut PistonPushReactionEvent) -> Option < mod_api :: PushReaction >
+play_hit_sound	fn play_hit_sound(&self, host: &mut dyn ClientHost, event: &mut PlayHitSoundEvent) -> Flow
+play_level_sound_at_entity	fn play_level_sound_at_entity(&self, host: HostSide, event: &mut PlayLevelSoundAtEntityEvent<'_>) -> Flow
+play_level_sound_at_position	fn play_level_sound_at_position(&self, host: HostSide, event: &mut PlayLevelSoundAtPositionEvent<'_>) -> Flow
+play_sound	fn play_sound(&self, context: &dyn LoopContext, event: &mut PlaySoundEvent<'_>)
+play_sound_source	fn play_sound_source(&self, context: &dyn LoopContext, event: &mut PlaySoundSourceEvent<'_>)
+play_streaming_source	fn play_streaming_source(&self, context: &dyn LoopContext, event: &mut PlayStreamingSourceEvent<'_>)
+player_advancement_done	fn player_advancement_done(&self, host: &mut dyn ServerHost, event: &mut PlayerAdvancementDoneEvent<'_>)
+player_advancement_progress	fn player_advancement_progress(&self, host: &mut dyn ServerHost, event: &mut PlayerAdvancementProgressEvent<'_>)
+player_arm_swing	fn player_arm_swing(&self, host: &mut dyn ServerHost, event: &mut PlayerArmSwingEvent<'_>)
+player_attack_cooldown_reset	fn player_attack_cooldown_reset(&self, host: &mut dyn ServerHost, event: &mut PlayerAttackCooldownResetEvent<'_>)
+player_bed_enter	fn player_bed_enter(&self, host: &mut dyn ServerHost, event: &mut PlayerBedEnterEvent<'_>) -> Flow
+player_bed_leave	fn player_bed_leave(&self, host: &mut dyn ServerHost, event: &mut PlayerBedLeaveEvent<'_>)
+player_break_speed	fn player_break_speed(&self, host: HostSide, event: &mut PlayerBreakSpeedEvent) -> Flow
+player_brewed_potion	fn player_brewed_potion(&self, host: &mut dyn ServerHost, event: &mut PlayerBrewedPotionEvent<'_>)
+player_bucket_entity	fn player_bucket_entity(&self, host: &mut dyn ServerHost, event: &mut PlayerBucketEntityEvent<'_>)
+player_bundle_item_select	fn player_bundle_item_select(&self, host: &mut dyn ServerHost, event: &mut PlayerBundleItemSelectEvent<'_>)
+player_change_beacon_effect	fn player_change_beacon_effect(&self, host: &mut dyn ServerHost, event: &mut PlayerChangeBeaconEffectEvent<'_>)
+player_changed_dimension	fn player_changed_dimension(&self, host: &mut dyn ServerHost, event: &mut PlayerChangedDimensionEvent<'_>)
+player_client_loaded_world	fn player_client_loaded_world(&self, host: &mut dyn ServerHost, event: &mut PlayerClientLoadedWorldEvent<'_>)
+player_clone	fn player_clone(&self, host: &mut dyn ServerHost, event: &mut PlayerCloneEvent<'_>)
+player_command	fn player_command(&self, host: &mut dyn ServerHost, event: &mut PlayerCommandEvent<'_>) -> Flow
+player_commands_sent	fn player_commands_sent(&self, host: &mut dyn ServerHost, event: &mut PlayerCommandsSentEvent<'_>)
+player_container_close	fn player_container_close(&self, host: &mut dyn ServerHost, event: &mut PlayerContainerCloseEvent<'_>)
+player_container_open	fn player_container_open(&self, host: &mut dyn ServerHost, event: &mut PlayerContainerOpenEvent<'_>)
+player_deep_sleep	fn player_deep_sleep(&self, host: &mut dyn ServerHost, event: &mut PlayerDeepSleepEvent<'_>)
+player_destroy_item	fn player_destroy_item(&self, host: &mut dyn ServerHost, event: &mut PlayerDestroyItemEvent<'_>)
+player_destroyed_block	fn player_destroyed_block(&self, host: &mut dyn ServerHost, event: &mut PlayerDestroyedBlockEvent)
+player_died	fn player_died(&self, host: &mut dyn ServerHost, event: &mut PlayerDiedEvent<'_>)
+player_edit_book	fn player_edit_book(&self, host: &mut dyn ServerHost, event: &mut PlayerEditBookEvent<'_>) -> Flow
+player_egg_throw	fn player_egg_throw(&self, host: &mut dyn ServerHost, event: &mut PlayerEggThrowEvent<'_>)
+player_elytra_boost	fn player_elytra_boost(&self, host: &mut dyn ServerHost, event: &mut PlayerElytraBoostEvent<'_>)
+player_enchant_item	fn player_enchant_item(&self, host: &mut dyn ServerHost, event: &mut PlayerEnchantItemEvent<'_>)
+player_exp_cooldown_change	fn player_exp_cooldown_change(&self, host: &mut dyn ServerHost, event: &mut PlayerExpCooldownChangeEvent<'_>)
+player_fish	fn player_fish(&self, host: &mut dyn ServerHost, event: &mut PlayerFishEvent<'_>) -> Flow
+player_flower_pot_manipulate	fn player_flower_pot_manipulate(&self, host: &mut dyn ServerHost, event: &mut PlayerFlowerPotManipulateEvent<'_>)
+player_flyable_fall	fn player_flyable_fall(&self, host: &mut dyn ServerHost, event: &mut PlayerFlyableFallEvent<'_>)
+player_game_mode_changed	fn player_game_mode_changed(&self, host: &mut dyn ServerHost, event: &mut PlayerGameModeChangedEvent<'_>) -> Flow
+player_handshake	fn player_handshake(&self, host_: &mut dyn ServerHost, event: &mut PlayerHandshakeEvent<'_>) -> Flow
+player_harvest_check	fn player_harvest_check(&self, host: HostSide, event: &mut PlayerHarvestCheckEvent)
+player_heart_type	fn player_heart_type(&self, host: &mut dyn ClientHost, event: &mut PlayerHeartTypeEvent<'_>)
+player_input	fn player_input(&self, host: &mut dyn ServerHost, event: &mut PlayerInputEvent<'_>)
+player_insert_lectern_book	fn player_insert_lectern_book(&self, host: &mut dyn ServerHost, event: &mut PlayerInsertLecternBookEvent<'_>)
+player_inventory_changed	fn player_inventory_changed(&self, host: &mut dyn ServerHost, event: &mut PlayerInventoryChangedEvent<'_>)
+player_item_cooldown	fn player_item_cooldown(&self, host: &mut dyn ServerHost, event: &mut PlayerItemCooldownEvent<'_>) -> Flow
+player_item_frame_change	fn player_item_frame_change(&self, host: &mut dyn ServerHost, event: &mut PlayerItemFrameChangeEvent<'_>)
+player_item_mend	fn player_item_mend(&self, host: &mut dyn ServerHost, event: &mut PlayerItemMendEvent<'_>)
+player_item_smithed	fn player_item_smithed(&self, host: &mut dyn ServerHost, event: &mut PlayerItemSmithedEvent<'_>)
+player_jump	fn player_jump(&self, host: &mut dyn ServerHost, event: &mut PlayerJumpEvent<'_>)
+player_kicked	fn player_kicked(&self, host: &mut dyn ServerHost, event: &mut PlayerKickedEvent<'_>)
+player_launch_projectile	fn player_launch_projectile(&self, host: &mut dyn ServerHost, event: &mut PlayerLaunchProjectileEvent<'_>)
+player_leaving	fn player_leaving(&self, host: &mut dyn ServerHost, event: &mut PlayerLeavingEvent<'_>)
+player_lectern_page_change	fn player_lectern_page_change(&self, host: &mut dyn ServerHost, event: &mut PlayerLecternPageChangeEvent<'_>)
+player_level_change	fn player_level_change(&self, host: &mut dyn ServerHost, event: &mut PlayerLevelChangeEvent<'_>)
+player_load_from_file	fn player_load_from_file(&self, host: &mut dyn ServerHost, event: &mut PlayerLoadFromFileEvent<'_>)
+player_logged_in	fn player_logged_in(&self, host: &mut dyn ServerHost, event: &mut PlayerLoggedInEvent<'_>)
+player_logged_out	fn player_logged_out(&self, host: &mut dyn ServerHost, event: &mut PlayerLoggedOutEvent<'_>)
+player_login	fn player_login(&self, host: &mut dyn ServerHost, event: &mut PlayerLoginEvent<'_>) -> Flow
+player_login_profile	fn player_login_profile(&self, event: &mut PlayerLoginProfileEvent<'_>)
+player_loom_pattern_select	fn player_loom_pattern_select(&self, host: &mut dyn ServerHost, event: &mut PlayerLoomPatternSelectEvent<'_>)
+player_map_filled	fn player_map_filled(&self, host: &mut dyn ServerHost, event: &mut PlayerMapFilledEvent<'_>)
+player_move	fn player_move(&self, host: &mut dyn ServerHost, event: &mut PlayerMoveEvent) -> Flow
+player_move_packet	fn player_move_packet(&self, host: &mut dyn ServerHost, event: &mut PlayerMovePacketEvent)
+player_name_entity	fn player_name_entity(&self, host: &mut dyn ServerHost, event: &mut PlayerNameEntityEvent<'_>)
+player_name_format	fn player_name_format(&self, context: &dyn LoopContext, event: &mut PlayerNameFormatEvent<'_>)
+player_open_sign	fn player_open_sign(&self, host: &mut dyn ServerHost, event: &mut PlayerOpenSignEvent<'_>)
+player_passage_cross	fn player_passage_cross(&self, host: &mut dyn ServerHost, event: &mut PlayerPassageCrossEvent) -> Flow
+player_pick_item	fn player_pick_item(&self, host: &mut dyn ServerHost, event: &mut PlayerPickItemEvent<'_>) -> Flow
+player_pickup_arrow	fn player_pickup_arrow(&self, host: &mut dyn ServerHost, event: &mut PlayerPickupArrowEvent<'_>)
+player_pong	fn player_pong(&self, host: &mut dyn ServerHost, event: &mut PlayerPongEvent<'_>)
+player_ready_arrow	fn player_ready_arrow(&self, host: &mut dyn ServerHost, event: &mut PlayerReadyArrowEvent<'_>)
+player_recipe_book_click	fn player_recipe_book_click(&self, host: &mut dyn ServerHost, event: &mut PlayerRecipeBookClickEvent<'_>)
+player_recipe_book_settings_change	fn player_recipe_book_settings_change(&self, host: &mut dyn ServerHost, event: &mut PlayerRecipeBookSettingsChangeEvent<'_>)
+player_recipe_discovered	fn player_recipe_discovered(&self, host: &mut dyn ServerHost, event: &mut PlayerRecipeDiscoveredEvent<'_>) -> Flow
+player_respawn_position	fn player_respawn_position(&self, host: &mut dyn ServerHost, event: &mut PlayerRespawnPositionEvent<'_>)
+player_respawned	fn player_respawned(&self, host: &mut dyn ServerHost, event: &mut PlayerRespawnedEvent<'_>)
+player_riptide	fn player_riptide(&self, host: &mut dyn ServerHost, event: &mut PlayerRiptideEvent<'_>)
+player_save_to_file	fn player_save_to_file(&self, host: &mut dyn ServerHost, event: &mut PlayerSaveToFileEvent<'_>)
+player_set_spawn	fn player_set_spawn(&self, host: &mut dyn ServerHost, event: &mut PlayerSetSpawnEvent<'_>) -> Flow
+player_shear_entity	fn player_shear_entity(&self, host: &mut dyn ServerHost, event: &mut PlayerShearEntityEvent<'_>) -> Flow
+player_shield_disable	fn player_shield_disable(&self, host: &mut dyn ServerHost, event: &mut PlayerShieldDisableEvent<'_>)
+player_spawn_phantoms	fn player_spawn_phantoms(&self, host: &mut dyn ServerHost, event: &mut PlayerSpawnPhantomsEvent<'_>) -> Option < PhantomSpawnResult >
+player_sprint	fn player_sprint(&self, host: &mut dyn ServerHost, event: &mut PlayerSprintEvent<'_>)
+player_start_spectating_entity	fn player_start_spectating_entity(&self, host: &mut dyn ServerHost, event: &mut PlayerStartSpectatingEntityEvent<'_>)
+player_start_tracking	fn player_start_tracking(&self, host: &mut dyn ServerHost, event: &mut PlayerStartTrackingEvent<'_>)
+player_stat_award	fn player_stat_award(&self, host: &mut dyn ServerHost, event: &mut PlayerStatAwardEvent<'_>) -> Flow
+player_stays_on_ground_surface	fn player_stays_on_ground_surface(&self, context: &dyn LoopContext, event: &mut PlayerStaysOnGroundSurfaceEvent)
+player_stonecutter_recipe_select	fn player_stonecutter_recipe_select(&self, host: &mut dyn ServerHost, event: &mut PlayerStonecutterRecipeSelectEvent<'_>)
+player_stop_spectating_entity	fn player_stop_spectating_entity(&self, host: &mut dyn ServerHost, event: &mut PlayerStopSpectatingEntityEvent<'_>)
+player_stop_tracking	fn player_stop_tracking(&self, host: &mut dyn ServerHost, event: &mut PlayerStopTrackingEvent<'_>)
+player_stop_using_item	fn player_stop_using_item(&self, host: &mut dyn ServerHost, event: &mut PlayerStopUsingItemEvent<'_>)
+player_swap_hands	fn player_swap_hands(&self, host: &mut dyn ServerHost, event: &mut PlayerSwapHandsEvent<'_>) -> Flow
+player_swap_with_equipment_slot	fn player_swap_with_equipment_slot(&self, host: &mut dyn ServerHost, event: &mut PlayerSwapWithEquipmentSlotEvent<'_>)
+player_switch_hotbar_slot_post	fn player_switch_hotbar_slot_post(&self, host: &mut dyn ServerHost, event: &mut PlayerSwitchHotbarSlotPostEvent)
+player_switch_hotbar_slot_pre	fn player_switch_hotbar_slot_pre(&self, host: &mut dyn ServerHost, event: &mut PlayerSwitchHotbarSlotPreEvent) -> Flow
+player_tab_list_name_format	fn player_tab_list_name_format(&self, context: &dyn LoopContext, event: &mut PlayerTabListNameFormatEvent<'_>)
+player_take_lectern_book	fn player_take_lectern_book(&self, host: &mut dyn ServerHost, event: &mut PlayerTakeLecternBookEvent<'_>)
+player_teleport_end_gateway	fn player_teleport_end_gateway(&self, host: &mut dyn ServerHost, event: &mut PlayerTeleportEndGatewayEvent<'_>) -> Flow
+player_teleported	fn player_teleported(&self, host: &mut dyn ServerHost, event: &mut PlayerTeleportedEvent<'_>)
+player_tick_post	fn player_tick_post(&self, host: HostSide, event: &mut PlayerTickPostEvent)
+player_tick_pre	fn player_tick_pre(&self, host: HostSide, event: &mut PlayerTickPreEvent)
+player_toggle_entity_age_lock	fn player_toggle_entity_age_lock(&self, host: &mut dyn ServerHost, event: &mut PlayerToggleEntityAgeLockEvent<'_>)
+player_toggle_flight	fn player_toggle_flight(&self, host: &mut dyn ServerHost, event: &mut PlayerToggleFlightEvent<'_>) -> Flow
+player_toggle_sneak	fn player_toggle_sneak(&self, host: &mut dyn ServerHost, event: &mut PlayerToggleSneakEvent<'_>)
+player_totem	fn player_totem(&self, host: &mut dyn ServerHost, event: &mut PlayerTotemEvent<'_>)
+player_trade	fn player_trade(&self, host: &mut dyn ServerHost, event: &mut PlayerTradeEvent<'_>)
+player_unleash_entity	fn player_unleash_entity(&self, host: &mut dyn ServerHost, event: &mut PlayerUnleashEntityEvent<'_>)
+player_velocity	fn player_velocity(&self, host: &mut dyn ServerHost, event: &mut PlayerVelocityEvent<'_>)
+player_xp_change	fn player_xp_change(&self, host: &mut dyn ServerHost, event: &mut PlayerXpChangeEvent<'_>) -> Flow
+player_xp_level_change	fn player_xp_level_change(&self, host: &mut dyn ServerHost, event: &mut PlayerXpLevelChangeEvent<'_>) -> Flow
+portal_create	fn portal_create(&self, host: &mut dyn ServerHost, event: &mut PortalCreateEvent<'_>)
+portal_spawn	fn portal_spawn(&self, level: &dyn LevelHost, event: &mut PortalSpawnEvent) -> Flow
+potential_spawns	fn potential_spawns(&self, host: &dyn Host, event: &mut PotentialSpawnsEvent<'_>) -> Flow
+potion_brew_post	fn potion_brew_post(&self, host: &mut dyn ServerHost, event: &mut PotionBrewPostEvent<'_>)
+potion_brew_pre	fn potion_brew_pre(&self, host: &mut dyn ServerHost, event: &mut PotionBrewPreEvent<'_>) -> Flow
+potion_splash	fn potion_splash(&self, host: &mut dyn ServerHost, event: &mut PotionSplashEvent<'_>)
+pre_remove_side_effects	fn pre_remove_side_effects(&self, level: &mut dyn LevelRandomHost, event: &mut PreRemoveSideEffectsEvent<'_>)
+prepare_hopper_transfer	fn prepare_hopper_transfer(&self, host: &mut dyn ServerHost, event: &mut PrepareHopperTransferEvent)
+prepare_item_craft	fn prepare_item_craft(&self, host: &mut dyn ServerHost, event: &mut PrepareItemCraftEvent<'_>) -> Option < ItemStack >
+prepare_item_enchant	fn prepare_item_enchant(&self, host: &mut dyn ServerHost, event: &mut PrepareItemEnchantEvent<'_>)
+prepare_smithing	fn prepare_smithing(&self, host: &mut dyn ServerHost, event: &mut PrepareSmithingEvent<'_>) -> Option < ItemStack >
+projectile_impact	fn projectile_impact(&self, host: &mut dyn ServerHost, event: &mut ProjectileImpactEvent<'_>) -> Flow
+projectile_launch	fn projectile_launch(&self, host: &mut dyn ServerHost, event: &mut ProjectileLaunchEvent<'_>)
+raid_spawn_wave	fn raid_spawn_wave(&self, host: &mut dyn ServerHost, event: &mut RaidSpawnWaveEvent)
+raid_state_change	fn raid_state_change(&self, host: &mut dyn ServerHost, event: &mut RaidStateChangeEvent<'_>)
+rail_can_make_slopes	fn rail_can_make_slopes(&self, level: &dyn LevelHost, event: &mut RailCanMakeSlopesEvent)
+rail_direction	fn rail_direction(&self, level: LevelSide, event: &mut RailDirectionEvent<'_>)
+rail_flexible	fn rail_flexible(&self, level: &dyn LevelHost, event: &mut RailFlexibleEvent)
+rail_valid_shape	fn rail_valid_shape(&self, level: &dyn LevelHost, event: &mut RailValidShapeEvent)
+random_tick	fn random_tick(&self, level: &mut dyn LevelWriteHost, event: &mut RandomTickEvent) -> Flow
+recipe_book_categories	fn recipe_book_categories(&self, host: HostSide, event: &mut RecipeBookCategoriesEvent<'_>)
+recipe_property_sets	fn recipe_property_sets(&self, context: &dyn DataLoadContext, event: &mut RecipePropertySetsEvent<'_>)
+recipe_sources	fn recipe_sources(&self, host: &mut dyn ServerHost, event: &mut RecipeSourcesEvent<'_>)
+recipes_received	fn recipes_received(&self, host: &mut dyn ClientHost, event: &mut RecipesReceivedEvent<'_>)
+register	fn register(&self, r: &mut dyn Registrar, cx: &RegistrationContext)
+register_behaviors	fn register_behaviors(&self, behaviors: &mut BehaviorRegistrar<'_>)
+register_block_state_models	fn register_block_state_models(&self, context: &RegistrationContext, event: &mut RegisterBlockStateModelsEvent<'_>)
+register_block_tint_sources	fn register_block_tint_sources(&self, context: &RegistrationContext, event: &mut RegisterBlockTintSourcesEvent<'_>)
+register_cauldron_fluid_content	fn register_cauldron_fluid_content(&self, context: &RegistrationContext, event: &mut RegisterCauldronFluidContentEvent<'_>)
+register_cauldron_interaction	fn register_cauldron_interaction(&self, context: &RegistrationContext, event: &mut RegisterCauldronInteractionEvent<'_>)
+register_client_commands	fn register_client_commands(&self, host: &mut dyn ClientHost, event: &mut RegisterClientCommandsEvent<'_>)
+register_color_resolvers	fn register_color_resolvers(&self, context: &RegistrationContext, event: &mut RegisterColorResolversEvent<'_>)
+register_commands	fn register_commands(&self, host: &mut dyn ServerHost, event: &mut RegisterCommandsEvent<'_>)
+register_configs	fn register_configs(&self, host: HostSide, event: &mut RegisterConfigsEvent<'_>)
+register_debug_entries	fn register_debug_entries(&self, context: &RegistrationContext, event: &mut RegisterDebugEntriesEvent<'_>)
+register_debug_renderers	fn register_debug_renderers(&self, context: &RegistrationContext, event: &mut RegisterDebugRenderersEvent<'_>)
+register_dimension_transition_screen	fn register_dimension_transition_screen(&self, context: &RegistrationContext, event: &mut RegisterDimensionTransitionScreenEvent<'_>)
+register_enchantment_damage_effects	fn register_enchantment_damage_effects(&self, context: &RegistrationContext, event: &mut RegisterEnchantmentDamageEffectsEvent<'_>)
+register_entity_layers	fn register_entity_layers(&self, context: &RegistrationContext, event: &mut RegisterEntityLayersEvent<'_>)
+register_entity_renderers	fn register_entity_renderers(&self, context: &RegistrationContext, event: &mut RegisterEntityRenderersEvent<'_>)
+register_entity_spectator_shaders	fn register_entity_spectator_shaders(&self, context: &RegistrationContext, event: &mut RegisterEntitySpectatorShadersEvent<'_>)
+register_fluid_models	fn register_fluid_models(&self, context: &RegistrationContext, event: &mut RegisterFluidModelsEvent<'_>)
+register_game_tests	fn register_game_tests(&self, host: &dyn Host, event: &mut RegisterGameTestsEvent<'_>)
+register_goals	fn register_goals(&self, goals: &mut GoalRegistrar<'_>)
+register_gui_layers	fn register_gui_layers(&self, context: &RegistrationContext, event: &mut RegisterGuiLayersEvent<'_>)
+register_item_models	fn register_item_models(&self, context: &RegistrationContext, event: &mut RegisterItemModelsEvent<'_>)
+register_item_tint_sources	fn register_item_tint_sources(&self, context: &RegistrationContext, event: &mut RegisterItemTintSourcesEvent<'_>)
+register_json_animation_types	fn register_json_animation_types(&self, context: &RegistrationContext, event: &mut RegisterJsonAnimationTypesEvent<'_>)
+register_layer_definitions	fn register_layer_definitions(&self, context: &RegistrationContext, event: &mut RegisterLayerDefinitionsEvent<'_>)
+register_load_conditions	fn register_load_conditions(&self, context: &RegistrationContext, event: &mut RegisterLoadConditionsEvent<'_>)
+register_model_loaders	fn register_model_loaders(&self, context: &RegistrationContext, event: &mut RegisterModelLoadersEvent<'_>)
+register_particle_groups	fn register_particle_groups(&self, context: &RegistrationContext, event: &mut RegisterParticleGroupsEvent<'_>)
+register_particle_providers	fn register_particle_providers(&self, context: &RegistrationContext, event: &mut RegisterParticleProvidersEvent<'_>)
+register_preset_editors	fn register_preset_editors(&self, context: &RegistrationContext, event: &mut RegisterPresetEditorsEvent<'_>)
+register_range_select_item_model_property	fn register_range_select_item_model_property(&self, context: &RegistrationContext, event: &mut RegisterRangeSelectItemModelPropertyEvent<'_>)
+register_render_pipelines	fn register_render_pipelines(&self, context: &RegistrationContext, event: &mut RegisterRenderPipelinesEvent<'_>)
+register_runtime_sprites	fn register_runtime_sprites(&self, context: &RegistrationContext, event: &mut RegisterRuntimeSpritesEvent<'_>)
+register_select_item_model_property	fn register_select_item_model_property(&self, context: &RegistrationContext, event: &mut RegisterSelectItemModelPropertyEvent<'_>)
+register_special_model_renderer	fn register_special_model_renderer(&self, context: &RegistrationContext, event: &mut RegisterSpecialModelRendererEvent<'_>)
+register_sprite_sources	fn register_sprite_sources(&self, context: &RegistrationContext, event: &mut RegisterSpriteSourcesEvent<'_>)
+register_texture_atlases	fn register_texture_atlases(&self, context: &RegistrationContext, event: &mut RegisterTextureAtlasesEvent<'_>)
+register_villager_professions	fn register_villager_professions(&self, context: &RegistrationContext, event: &mut RegisterVillagerProfessionsEvent<'_>)
+registered_player_command	fn registered_player_command(&self, host: &mut dyn ServerHost, event: &mut RegisteredPlayerCommandEvent<'_>) -> Flow
+release_using	fn release_using(&self, host: HostSide, event: &mut ReleaseUsingEvent<'_>)
+remove_block	fn remove_block(&self, level: &dyn LevelHost, event: &mut RemoveBlockEvent) -> Option < BlockState >
+render_arm	fn render_arm(&self, host: &dyn ClientHost, event: &mut RenderArmEvent<'_>) -> Flow
+render_fog	fn render_fog(&self, host: &dyn ClientHost, event: &mut RenderFogEvent<'_>)
+render_frame_post	fn render_frame_post(&self, host: &mut dyn ClientHost, event: &mut RenderFramePostEvent)
+render_frame_pre	fn render_frame_pre(&self, host: &mut dyn ClientHost, event: &mut RenderFramePreEvent)
+render_gui_post	fn render_gui_post(&self, host: &dyn ClientHost, event: &mut RenderGuiPostEvent<'_>)
+render_gui_pre	fn render_gui_pre(&self, host: &dyn ClientHost, event: &mut RenderGuiPreEvent) -> Flow
+render_hand	fn render_hand(&self, host: &dyn ClientHost, event: &mut RenderHandEvent<'_, '_>) -> Flow
+render_item_in_frame	fn render_item_in_frame(&self, host: &dyn ClientHost, event: &mut RenderItemInFrameEvent<'_>) -> Flow
+render_level_stage	fn render_level_stage(&self, host: &dyn ClientHost, event: &mut RenderLevelStageEvent<'_>)
+render_living_post	fn render_living_post(&self, host: &dyn ClientHost, event: &mut RenderLivingPostEvent<'_>)
+render_living_pre	fn render_living_pre(&self, host: &dyn ClientHost, event: &mut RenderLivingPreEvent<'_>) -> Flow
+render_name_tag	fn render_name_tag(&self, host: &dyn ClientHost, event: &mut RenderNameTagEvent<'_>)
+render_player_post	fn render_player_post(&self, host: &dyn ClientHost, event: &mut RenderPlayerPostEvent<'_>)
+render_player_pre	fn render_player_pre(&self, host: &dyn ClientHost, event: &mut RenderPlayerPreEvent<'_>) -> Flow
+render_tooltip_gather_components	fn render_tooltip_gather_components(&self, host: &dyn ClientHost, event: &mut RenderTooltipGatherComponentsEvent<'_>) -> Flow
+render_tooltip_pre	fn render_tooltip_pre(&self, host: &dyn ClientHost, event: &mut RenderTooltipPreEvent<'_>) -> Flow
+render_tooltip_texture	fn render_tooltip_texture(&self, host: &dyn ClientHost, event: &mut RenderTooltipTextureEvent<'_>)
+replay_advanced	fn replay_advanced(&self, host: &mut dyn ClientHost, event: &mut ReplayAdvancedEvent)
+replay_closed	fn replay_closed(&self, host: &mut dyn ClientHost, event: &mut ReplayClosedEvent<'_>)
+replay_open_failed	fn replay_open_failed(&self, host: &mut dyn ClientHost, event: &mut ReplayOpenFailedEvent<'_>)
+replay_opened	fn replay_opened(&self, host: &mut dyn ClientHost, event: &mut ReplayOpenedEvent<'_>)
+resource_pack_status	fn resource_pack_status(&self, host: &mut dyn ServerHost, event: &mut ResourcePackStatusEvent<'_>)
+respawn_position	fn respawn_position(&self, host: &dyn Host, event: &mut RespawnPositionEvent<'_>)
+right_click_block	fn right_click_block(&self, host: HostSide, event: &mut RightClickBlockEvent<'_>) -> Flow
+right_click_empty	fn right_click_empty(&self, host: &mut dyn ClientHost, event: &mut RightClickEmptyEvent)
+right_click_item	fn right_click_item(&self, host: HostSide, event: &mut RightClickItemEvent<'_>) -> Flow
+rotate	fn rotate(&self, context: &dyn WorldgenHost, event: &mut RotateEvent<'_>)
+run_mod_command	fn run_mod_command(&self, host: &mut dyn ServerHost, event: &mut RunModCommandEvent<'_>) -> Flow
+scheduled_task	fn scheduled_task(&self, host: &mut dyn ServerHost, event: &mut ScheduledTaskEvent<'_>)
+screen	fn screen(&self, host: &dyn Host, event: &mut ScreenEvent<'_>) -> Option < mod_api :: Screen >
+screen_char_typed_post	fn screen_char_typed_post(&self, host: &dyn ClientHost, event: &mut ScreenCharTypedPostEvent<'_>) -> Flow
+screen_char_typed_pre	fn screen_char_typed_pre(&self, host: &dyn ClientHost, event: &mut ScreenCharTypedPreEvent<'_>) -> Flow
+screen_click	fn screen_click(&self, host: &dyn ClientHost, event: &mut ScreenClickEvent<'_>) -> Option < i32 >
+screen_closing	fn screen_closing(&self, host: &dyn ClientHost, event: &mut ScreenClosingEvent<'_>)
+screen_draw	fn screen_draw(&self, host: &dyn ClientHost, event: &mut ScreenDrawEvent<'_>)
+screen_exclusion_areas	fn screen_exclusion_areas(&self, host: &dyn ClientHost, event: &mut ScreenExclusionAreasEvent<'_>)
+screen_init_post	fn screen_init_post(&self, host: &dyn ClientHost, event: &mut ScreenInitPostEvent<'_>)
+screen_key_pressed_post	fn screen_key_pressed_post(&self, host: &dyn ClientHost, event: &mut ScreenKeyPressedPostEvent<'_>) -> Flow
+screen_key_pressed_pre	fn screen_key_pressed_pre(&self, host: &dyn ClientHost, event: &mut ScreenKeyPressedPreEvent<'_>) -> Flow
+screen_key_released_post	fn screen_key_released_post(&self, host: &dyn ClientHost, event: &mut ScreenKeyReleasedPostEvent<'_>) -> Flow
+screen_key_released_pre	fn screen_key_released_pre(&self, host: &dyn ClientHost, event: &mut ScreenKeyReleasedPreEvent<'_>) -> Flow
+screen_mouse_button_pressed_post	fn screen_mouse_button_pressed_post(&self, host: &dyn ClientHost, event: &mut ScreenMouseButtonPressedPostEvent<'_>)
+screen_mouse_button_pressed_pre	fn screen_mouse_button_pressed_pre(&self, host: &dyn ClientHost, event: &mut ScreenMouseButtonPressedPreEvent<'_>) -> Flow
+screen_mouse_button_released_post	fn screen_mouse_button_released_post(&self, host: &dyn ClientHost, event: &mut ScreenMouseButtonReleasedPostEvent<'_>)
+screen_mouse_button_released_pre	fn screen_mouse_button_released_pre(&self, host: &dyn ClientHost, event: &mut ScreenMouseButtonReleasedPreEvent<'_>) -> Flow
+screen_mouse_dragged_post	fn screen_mouse_dragged_post(&self, host: &dyn ClientHost, event: &mut ScreenMouseDraggedPostEvent<'_>)
+screen_mouse_dragged_pre	fn screen_mouse_dragged_pre(&self, host: &dyn ClientHost, event: &mut ScreenMouseDraggedPreEvent<'_>) -> Flow
+screen_mouse_scrolled_post	fn screen_mouse_scrolled_post(&self, host: &dyn ClientHost, event: &mut ScreenMouseScrolledPostEvent<'_>)
+screen_mouse_scrolled_pre	fn screen_mouse_scrolled_pre(&self, host: &dyn ClientHost, event: &mut ScreenMouseScrolledPreEvent<'_>) -> Flow
+screen_opening	fn screen_opening(&self, host: &dyn ClientHost, event: &mut ScreenOpeningEvent<'_>) -> Option<ScreenOpening>
+screen_preedit_post	fn screen_preedit_post(&self, host: &dyn ClientHost, event: &mut ScreenPreeditPostEvent<'_>)
+screen_preedit_pre	fn screen_preedit_pre(&self, host: &dyn ClientHost, event: &mut ScreenPreeditPreEvent<'_>) -> Flow
+screen_render_background	fn screen_render_background(&self, host: &dyn ClientHost, event: &mut ScreenRenderBackgroundEvent<'_>)
+screen_render_foreground	fn screen_render_foreground(&self, host: &dyn ClientHost, event: &mut ScreenRenderForegroundEvent<'_>)
+screen_render_inventory_mob_effects	fn screen_render_inventory_mob_effects(&self, host: &dyn ClientHost, event: &mut ScreenRenderInventoryMobEffectsEvent<'_>) -> Flow
+screen_render_post	fn screen_render_post(&self, host: &dyn ClientHost, event: &mut ScreenRenderPostEvent<'_>)
+screen_render_pre	fn screen_render_pre(&self, host: &dyn ClientHost, event: &mut ScreenRenderPreEvent<'_>) -> Flow
+screen_room	fn screen_room(&self, host: &dyn ClientHost, event: &mut ScreenRoomEvent<'_>)
+screen_tooltip	fn screen_tooltip(&self, host: &dyn ClientHost, event: &mut ScreenTooltipEvent<'_>)
+screen_transparent_background	fn screen_transparent_background(&self, host: &dyn ClientHost, event: &mut ScreenTransparentBackgroundEvent<'_>) -> Flow
+screenshot	fn screenshot(&self, host: &mut dyn ClientHost, event: &mut ScreenshotEvent<'_>) -> Flow
+sculk_bloom	fn sculk_bloom(&self, host: &mut dyn ServerHost, event: &mut SculkBloomEvent<'_>)
+server_about_to_start	fn server_about_to_start(&self, host: &mut dyn ServerHost, event: &mut ServerAboutToStartEvent)
+server_chat	fn server_chat(&self, host: &mut dyn ServerHost, event: &mut ServerChatEvent<'_>) -> Flow
+server_list_ping	fn server_list_ping(&self, host: &mut dyn ServerHost, event: &mut ServerListPingEvent<'_>) -> Flow
+server_started	fn server_started(&self, host: &mut dyn ServerHost, event: &mut ServerStartedEvent)
+server_starting	fn server_starting(&self, host: &mut dyn ServerHost, event: &mut ServerStartingEvent)
+server_stopped	fn server_stopped(&self, host: &mut dyn ServerHost, event: &mut ServerStoppedEvent)
+server_stopping	fn server_stopping(&self, host: &mut dyn ServerHost, event: &mut ServerStoppingEvent)
+server_tick	fn server_tick(&self, host: &mut dyn ServerHost, event: &mut ServerTickEvent<'_>)
+server_tick_rate_changed	fn server_tick_rate_changed(&self, host: &mut dyn ServerHost, event: &mut ServerTickRateChangedEvent)
+setting_changed	fn setting_changed(&self, host: &mut dyn ClientHost, event: &mut SettingChangedEvent<'_>)
+shader_params	fn shader_params(&self, host: &dyn ClientHost, event: &mut ShaderParamsEvent<'_>)
+should_apply_effect_tick_this_tick	fn should_apply_effect_tick_this_tick(&self, host: &dyn Host, event: &mut ShouldApplyEffectTickThisTickEvent)
+should_cause_block_break_reset	fn should_cause_block_break_reset(&self, host: &dyn ClientHost, event: &mut ShouldCauseBlockBreakResetEvent<'_>)
+should_cause_reequip_animation	fn should_cause_reequip_animation(&self, host: &dyn ClientHost, event: &mut ShouldCauseReequipAnimationEvent<'_>)
+should_check_weak_power	fn should_check_weak_power(&self, level: &dyn LevelHost, event: &mut ShouldCheckWeakPowerEvent)
+should_display_fluid_overlay	fn should_display_fluid_overlay(&self, host: &dyn ClientHost, event: &mut ShouldDisplayFluidOverlayEvent)
+should_hide_adjacent_fluid_face	fn should_hide_adjacent_fluid_face(&self, host: &dyn ClientHost, event: &mut ShouldHideAdjacentFluidFaceEvent)
+should_redstone_wire_connect_to	fn should_redstone_wire_connect_to(&self, level: &dyn LevelHost, event: &mut ShouldRedstoneWireConnectToEvent)
+sign_changed	fn sign_changed(&self, host: &mut dyn ServerHost, event: &mut SignChangedEvent<'_>) -> Flow
+sleep_finished_time	fn sleep_finished_time(&self, host: &mut dyn ServerHost, event: &mut SleepFinishedTimeEvent<'_>) -> Flow
+smoke_source	fn smoke_source(&self, level: &dyn LevelHost, event: &mut SmokeSourceEvent) -> Option < bool >
+sound_engine_load	fn sound_engine_load(&self, context: &dyn LoopContext, event: &mut SoundEngineLoadEvent)
+sound_type	fn sound_type(&self, context: &dyn LoopContext, event: &mut SoundTypeEvent<'_>)
+spawn_change	fn spawn_change(&self, host: &mut dyn ServerHost, event: &mut SpawnChangeEvent)
+spawn_cluster_size	fn spawn_cluster_size(&self, host: &dyn Host, mob: UnspawnedMobRef, reason: SpawnReason, spawner: Option<SpawnSource>, vanilla: u32) -> Option<u32>
+sponge_absorb	fn sponge_absorb(&self, level: &dyn LevelHost, event: &mut SpongeAbsorbEvent)
+spread_players_teleport	fn spread_players_teleport(&self, host: &mut dyn ServerHost, event: &mut SpreadPlayersTeleportEvent<'_>) -> Flow
+sprite_source	fn sprite_source(&self, context: &RegistrationContext, event: &mut SpriteSourceEvent<'_>)
+standalone_models	fn standalone_models(&self, context: &RegistrationContext, event: &mut StandaloneModelsEvent<'_>)
+state_at_viewpoint	fn state_at_viewpoint(&self, host: &dyn ClientHost, event: &mut StateAtViewpointEvent<'_>)
+state_for_placement	fn state_for_placement(&self, level: &dyn LevelHost, event: &mut StateForPlacementEvent<'_>) -> Option < Option < BlockState > >
+stateful_block_entity	fn stateful_block_entity(&self, host: &dyn Host, event: &mut StatefulBlockEntityEvent<'_>)
+station_closing	fn station_closing(&self, host: &mut dyn ServerHost, event: &mut StationClosingEvent<'_>)
+submit_custom_geometry	fn submit_custom_geometry(&self, host: &dyn ClientHost, event: &mut SubmitCustomGeometryEvent<'_>)
+sweep_attack	fn sweep_attack(&self, host: HostSide, event: &mut SweepAttackEvent<'_>) -> Flow
+tab_complete	fn tab_complete(&self, host: &mut dyn ServerHost, event: &mut TabCompleteEvent<'_>)
+tags_updated	fn tags_updated(&self, host: HostSide, event: &mut TagsUpdatedEvent)
+target_hit	fn target_hit(&self, host: &mut dyn ServerHost, event: &mut TargetHitEvent<'_>)
+teleport_command	fn teleport_command(&self, host: &mut dyn ServerHost, event: &mut TeleportCommandEvent<'_>) -> Flow
+texture_atlas_stitched	fn texture_atlas_stitched(&self, host: &mut dyn ClientHost, event: &mut TextureAtlasStitchedEvent)
+thunder_change	fn thunder_change(&self, host: &mut dyn ServerHost, event: &mut ThunderChangeEvent<'_>) -> Flow
+tick_block	fn tick_block(&self, level: &mut dyn LevelWriteHost, event: &mut TickBlockEvent) -> Flow
+tick_target_millis	fn tick_target_millis(&self, host: &dyn ClientHost, event: &mut TickTargetMillisEvent)
+time_skip	fn time_skip(&self, host: &mut dyn ServerHost, event: &mut TimeSkipEvent<'_>) -> Flow
+tnt_primed	fn tnt_primed(&self, host: &mut dyn ServerHost, event: &mut TntPrimedEvent) -> Flow
+toast_add	fn toast_add(&self, host: &dyn ClientHost, event: &mut ToastAddEvent<'_>) -> Flow
+tool_modified_state	fn tool_modified_state(&self, host: &dyn Host, event: &mut ToolModifiedStateEvent<'_>) -> Flow
+tooltip	fn tooltip(&self, host: &dyn ClientHost, event: &mut TooltipEvent<'_>)
+tooltip_component	fn tooltip_component(&self, host: &dyn ClientHost, event: &mut TooltipComponentEvent<'_>) -> Option < [f32 ; 2] >
+tooltip_component_draw	fn tooltip_component_draw(&self, host: &dyn ClientHost, event: &mut TooltipComponentDrawEvent<'_>)
+trade_select	fn trade_select(&self, host: &mut dyn ServerHost, event: &mut TradeSelectEvent<'_>)
+trade_with_villager	fn trade_with_villager(&self, host: &mut dyn ServerHost, event: &mut TradeWithVillagerEvent<'_>)
+update_shape	fn update_shape(&self, level: &mut dyn LevelTicksHost, event: &mut UpdateShapeEvent) -> Option < BlockState >
+use_animation	fn use_animation(&self, host: &dyn ClientHost, event: &mut UseAnimationEvent<'_>)
+use_duration	fn use_duration(&self, host: &dyn Host, event: &mut UseDurationEvent<'_>)
+use_item	fn use_item(&self, host: HostSide, event: &mut UseItemEvent<'_>) -> Option < InteractionResult >
+use_item_on	fn use_item_on(&self, host: &mut dyn ServerHost, event: &mut UseItemOnEvent<'_>) -> Option < mod_api :: InteractionResult >
+use_item_on_block	fn use_item_on_block(&self, host: HostSide, event: &mut UseItemOnBlockEvent<'_>) -> Flow
+use_on	fn use_on(&self, host: HostSide, event: &mut UseOnEvent<'_>) -> Option < InteractionResult >
+use_without_item	fn use_without_item(&self, host: &mut dyn ServerHost, event: &mut UseWithoutItemEvent<'_>) -> Option < mod_api :: InteractionResult >
+validate_tickets	fn validate_tickets(&self, host: &mut dyn ServerHost, event: &mut ValidateTicketsEvent<'_>)
+vanilla_game_event	fn vanilla_game_event(&self, host: &mut dyn ServerHost, event_: &mut VanillaGameEventEvent<'_>) -> Flow
+vault_change_state	fn vault_change_state(&self, host: &mut dyn ServerHost, event: &mut VaultChangeStateEvent<'_>)
+vault_loot	fn vault_loot(&self, host: &mut dyn ServerHost, event: &mut VaultLootEvent<'_>)
+vehicle_create	fn vehicle_create(&self, host: &mut dyn ServerHost, event: &mut VehicleCreateEvent<'_>)
+vehicle_damage	fn vehicle_damage(&self, host: &mut dyn ServerHost, event: &mut VehicleDamageEvent<'_>) -> Flow
+vehicle_destroy	fn vehicle_destroy(&self, host: &mut dyn ServerHost, event: &mut VehicleDestroyEvent<'_>)
+vehicle_moved	fn vehicle_moved(&self, host: &mut dyn ServerHost, event: &mut VehicleMovedEvent<'_>)
+viewed_level_sound	fn viewed_level_sound(&self, host: &mut dyn ClientHost, event: &mut ViewedLevelSoundEvent<'_>)
+village_siege	fn village_siege(&self, host: &mut dyn ServerHost, event: &mut VillageSiegeEvent<'_>) -> Flow
+visuals	fn visuals(&self, host: &dyn ClientHost, event: &mut VisualsEvent<'_>)
+weak_changes	fn weak_changes(&self, level: &dyn LevelHost, event: &mut WeakChangesEvent)
+weather_change	fn weather_change(&self, host: &mut dyn ServerHost, event: &mut WeatherChangeEvent<'_>) -> Flow
+whitelist_state_update	fn whitelist_state_update(&self, host: &mut dyn ServerHost, event: &mut WhitelistStateUpdateEvent)
+wind_burst	fn wind_burst(&self, host: &mut dyn ServerHost, event: &mut WindBurstEvent<'_>)
+window_resize	fn window_resize(&self, host: &mut dyn ClientHost, event: &mut WindowResizeEvent)
+world_border_bounds_change_finish	fn world_border_bounds_change_finish(&self, host: &mut dyn ServerHost, event: &mut WorldBorderBoundsChangeFinishEvent)
+world_border_bounds_changed	fn world_border_bounds_changed(&self, host: &mut dyn ServerHost, event: &mut WorldBorderBoundsChangedEvent)
+world_border_center_changed	fn world_border_center_changed(&self, host: &mut dyn ServerHost, event: &mut WorldBorderCenterChangedEvent)
+world_lifecycle	fn world_lifecycle(&self, host: &mut dyn ServerHost, event: &mut WorldLifecycleEvent<'_>)
+world_saved	fn world_saved(&self, host: &mut dyn ServerHost, event: &mut WorldSavedEvent)
+xp_orb_targeting	fn xp_orb_targeting(&self, host: &mut dyn ServerHost, event: &mut XpOrbTargetingEvent<'_>)
+xp_repair_ratio	fn xp_repair_ratio(&self, host: &dyn Host, event: &mut XpRepairRatioEvent<'_>)
+zoom	fn zoom(&self, host: &dyn ClientHost, event: &mut ZoomEvent) -> Option < mod_api :: Zoom >

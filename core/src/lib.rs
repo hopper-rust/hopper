@@ -4,6 +4,7 @@
 //! jar is only read for a license that allows porting.
 
 pub mod classfile;
+pub mod generate;
 pub mod library;
 pub mod license;
 #[cfg(feature = "modrinth")]

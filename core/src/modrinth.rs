@@ -62,6 +62,18 @@ fn json(url: &str) -> Result<serde_json::Value, String> {
 /// Checks `target` (a Modrinth link, slug or id), for Minecraft `game` when given. Jars larger
 /// than `max_jar` bytes aren't downloaded.
 pub fn check(library: &Library, target: &str, game: Option<&str>, max_jar: u64) -> Result<Checked, String> {
+    fetch(library, target, game, max_jar).map(|f| f.checked)
+}
+
+/// What [`fetch`] got: the check, the project's license, and the jar when it was downloaded.
+pub struct Fetched {
+    pub checked: Checked,
+    pub license: String,
+    pub jar: Option<Vec<u8>>,
+}
+
+/// [`check`], keeping the jar (for the generator).
+pub fn fetch(library: &Library, target: &str, game: Option<&str>, max_jar: u64) -> Result<Fetched, String> {
     let slug = slug(target).ok_or("that isn't a Modrinth link or project name")?;
     if game.is_some_and(|g| !game_ok(g)) {
         return Err("that isn't a Minecraft version".into());
@@ -76,7 +88,8 @@ pub fn check(library: &Library, target: &str, game: Option<&str>, max_jar: u64) 
     let license = project["license"]["id"].as_str().unwrap_or_default().to_string();
     if let Ok(report) = crate::check(library, &license, None) {
         // Stopped at the license: nothing is downloaded.
-        return Ok(Checked { slug, title, icon_url, version: None, file: None, report });
+        let checked = Checked { slug, title, icon_url, version: None, file: None, report };
+        return Ok(Fetched { checked, license, jar: None });
     }
     let mut url = format!("{API}/project/{slug}/version?loaders=%5B%22fabric%22%5D");
     if let Some(g) = game {
@@ -105,7 +118,8 @@ pub fn check(library: &Library, target: &str, game: Option<&str>, max_jar: u64) 
     }
     let report = crate::check(library, &license, Some(&bytes)).map_err(|e| e.0)?;
     let version = version["version_number"].as_str().map(str::to_string);
-    Ok(Checked { slug, title, icon_url, version, file: Some(name), report })
+    let checked = Checked { slug, title, icon_url, version, file: Some(name), report };
+    Ok(Fetched { checked, license, jar: Some(bytes) })
 }
 
 #[cfg(test)]
