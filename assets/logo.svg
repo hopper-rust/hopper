@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <title>Hopper</title>
+  <rect width="512" height="512" rx="96" fill="#f4f1ec"/>
+  <g transform="translate(-164 -81.5) scale(3)">
+    <polygon fill="#3a3d42" points="80,50 200,50 200,74 162,112 162,136 118,136 118,112 80,74"/>
+    <rect x="92" y="58" width="96" height="8" rx="2" fill="#d2602a"/>
+    <path fill="#d2602a" d="M140 148 C134 158 132 163 132 167 a8 8 0 0 0 16 0 C148 163 146 158 140 148Z"/>
+  </g>
+</svg>

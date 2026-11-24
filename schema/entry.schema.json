@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hopper-rust.github.io/schema/entry.schema.json",
+  "title": "Hopper library entry",
+  "type": "object",
+  "required": ["from", "to", "info"],
+  "additionalProperties": false,
+  "properties": {
+    "from": {
+      "type": "object",
+      "required": ["loader", "class"],
+      "additionalProperties": false,
+      "properties": {
+        "loader": { "enum": ["fabric"] },
+        "class": { "type": "string", "pattern": "^[A-Za-z_$][\\w$]*(\\.[A-Za-z_$][\\w$]*)+$" },
+        "member": { "type": "string", "minLength": 1 },
+        "aliases": { "type": "array", "items": { "type": "string" }, "uniqueItems": true }
+      }
+    },
+    "to": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "maxProperties": 1,
+      "properties": {
+        "hook": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" },
+        "host": { "type": "string", "minLength": 1 },
+        "missing": { "type": "string", "format": "uri" }
+      }
+    },
+    "info": {
+      "type": "object",
+      "required": ["status", "notes", "since_api"],
+      "additionalProperties": false,
+      "properties": {
+        "status": { "enum": ["direct", "partial", "missing"] },
+        "notes": { "type": "string", "minLength": 1 },
+        "since_api": { "type": "string", "pattern": "^\\d+\\.\\d+$" },
+        "seen_in": { "type": "array", "items": { "type": "string", "format": "uri" } }
+      }
+    }
+  },
+  "if": { "properties": { "info": { "properties": { "status": { "const": "missing" } } } } },
+  "then": { "properties": { "to": { "required": ["missing"] } } },
+  "else": { "properties": { "to": { "not": { "required": ["missing"] } } } }
+}
