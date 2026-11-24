@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.gui.Hud"
+member = "extractItemHotbar"
+aliases = ["net.minecraft.client.gui.Gui#renderItemHotbar", "net.minecraft.client.gui.hud.InGameHud#renderHotbar"]
+
+[to]
+hook = "gui_layer_pre"
+
+[info]
+status = "direct"
+notes = "No mixin needed: the minecraft:hotbar layer in gui_layer_pre or gui_layer_post."
+since_api = "0.2"

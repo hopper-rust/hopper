@@ -1,0 +1,14 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.gui.Gui"
+member = "screen"
+aliases = ["net.minecraft.client.Minecraft#screen", "net.minecraft.client.MinecraftClient#currentScreen"]
+
+[to]
+host = "host.observed_screen_id"
+
+[info]
+status = "partial"
+notes = "host.observed_screen_id() says which screen is open, as the screen hooks name it; host.mod_screen() says whether a mod's own screen is."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/macro-keys", "https://github.com/selfmonoraque5/earshot"]

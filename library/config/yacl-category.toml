@@ -1,0 +1,12 @@
+[from]
+loader = "fabric"
+class = "dev.isxander.yacl3.api.ConfigCategory"
+
+[to]
+host = "Registrar.register_setting"
+
+[info]
+status = "partial"
+notes = "No categories: register the options in the order they should show."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/living-hands"]

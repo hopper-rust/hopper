@@ -1,0 +1,14 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.renderer.GameRenderer"
+member = "renderItemInHand"
+aliases = ["net.minecraft.client.render.GameRenderer#renderHand"]
+
+[to]
+hook = "render_hand"
+
+[info]
+status = "partial"
+notes = "render_hand runs for each first-person hand: change its pose, draw in it, or cancel it."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/living-hands", "https://github.com/selfmonoraque5/first-person-body"]

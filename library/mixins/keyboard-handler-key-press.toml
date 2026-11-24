@@ -1,0 +1,14 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.KeyboardHandler"
+member = "keyPress"
+aliases = ["net.minecraft.client.Keyboard#onKey"]
+
+[to]
+hook = "input_key"
+
+[info]
+status = "partial"
+notes = "input_key hears key events after the game handled them. For the mod's own keys use a key mapping (consume_click); for screens, screen_key_pressed_pre."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/macro-keys"]

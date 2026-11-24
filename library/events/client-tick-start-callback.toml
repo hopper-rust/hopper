@@ -1,0 +1,11 @@
+[from]
+loader = "fabric"
+class = "net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents$StartTick"
+
+[to]
+hook = "client_tick_pre"
+
+[info]
+status = "direct"
+notes = "The callback type of START_CLIENT_TICK: its body becomes the client_tick_pre method."
+since_api = "0.2"

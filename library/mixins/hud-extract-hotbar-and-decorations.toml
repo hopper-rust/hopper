@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.gui.Hud"
+member = "extractHotbarAndDecorations"
+
+[to]
+hook = "gui_layer_pre"
+
+[info]
+status = "partial"
+notes = "The hotbar and the rows over it are separate layers here: minecraft:hotbar, minecraft:player_health and minecraft:contextual_info_bar."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/skyblock-hud"]

@@ -1,0 +1,11 @@
+[from]
+loader = "fabric"
+class = "com.mojang.brigadier.builder.LiteralArgumentBuilder"
+
+[to]
+hook = "register_client_commands"
+
+[info]
+status = "partial"
+notes = "Each chain of literals and arguments becomes one usage string, such as \"mycmd set <value:int>\"."
+since_api = "0.2"

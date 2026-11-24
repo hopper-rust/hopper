@@ -1,0 +1,14 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.gui.Gui"
+member = "setScreen"
+aliases = ["net.minecraft.client.Minecraft#setScreen", "net.minecraft.client.MinecraftClient#setScreen"]
+
+[to]
+host = "host.mod_screen_open / host.close_screen"
+
+[info]
+status = "partial"
+notes = "A mod opens only its own screen (host.mod_screen_open) or the inventory (host.open_inventory); host.close_screen() closes the open one as Escape does."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/macro-keys", "https://github.com/selfmonoraque5/earshot"]

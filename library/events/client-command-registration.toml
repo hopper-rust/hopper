@@ -1,0 +1,12 @@
+[from]
+loader = "fabric"
+class = "net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback"
+member = "EVENT"
+
+[to]
+hook = "register_client_commands"
+
+[info]
+status = "partial"
+notes = "No Brigadier tree: push one Command::new(\"mycmd <mode:word>\") per usage in register_client_commands, and run it when the command hook hears it. The chat box colours and completes it like the game's own."
+since_api = "0.2"

@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.MouseHandler"
+member = "onScroll"
+aliases = ["net.minecraft.client.Mouse#onMouseScroll"]
+
+[to]
+hook = "mouse_scrolling"
+
+[info]
+status = "partial"
+notes = "mouse_scrolling is gameplay scrolling, before the hotbar uses it; screens have screen_mouse_scrolled_pre."
+since_api = "0.2"

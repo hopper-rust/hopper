@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.MouseHandler"
+member = "onButton"
+aliases = ["net.minecraft.client.Mouse#onMouseButton"]
+
+[to]
+hook = "mouse_button_pre"
+
+[info]
+status = "partial"
+notes = "mouse_button_pre hears raw button input before it is handled; cancelling skips it."
+since_api = "0.2"

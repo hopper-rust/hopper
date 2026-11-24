@@ -1,0 +1,11 @@
+[from]
+loader = "fabric"
+class = "net.fabricmc.fabric.api.client.command.v2.ClientCommands"
+
+[to]
+hook = "register_client_commands"
+
+[info]
+status = "partial"
+notes = "Brigadier builders become usage strings: Command::new(\"mycmd <mode:word>\"). See the ClientCommandRegistrationCallback entry."
+since_api = "0.2"

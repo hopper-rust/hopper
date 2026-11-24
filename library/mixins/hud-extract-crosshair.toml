@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.gui.Hud"
+member = "extractCrosshair"
+aliases = ["net.minecraft.client.gui.Gui#renderCrosshair", "net.minecraft.client.gui.hud.InGameHud#renderCrosshair"]
+
+[to]
+hook = "gui_layer_pre"
+
+[info]
+status = "direct"
+notes = "No mixin needed: the minecraft:crosshair layer in gui_layer_pre (cancel to hide, draw to go under) or gui_layer_post."
+since_api = "0.2"

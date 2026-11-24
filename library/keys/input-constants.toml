@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "com.mojang.blaze3d.platform.InputConstants"
+aliases = ["net.minecraft.client.util.InputUtil"]
+
+[to]
+api = "key names (\"key.keyboard.k\")"
+
+[info]
+status = "partial"
+notes = "Keys are named as Controls names them: KeyRegistration::new(id, \"key.keyboard.k\"), \"key.mouse.left\", or \"key.keyboard.unknown\" for none. Screen hooks give GLFW key numbers."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/macro-keys", "https://github.com/selfmonoraque5/living-hands"]

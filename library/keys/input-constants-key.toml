@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "com.mojang.blaze3d.platform.InputConstants$Key"
+aliases = ["net.minecraft.client.util.InputUtil$Key"]
+
+[to]
+api = "key names (\"key.keyboard.k\")"
+
+[info]
+status = "partial"
+notes = "Keys are their names; host.mod_key(mod_id, id) answers the bound key and its modifiers."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/macro-keys"]

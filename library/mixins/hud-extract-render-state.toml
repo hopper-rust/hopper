@@ -1,0 +1,14 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.gui.Hud"
+member = "extractRenderState"
+aliases = ["net.minecraft.client.gui.Gui#render", "net.minecraft.client.gui.hud.InGameHud#render"]
+
+[to]
+hook = "render_gui_post"
+
+[info]
+status = "partial"
+notes = "Draw over the whole HUD in render_gui_post, under it in render_gui_pre (cancel there to hide it all), or around one layer with gui_layer_pre and gui_layer_post."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/skyblock-hud", "https://github.com/selfmonoraque5/earshot"]

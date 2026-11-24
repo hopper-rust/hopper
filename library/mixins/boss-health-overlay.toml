@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.gui.components.BossHealthOverlay"
+member = "extractRenderState"
+aliases = ["net.minecraft.client.gui.components.BossHealthOverlay#render", "net.minecraft.client.gui.hud.BossBarHud#render"]
+
+[to]
+hook = "gui_layer_pre"
+
+[info]
+status = "partial"
+notes = "The minecraft:boss_overlay layer in gui_layer_pre (cancel to hide) or gui_layer_post."
+since_api = "0.2"

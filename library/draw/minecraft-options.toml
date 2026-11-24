@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.Minecraft"
+member = "options"
+aliases = ["net.minecraft.client.MinecraftClient#options"]
+
+[to]
+host = "host.gui_options / input_options / graphics_options"
+
+[info]
+status = "partial"
+notes = "Read the game's options with host.input_options(), graphics_options(), gui_options(), chat_options() or audio_options()."
+since_api = "0.2"

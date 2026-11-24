@@ -1,0 +1,11 @@
+[from]
+loader = "fabric"
+class = "com.mojang.brigadier.CommandDispatcher"
+
+[to]
+hook = "register_client_commands"
+
+[info]
+status = "partial"
+notes = "Client commands are usage strings pushed in register_client_commands and run in the command hook; there is no dispatcher."
+since_api = "0.2"

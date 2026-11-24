@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "com.mojang.blaze3d.platform.Window"
+aliases = ["net.minecraft.client.util.Window"]
+
+[to]
+host = "draw.size"
+
+[info]
+status = "partial"
+notes = "No window handle: in a drawing hook, draw.size() is the GUI width and height (getGuiScaledWidth/Height); host.gui_scale() is the scale."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/skyblock-hud"]

@@ -1,0 +1,12 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.KeyMapping$Category"
+
+[to]
+host = "Registrar.register_key_mapping"
+
+[info]
+status = "partial"
+notes = "No categories: Horizon lists a mod's keys under its name in Controls."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/macro-keys", "https://github.com/selfmonoraque5/living-hands", "https://github.com/selfmonoraque5/first-person-body", "https://github.com/selfmonoraque5/earshot"]

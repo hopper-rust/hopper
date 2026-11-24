@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.Camera"
+member = "calculateFov"
+aliases = ["net.minecraft.client.renderer.GameRenderer#getFov", "net.minecraft.client.render.GameRenderer#getFov"]
+
+[to]
+hook = "compute_fov"
+
+[info]
+status = "direct"
+notes = "compute_fov gets the field of view after the normal calculation and zoom; change it there."
+since_api = "0.2"

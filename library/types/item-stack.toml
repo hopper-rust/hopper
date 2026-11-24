@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.world.item.ItemStack"
+aliases = ["net.minecraft.item.ItemStack"]
+
+[to]
+api = "mod_api::ItemStack"
+
+[info]
+status = "partial"
+notes = "Host calls give Option<ItemStack>: None is an empty slot (isEmpty). stack.item() and stack.count() read it; components through stack.components()."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/skyblock-hud", "https://github.com/selfmonoraque5/living-hands"]

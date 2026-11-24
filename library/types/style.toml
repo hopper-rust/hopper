@@ -1,0 +1,12 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.network.chat.Style"
+aliases = ["net.minecraft.text.Style"]
+
+[to]
+api = "mod_api::text::TextStyle"
+
+[info]
+status = "partial"
+notes = "TextStyle has color (a named colour or #RRGGBB), bold, italic, underlined, strikethrough and obfuscated; TextStyle::default() for Style.EMPTY."
+since_api = "0.2"

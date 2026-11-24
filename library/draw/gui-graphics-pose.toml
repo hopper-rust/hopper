@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.gui.GuiGraphicsExtractor"
+member = "pose"
+aliases = ["net.minecraft.client.gui.GuiGraphics#pose", "net.minecraft.client.gui.DrawContext#getMatrices"]
+
+[to]
+host = "draw (no pose stack)"
+
+[info]
+status = "partial"
+notes = "GUI drawing has no pose stack to translate or scale: work positions out in the mod. Moving is easy that way; drawing text bigger or smaller has no call."
+since_api = "0.2"

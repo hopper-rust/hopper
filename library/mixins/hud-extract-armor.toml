@@ -1,0 +1,14 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.gui.Hud"
+member = "extractArmor"
+aliases = ["net.minecraft.client.gui.Gui#renderArmor", "net.minecraft.client.gui.hud.InGameHud#renderArmor"]
+
+[to]
+hook = "gui_layer_pre"
+
+[info]
+status = "partial"
+notes = "Armour is drawn with health, food and air in one layer, minecraft:player_health: they can only be hidden together."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/skyblock-hud"]

@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.gui.Hud"
+member = "extractEffects"
+aliases = ["net.minecraft.client.gui.Gui#renderEffects", "net.minecraft.client.gui.hud.InGameHud#renderStatusEffectOverlay"]
+
+[to]
+hook = "gui_layer_pre"
+
+[info]
+status = "direct"
+notes = "No mixin needed: the minecraft:effects layer in gui_layer_pre or gui_layer_post."
+since_api = "0.2"

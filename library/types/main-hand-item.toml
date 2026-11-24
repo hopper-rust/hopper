@@ -1,0 +1,14 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.player.LocalPlayer"
+member = "getMainHandItem"
+aliases = ["net.minecraft.world.entity.LivingEntity#getMainHandItem", "net.minecraft.client.network.ClientPlayerEntity#getMainHandStack"]
+
+[to]
+api = "LivingRef::hand_item"
+
+[info]
+status = "direct"
+notes = "LivingRef::new(player.entity()).hand_item(host, Hand::Main), with player from host.local_player(). None for an empty hand."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/skyblock-hud"]

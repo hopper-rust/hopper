@@ -1,0 +1,14 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.gui.GuiGraphicsExtractor"
+member = "guiWidth"
+aliases = ["net.minecraft.client.gui.GuiGraphics#guiWidth", "net.minecraft.client.gui.DrawContext#getScaledWindowWidth"]
+
+[to]
+host = "draw.size"
+
+[info]
+status = "direct"
+notes = "draw.size()[0]."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/skyblock-hud"]

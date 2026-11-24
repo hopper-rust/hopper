@@ -1,0 +1,12 @@
+[from]
+loader = "fabric"
+class = "dev.isxander.yacl3.api.Option"
+
+[to]
+host = "Registrar.register_setting"
+
+[info]
+status = "partial"
+notes = "One SettingSpec per option: toggle for a boolean, range for a number slider, choice for an enum or cycling list."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/living-hands"]

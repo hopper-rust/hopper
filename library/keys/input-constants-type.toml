@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "com.mojang.blaze3d.platform.InputConstants$Type"
+aliases = ["net.minecraft.client.util.InputUtil$Type"]
+
+[to]
+api = "key names (\"key.keyboard.k\")"
+
+[info]
+status = "partial"
+notes = "The type is part of the key's name: \"key.keyboard.*\" or \"key.mouse.*\"."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/macro-keys"]

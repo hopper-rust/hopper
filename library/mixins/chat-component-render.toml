@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.gui.components.ChatComponent"
+member = "extractRenderState"
+aliases = ["net.minecraft.client.gui.components.ChatComponent#render", "net.minecraft.client.gui.hud.ChatHud#render"]
+
+[to]
+hook = "customize_chat_overlay"
+
+[info]
+status = "partial"
+notes = "customize_chat_overlay runs before the in-game chat is drawn; the unfocused chat is also the minecraft:chat layer in gui_layer_pre."
+since_api = "0.2"
