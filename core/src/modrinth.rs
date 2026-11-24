@@ -76,53 +76,126 @@ pub struct Fetched {
 
 /// [`check`], keeping the jar (for the generator).
 pub fn fetch(library: &Library, target: &str, game: Option<&str>, max_jar: u64) -> Result<Fetched, String> {
+    match resolve(target, game, max_jar)? {
+        Resolved::Stopped(checked, project) => {
+            Ok(Fetched { checked, license: project.license, jar: None, source_url: project.source_url })
+        }
+        Resolved::Ready(project, version) => {
+            let jar = download(&version, max_jar)?;
+            let checked = report(library, &project, &version, &jar)?;
+            Ok(Fetched { checked, license: project.license, jar: Some(jar), source_url: project.source_url })
+        }
+    }
+}
+
+/// A Modrinth project, as far as Hopper needs it.
+#[derive(Clone, Debug)]
+pub struct Project {
+    pub slug: String,
+    pub title: String,
+    pub icon_url: Option<String>,
+    pub license: String,
+    pub source_url: Option<String>,
+}
+
+/// The Fabric file of one version of a project.
+#[derive(Clone, Debug)]
+pub struct Version {
+    /// Modrinth's id of the version: letters and digits, the same for as long as it exists.
+    pub id: String,
+    pub number: String,
+    pub file_name: String,
+    pub file_url: String,
+}
+
+/// What the network says before anything is downloaded.
+#[derive(Debug)]
+pub enum Resolved {
+    /// The license stops the check: the report says why, and nothing is downloaded.
+    Stopped(Checked, Project),
+    /// The license allows porting: the newest Fabric version to check.
+    Ready(Project, Version),
+}
+
+/// Looks `target` up on Modrinth: its project, and (when the license allows porting) its newest
+/// Fabric version for Minecraft `game`. Two small requests; nothing is downloaded.
+pub fn resolve(target: &str, game: Option<&str>, max_jar: u64) -> Result<Resolved, String> {
     let slug = slug(target).ok_or("that isn't a Modrinth link or project name")?;
     if game.is_some_and(|g| !game_ok(g)) {
         return Err("that isn't a Minecraft version".into());
     }
-    let project = json(&format!("{API}/project/{slug}"))?;
-    if project["project_type"].as_str() != Some("mod") {
-        return Err(format!("{slug} is a {}, not a mod", project["project_type"].as_str().unwrap_or("project")));
+    let p = json(&format!("{API}/project/{slug}"))?;
+    if p["project_type"].as_str() != Some("mod") {
+        return Err(format!("{slug} is a {}, not a mod", p["project_type"].as_str().unwrap_or("project")));
     }
-    let slug = project["slug"].as_str().unwrap_or(slug).to_string();
-    let title = project["title"].as_str().unwrap_or(&slug).to_string();
-    let icon_url = project["icon_url"].as_str().map(str::to_string);
-    let license = project["license"]["id"].as_str().unwrap_or_default().to_string();
-    let source_url = project["source_url"].as_str().map(str::to_string);
-    if let Ok(report) = crate::check(library, &license, None) {
-        // Stopped at the license: nothing is downloaded.
-        let checked = Checked { slug, title, icon_url, version: None, file: None, report };
-        return Ok(Fetched { checked, license, jar: None, source_url });
+    let slug = p["slug"].as_str().unwrap_or(slug).to_string();
+    let project = Project {
+        title: p["title"].as_str().unwrap_or(&slug).to_string(),
+        icon_url: p["icon_url"].as_str().map(str::to_string),
+        license: p["license"]["id"].as_str().unwrap_or_default().to_string(),
+        source_url: p["source_url"].as_str().map(str::to_string),
+        slug,
+    };
+    if let Ok(report) = crate::check(&Library::default(), &project.license, None) {
+        let checked = Checked {
+            slug: project.slug.clone(),
+            title: project.title.clone(),
+            icon_url: project.icon_url.clone(),
+            version: None,
+            file: None,
+            report,
+        };
+        return Ok(Resolved::Stopped(checked, project));
     }
-    let mut url = format!("{API}/project/{slug}/version?loaders=%5B%22fabric%22%5D");
+    let mut url = format!("{API}/project/{}/version?loaders=%5B%22fabric%22%5D", project.slug);
     if let Some(g) = game {
         url += &format!("&game_versions=%5B%22{g}%22%5D");
     }
     let versions = json(&url)?;
-    let version = versions.as_array().and_then(|v| v.first()).ok_or(match game {
-        Some(g) => format!("{title} has no Fabric version for {g} on Modrinth"),
-        None => format!("{title} has no Fabric version on Modrinth"),
+    let v = versions.as_array().and_then(|v| v.first()).ok_or(match game {
+        Some(g) => format!("{} has no Fabric version for {g} on Modrinth", project.title),
+        None => format!("{} has no Fabric version on Modrinth", project.title),
     })?;
-    let files = version["files"].as_array().ok_or("the version has no files")?;
+    let files = v["files"].as_array().ok_or("the version has no files")?;
     let file = files.iter().find(|f| f["primary"].as_bool() == Some(true)).or(files.first()).ok_or("the version has no files")?;
-    let name = file["filename"].as_str().unwrap_or("mod.jar").to_string();
+    let file_name = file["filename"].as_str().unwrap_or("mod.jar").to_string();
     let size = file["size"].as_u64().unwrap_or(0);
     if size > max_jar {
-        return Err(format!("{name} is {} MB, more than Hopper downloads ({} MB)", size >> 20, max_jar >> 20));
+        return Err(format!("{file_name} is {} MB, more than Hopper downloads ({} MB)", size >> 20, max_jar >> 20));
     }
-    let file_url = file["url"].as_str().ok_or("no file url")?;
+    let file_url = file["url"].as_str().ok_or("no file url")?.to_string();
     if !file_url.starts_with("https://cdn.modrinth.com/") {
         return Err("the file isn't on Modrinth's CDN".into());
     }
-    let mut bytes = Vec::new();
-    get(file_url)?.into_reader().take(max_jar + 1).read_to_end(&mut bytes).map_err(|e| e.to_string())?;
-    if bytes.len() as u64 > max_jar {
-        return Err(format!("{name} is larger than Hopper downloads"));
+    let id = v["id"].as_str().unwrap_or_default().to_string();
+    if id.is_empty() || !id.chars().all(|c| c.is_ascii_alphanumeric()) {
+        return Err("Modrinth gave a version without a usable id".into());
     }
-    let report = crate::check(library, &license, Some(&bytes)).map_err(|e| e.0)?;
-    let version = version["version_number"].as_str().map(str::to_string);
-    let checked = Checked { slug, title, icon_url, version, file: Some(name), report };
-    Ok(Fetched { checked, license, jar: Some(bytes), source_url })
+    let number = v["version_number"].as_str().unwrap_or_default().to_string();
+    Ok(Resolved::Ready(project, Version { id, number, file_name, file_url }))
+}
+
+/// Downloads a version's jar: at most `max` bytes.
+pub fn download(version: &Version, max: u64) -> Result<Vec<u8>, String> {
+    let mut bytes = Vec::new();
+    get(&version.file_url)?.into_reader().take(max + 1).read_to_end(&mut bytes).map_err(|e| e.to_string())?;
+    if bytes.len() as u64 > max {
+        return Err(format!("{} is larger than Hopper downloads", version.file_name));
+    }
+    Ok(bytes)
+}
+
+/// The report for a downloaded jar.
+pub fn report(library: &Library, project: &Project, version: &Version, jar: &[u8]) -> Result<Checked, String> {
+    let report = crate::check(library, &project.license, Some(jar)).map_err(|e| e.0)?;
+    Ok(Checked {
+        slug: project.slug.clone(),
+        title: project.title.clone(),
+        icon_url: project.icon_url.clone(),
+        version: Some(version.number.clone()),
+        file: Some(version.file_name.clone()),
+        report,
+    })
 }
 
 /// `https://github.com/owner/repo` (maybe with `.git` or a `/tree/...` path): owner and repo.

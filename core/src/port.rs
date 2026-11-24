@@ -21,9 +21,23 @@ pub fn port(library: &Library, target: &str, game: Option<&str>, max_jar: u64) -
     let Some(jar) = &f.jar else {
         return Err(f.checked.report.summary.clone());
     };
-    let url = format!("https://modrinth.com/mod/{}", f.checked.slug);
-    // The license already allows porting (the jar was downloaded); its source may be read too.
-    let (converted, source_note) = match f.source_url.as_deref() {
+    let project = modrinth::Project {
+        slug: f.checked.slug.clone(),
+        title: f.checked.title.clone(),
+        icon_url: f.checked.icon_url.clone(),
+        license: f.license.clone(),
+        source_url: f.source_url.clone(),
+    };
+    let (project, source_note) = generate_for(library, &project, jar)?;
+    Ok(Ported { checked: f.checked, project, source_note })
+}
+
+/// The project for a downloaded jar: converts what the mod's public source allows (only called
+/// once the license allowed the jar to be downloaded), then generates. Also gives why nothing
+/// was converted, when nothing was.
+pub fn generate_for(library: &Library, p: &modrinth::Project, jar: &[u8]) -> Result<(Project, Option<String>), String> {
+    let url = format!("https://modrinth.com/mod/{}", p.slug);
+    let (converted, source_note) = match p.source_url.as_deref() {
         None => (None, Some("The mod links no source code on Modrinth, so nothing was converted.".to_string())),
         Some(src) => match modrinth::java_sources(src, MAX_SOURCE) {
             Ok(files) => {
@@ -34,11 +48,11 @@ pub fn port(library: &Library, target: &str, game: Option<&str>, max_jar: u64) -
         },
     };
     let source = Source {
-        title: &f.checked.title,
+        title: &p.title,
         url: &url,
-        license: &f.license,
+        license: &p.license,
         converted: converted.as_ref().map(|(c, src)| (c, src.as_str())),
     };
     let project = generate::generate(library, &source, jar)?;
-    Ok(Ported { checked: f.checked, project, source_note })
+    Ok((project, source_note))
 }
