@@ -1,0 +1,16 @@
+[package]
+name = "hopper-cli"
+description = "Hopper on the command line: check a Fabric mod from Modrinth or a jar."
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[[bin]]
+name = "hopper"
+path = "src/main.rs"
+
+[dependencies]
+hopper-core = { path = "../core" }
+serde_json = "1"
+ureq = "2"
