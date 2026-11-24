@@ -1,0 +1,12 @@
+[from]
+loader = "fabric"
+class = "me.shedaniel.autoconfig.ConfigHolder"
+
+[to]
+host = "host.setting_bool / setting_f64 / setting_choice"
+
+[info]
+status = "partial"
+notes = "Read each setting from the host when it's needed, or keep a copy updated in setting_changed."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/living-hands", "https://github.com/selfmonoraque5/first-person-body"]

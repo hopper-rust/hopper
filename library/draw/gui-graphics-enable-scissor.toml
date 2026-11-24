@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.gui.GuiGraphicsExtractor"
+member = "enableScissor"
+aliases = ["net.minecraft.client.gui.GuiGraphics#enableScissor", "net.minecraft.client.gui.DrawContext#enableScissor"]
+
+[to]
+host = "draw.push_clip"
+
+[info]
+status = "partial"
+notes = "draw.push_clip([x, y, width, height]) (a width and height, not corners); close it with draw.pop_clip()."
+since_api = "0.2"

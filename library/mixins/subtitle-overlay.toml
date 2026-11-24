@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.gui.components.SubtitleOverlay"
+member = "extractRenderState"
+aliases = ["net.minecraft.client.gui.components.SubtitleOverlay#render", "net.minecraft.client.gui.hud.SubtitlesHud#render"]
+
+[to]
+hook = "gui_layer_pre"
+
+[info]
+status = "partial"
+notes = "The minecraft:subtitle_overlay layer in gui_layer_pre (cancel to hide) or gui_layer_post."
+since_api = "0.2"

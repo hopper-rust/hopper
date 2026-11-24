@@ -1,0 +1,12 @@
+[from]
+loader = "fabric"
+class = "dev.isxander.yacl3.api.YetAnotherConfigLib$Builder"
+
+[to]
+host = "Registrar.register_setting"
+
+[info]
+status = "partial"
+notes = "No screen to build: register one SettingSpec per option in the register hook. Horizon draws the page and saves the values."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/living-hands"]

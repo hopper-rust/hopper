@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.DeltaTracker"
+aliases = ["net.minecraft.client.render.RenderTickCounter"]
+
+[to]
+hook = "render_frame_pre"
+
+[info]
+status = "partial"
+notes = "Frame time comes from render_frame_pre: event.elapsed is the time since the last frame."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/living-hands"]

@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.network.chat.Component"
+member = "getString"
+aliases = ["net.minecraft.text.Text#getString"]
+
+[to]
+host = "host.text_string"
+
+[info]
+status = "direct"
+notes = "host.text_string(&text) returns the plain string, translations and key names resolved (a Result)."
+since_api = "0.2"

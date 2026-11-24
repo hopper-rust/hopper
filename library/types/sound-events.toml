@@ -1,0 +1,12 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.sounds.SoundEvents"
+aliases = ["net.minecraft.sound.SoundEvents"]
+
+[to]
+api = "sound ids (\"minecraft:ui.button.click\")"
+
+[info]
+status = "partial"
+notes = "Sounds are named by id in SoundPlay instead of SoundEvents constants."
+since_api = "0.2"

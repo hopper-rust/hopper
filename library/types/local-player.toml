@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.player.LocalPlayer"
+aliases = ["net.minecraft.client.network.ClientPlayerEntity"]
+
+[to]
+host = "host.local_player"
+
+[info]
+status = "partial"
+notes = "host.local_player() gives a PlayerRef; read through the host with player.entity() (position, rotation, on_ground, is_sprinting, is_crouching, is_in_water, fire_ticks), host.living(entity) (health, hand_item, is_climbing, is_gliding, is_blocking) and player.selected_slot(host). Each read returns an Option."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/skyblock-hud", "https://github.com/selfmonoraque5/living-hands"]

@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.sounds.SoundManager"
+member = "play"
+aliases = ["net.minecraft.client.sound.SoundManager#play"]
+
+[to]
+host = "host.play_local_sound"
+
+[info]
+status = "partial"
+notes = "host.play_local_sound(&SoundPlay::ui(\"minecraft:ui.button.click\"), 0) for a UI sound; the SoundRef it returns can stop or fade it."
+since_api = "0.2"

@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.gui.GuiGraphicsExtractor"
+member = "disableScissor"
+aliases = ["net.minecraft.client.gui.GuiGraphics#disableScissor", "net.minecraft.client.gui.DrawContext#disableScissor"]
+
+[to]
+host = "draw.pop_clip"
+
+[info]
+status = "direct"
+notes = "draw.pop_clip()."
+since_api = "0.2"

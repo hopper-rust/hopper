@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.world.entity.LivingEntity"
+aliases = ["net.minecraft.entity.LivingEntity"]
+
+[to]
+api = "mod_api::LivingRef"
+
+[info]
+status = "partial"
+notes = "host.living(entity) or LivingRef::new(entity): health, hand_item(host, Hand::Main), is_climbing, is_gliding, is_blocking, item_use_remaining. Active effects with host.living_effects(living)."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/skyblock-hud", "https://github.com/selfmonoraque5/living-hands"]

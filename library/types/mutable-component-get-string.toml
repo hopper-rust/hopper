@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.network.chat.MutableComponent"
+member = "getString"
+aliases = ["net.minecraft.text.MutableText#getString"]
+
+[to]
+host = "host.text_string"
+
+[info]
+status = "direct"
+notes = "host.text_string(&text)."
+since_api = "0.2"

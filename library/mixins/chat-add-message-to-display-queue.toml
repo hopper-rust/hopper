@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.gui.components.ChatComponent"
+member = "addMessageToDisplayQueue"
+
+[to]
+hook = "client_chat_received"
+
+[info]
+status = "partial"
+notes = "client_chat_received sees each server line before it shows: change *event.message or cancel it. Lines a mod adds itself (chat_line) don't pass through it."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/skyblock-hud", "https://github.com/selfmonoraque5/earshot"]

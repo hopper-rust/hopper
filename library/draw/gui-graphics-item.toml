@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.gui.GuiGraphicsExtractor"
+member = "item"
+aliases = ["net.minecraft.client.gui.GuiGraphics#renderItem", "net.minecraft.client.gui.DrawContext#drawItem"]
+
+[to]
+host = "draw.item_stack"
+
+[info]
+status = "partial"
+notes = "draw.item_stack(&stack, [x, y], 16.0) draws a stack and its decorations except the count (gui_draw_item_with adds custom count text); draw.item(item, [x, y], size) draws an item's icon."
+since_api = "0.2"

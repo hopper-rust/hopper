@@ -1,0 +1,12 @@
+[from]
+loader = "fabric"
+class = "dev.isxander.yacl3.api.OptionDescription"
+
+[to]
+api = "SettingSpec::tooltip"
+
+[info]
+status = "direct"
+notes = "spec.tooltip(lang key)."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/living-hands"]

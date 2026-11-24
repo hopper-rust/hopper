@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.Minecraft"
+member = "level"
+aliases = ["net.minecraft.client.MinecraftClient#world"]
+
+[to]
+host = "host.player_level"
+
+[info]
+status = "partial"
+notes = "host.player_level(player), with player from host.local_player(); None outside a world (where Fabric's level is null)."
+since_api = "0.2"

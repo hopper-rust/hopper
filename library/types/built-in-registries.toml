@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.core.registries.BuiltInRegistries"
+aliases = ["net.minecraft.registry.Registries"]
+
+[to]
+api = "ids from the item or block"
+
+[info]
+status = "partial"
+notes = "For an id, ask the thing itself: stack.item().id(host) for an item."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/living-hands"]

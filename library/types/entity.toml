@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.world.entity.Entity"
+aliases = ["net.minecraft.entity.Entity"]
+
+[to]
+api = "mod_api::EntityRef"
+
+[info]
+status = "partial"
+notes = "Entities are EntityRef handles: position(host), rotation(host), on_ground(host), is_sprinting(host) and so on, each an Option."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/living-hands"]

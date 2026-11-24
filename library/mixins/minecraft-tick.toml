@@ -1,0 +1,14 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.Minecraft"
+member = "tick"
+aliases = ["net.minecraft.client.MinecraftClient#tick"]
+
+[to]
+hook = "client_tick_post"
+
+[info]
+status = "direct"
+notes = "No mixin needed: client_tick_pre and client_tick_post run around the client tick."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/macro-keys", "https://github.com/selfmonoraque5/skyblock-hud", "https://github.com/selfmonoraque5/living-hands", "https://github.com/selfmonoraque5/first-person-body", "https://github.com/selfmonoraque5/earshot"]

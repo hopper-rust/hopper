@@ -1,0 +1,12 @@
+[from]
+loader = "fabric"
+class = "dev.isxander.yacl3.api.Option$Builder"
+
+[to]
+host = "Registrar.register_setting"
+
+[info]
+status = "partial"
+notes = "One SettingSpec per option (toggle, range or choice); no binding, since Horizon keeps the value: read it with host.setting_bool, setting_f64 or setting_choice."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/living-hands"]

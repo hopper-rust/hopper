@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.gui.Hud"
+member = "extractVehicleHealth"
+aliases = ["net.minecraft.client.gui.Gui#renderVehicleHealth", "net.minecraft.client.gui.hud.InGameHud#renderMountHealth"]
+
+[to]
+hook = "gui_layer_pre"
+
+[info]
+status = "partial"
+notes = "The minecraft:vehicle_health layer in gui_layer_pre (cancel to hide) or gui_layer_post."
+since_api = "0.2"

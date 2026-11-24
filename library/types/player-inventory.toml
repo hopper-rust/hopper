@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.player.LocalPlayer"
+member = "getInventory"
+aliases = ["net.minecraft.world.entity.player.Player#getInventory", "net.minecraft.entity.player.PlayerEntity#getInventory"]
+
+[to]
+host = "host.player_inventory"
+
+[info]
+status = "partial"
+notes = "host.player_inventory(player) gives the main inventory's non-empty stacks in slot order; on a client only the local player's."
+since_api = "0.2"

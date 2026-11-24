@@ -1,0 +1,12 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.world.effect.MobEffectInstance"
+aliases = ["net.minecraft.entity.effect.StatusEffectInstance"]
+
+[to]
+host = "host.living_effects"
+
+[info]
+status = "partial"
+notes = "host.living_effects(living) gives ActiveEffect values: id, duration, amplifier, ambient, visible, show_icon."
+since_api = "0.2"

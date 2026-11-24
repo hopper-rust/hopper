@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.Minecraft"
+member = "getFps"
+aliases = ["net.minecraft.client.MinecraftClient#getCurrentFps"]
+
+[to]
+hook = "render_frame_pre"
+
+[info]
+status = "partial"
+notes = "No FPS call: count frames in render_frame_pre (event.elapsed) and average them yourself."
+since_api = "0.2"

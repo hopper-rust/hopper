@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.Minecraft"
+member = "execute"
+aliases = ["net.minecraft.client.MinecraftClient#execute"]
+
+[to]
+rust = "call it directly"
+
+[info]
+status = "partial"
+notes = "The game calls the hooks itself, so code in a hook needs no execute. Work from a thread of the mod's own has to be handed back to a hook, for example through a channel read in client_tick_post."
+since_api = "0.2"

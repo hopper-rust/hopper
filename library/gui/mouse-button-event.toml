@@ -1,0 +1,12 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.input.MouseButtonEvent"
+
+[to]
+hook = "screen_mouse_button_pressed_pre"
+
+[info]
+status = "partial"
+notes = "The screen hooks' event: event.button (GLFW index), event.modifiers, and the pointer at event.screen.mouse."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/macro-keys", "https://github.com/selfmonoraque5/earshot"]

@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.world.phys.HitResult"
+aliases = ["net.minecraft.util.hit.HitResult"]
+
+[to]
+api = "mod_api::CrosshairTarget"
+
+[info]
+status = "partial"
+notes = "Match on CrosshairTarget instead of checking getType()."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/living-hands"]

@@ -1,0 +1,12 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.multiplayer.ClientLevel"
+aliases = ["net.minecraft.client.world.ClientWorld"]
+
+[to]
+api = "mod_api::LevelRef"
+
+[info]
+status = "partial"
+notes = "host.player_level(player) gives the client's level as a LevelRef; read blocks with host.level_block_state(level, [x, y, z])."
+since_api = "0.2"

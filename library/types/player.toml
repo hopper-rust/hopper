@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.world.entity.player.Player"
+aliases = ["net.minecraft.entity.player.PlayerEntity"]
+
+[to]
+api = "mod_api::PlayerRef"
+
+[info]
+status = "partial"
+notes = "Players are PlayerRef handles read through the host; see the LocalPlayer entry."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/skyblock-hud", "https://github.com/selfmonoraque5/living-hands"]

@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.Minecraft"
+member = "getCameraEntity"
+aliases = ["net.minecraft.client.MinecraftClient#getCameraEntity"]
+
+[to]
+host = "host.camera_entity"
+
+[info]
+status = "direct"
+notes = "host.camera_entity(): the entity the view follows, else the local player."
+since_api = "0.2"

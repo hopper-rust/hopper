@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.util.ARGB"
+aliases = ["net.minecraft.util.math.ColorHelper"]
+
+[to]
+rust = "u32 0xAARRGGBB"
+
+[info]
+status = "direct"
+notes = "Colours are plain u32 ARGB values in Horizon's draw calls; pack and unpack them with shifts."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/skyblock-hud"]

@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.gui.Gui"
+member = "hud"
+
+[to]
+hook = "render_gui_post"
+
+[info]
+status = "partial"
+notes = "Nothing to fetch: draw in render_gui_post or around a layer with gui_layer_pre and gui_layer_post."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/skyblock-hud", "https://github.com/selfmonoraque5/earshot"]

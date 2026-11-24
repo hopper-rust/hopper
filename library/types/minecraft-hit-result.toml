@@ -1,0 +1,14 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.Minecraft"
+member = "hitResult"
+aliases = ["net.minecraft.client.MinecraftClient#crosshairTarget"]
+
+[to]
+host = "host.crosshair_target"
+
+[info]
+status = "direct"
+notes = "host.crosshair_target() gives CrosshairTarget::Block { state, .. } or an entity hit; None on a miss."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/living-hands"]

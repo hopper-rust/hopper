@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.world.phys.Vec3"
+aliases = ["net.minecraft.util.math.Vec3d"]
+
+[to]
+rust = "[f64; 3]"
+
+[info]
+status = "partial"
+notes = "Positions read through the host come as arrays: entity.position(host) gives [x, y, z]."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/living-hands"]

@@ -1,0 +1,14 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.gui.Hud"
+member = "tick"
+aliases = ["net.minecraft.client.gui.Gui#tick", "net.minecraft.client.gui.hud.InGameHud#tick"]
+
+[to]
+hook = "client_tick_post"
+
+[info]
+status = "partial"
+notes = "Per-tick HUD state can update in client_tick_post."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/skyblock-hud"]

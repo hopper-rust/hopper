@@ -1,0 +1,14 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.Minecraft"
+member = "gui"
+aliases = ["net.minecraft.client.MinecraftClient#inGameHud"]
+
+[to]
+hook = "render_gui_post"
+
+[info]
+status = "partial"
+notes = "Nothing to fetch: the HUD hooks (render_gui_post, gui_layer_pre) give a draw context, and the screen calls are on the host."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/skyblock-hud", "https://github.com/selfmonoraque5/earshot"]

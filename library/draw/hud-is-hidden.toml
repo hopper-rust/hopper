@@ -1,0 +1,14 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.gui.Hud"
+member = "isHidden"
+aliases = ["net.minecraft.client.option.GameOptions#hudHidden"]
+
+[to]
+hook = "render_gui_post"
+
+[info]
+status = "direct"
+notes = "No check needed: render_gui_post and the HUD layers aren't drawn while F1 hides the HUD."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/skyblock-hud"]

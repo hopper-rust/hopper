@@ -1,0 +1,12 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.input.KeyEvent"
+
+[to]
+hook = "screen_key_pressed_pre"
+
+[info]
+status = "partial"
+notes = "The screen hooks' event: event.key (GLFW key) and event.modifiers."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/macro-keys", "https://github.com/selfmonoraque5/earshot"]

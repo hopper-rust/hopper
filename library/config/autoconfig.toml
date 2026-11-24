@@ -1,0 +1,12 @@
+[from]
+loader = "fabric"
+class = "me.shedaniel.autoconfig.AutoConfig"
+
+[to]
+host = "Registrar.register_setting"
+
+[info]
+status = "partial"
+notes = "No config class: register a SettingSpec per field and read the values from the host. Data that isn't a setting can go in a file with host.config_files()."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/macro-keys", "https://github.com/selfmonoraque5/living-hands"]

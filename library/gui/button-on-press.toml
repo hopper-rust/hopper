@@ -1,0 +1,12 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.gui.components.Button$OnPress"
+aliases = ["net.minecraft.client.gui.widget.ButtonWidget$PressAction"]
+
+[to]
+api = "mod_api::client::widgets::Outcome"
+
+[info]
+status = "partial"
+notes = "No callback: the Widgets input calls answer Outcome::Pressed(id) for the button pressed; act on it in the screen hook."
+since_api = "0.2"

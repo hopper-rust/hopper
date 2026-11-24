@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.world.item.Items"
+aliases = ["net.minecraft.item.Items"]
+
+[to]
+api = "item ids (\"minecraft:diamond\")"
+
+[info]
+status = "partial"
+notes = "Compare item ids instead of Items constants: stack.item().id(host) == \"minecraft:diamond\"."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/living-hands"]
