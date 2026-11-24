@@ -249,7 +249,7 @@ fn judge(scan: &Scan) -> (Overall, String) {
     } else if missing > 0 {
         summary += " Something it does has no Horizon API yet.";
         Overall::NeedsAPerson
-    } else if known * 10 >= total * 9 && partial * 10 <= known * 3 {
+    } else if known * 10 >= total * 9 {
         Overall::Easy
     } else if known * 10 >= total * 6 {
         Overall::Partial
