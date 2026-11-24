@@ -5,8 +5,8 @@ use hopper_core::{Overall, Report};
 use std::path::{Path, PathBuf};
 use std::process::ExitCode;
 
-const USER_AGENT: &str = concat!("hopper-rust/hopper/", env!("CARGO_PKG_VERSION"), " (github.com/hopper-rust/hopper)");
-const API: &str = "https://api.modrinth.com/v2";
+/// Jars larger than this aren't downloaded.
+const MAX_JAR: u64 = 200 << 20;
 
 const USAGE: &str = "\
 Usage: hopper check <modrinth link | slug | file.jar> [options]
@@ -62,61 +62,6 @@ fn library_dir(given: Option<PathBuf>) -> PathBuf {
     }
     let exe = std::env::current_exe().unwrap_or_default();
     exe.ancestors().map(|d| d.join("library")).find(|d| d.is_dir()).unwrap_or(here)
-}
-
-fn get(url: &str) -> Result<ureq::Response, String> {
-    ureq::get(url).set("User-Agent", USER_AGENT).call().map_err(|e| match e {
-        ureq::Error::Status(404, _) => "not found on Modrinth".to_string(),
-        e => format!("{url}: {e}"),
-    })
-}
-
-fn json(url: &str) -> Result<serde_json::Value, String> {
-    let body = get(url)?.into_string().map_err(|e| e.to_string())?;
-    serde_json::from_str(&body).map_err(|e| e.to_string())
-}
-
-/// `https://modrinth.com/mod/sodium/versions` or `sodium`: the project's slug or id.
-fn slug(target: &str) -> &str {
-    let t = target.trim_end_matches('/');
-    match t.split_once("modrinth.com/") {
-        Some((_, rest)) => rest.split('/').nth(1).unwrap_or(rest),
-        None => t,
-    }
-}
-
-struct Fetched {
-    title: String,
-    /// The jar's file name, when one was downloaded.
-    file: Option<String>,
-}
-
-/// The project's license, and its newest Fabric jar when the license allows porting.
-fn fetch(library: &Library, target: &str, game: Option<&str>) -> Result<(Fetched, Report), String> {
-    let slug = slug(target);
-    let project = json(&format!("{API}/project/{slug}"))?;
-    if project["project_type"].as_str() != Some("mod") {
-        return Err(format!("{slug} is a {}, not a mod", project["project_type"].as_str().unwrap_or("project")));
-    }
-    let title = project["title"].as_str().unwrap_or(slug).to_string();
-    let license = project["license"]["id"].as_str().unwrap_or_default().to_string();
-    if let Ok(report) = hopper_core::check(library, &license, None) {
-        // Stopped at the license: nothing is downloaded.
-        return Ok((Fetched { title, file: None }, report));
-    }
-    let mut url = format!("{API}/project/{slug}/version?loaders=%5B%22fabric%22%5D");
-    if let Some(g) = game {
-        url += &format!("&game_versions=%5B%22{g}%22%5D");
-    }
-    let versions = json(&url)?;
-    let version = versions.as_array().and_then(|v| v.first()).ok_or("no Fabric version on Modrinth")?;
-    let files = version["files"].as_array().ok_or("the version has no files")?;
-    let file = files.iter().find(|f| f["primary"].as_bool() == Some(true)).or(files.first()).ok_or("the version has no files")?;
-    let (name, url) = (file["filename"].as_str().unwrap_or("mod.jar"), file["url"].as_str().ok_or("no file url")?);
-    let mut bytes = Vec::new();
-    std::io::Read::read_to_end(&mut get(url)?.into_reader(), &mut bytes).map_err(|e| e.to_string())?;
-    let report = hopper_core::check(library, &license, Some(&bytes)).map_err(|e| e.0)?;
-    Ok((Fetched { title, file: Some(name.to_string()) }, report))
 }
 
 fn print(title: &str, file: Option<&str>, report: &Report, all: bool) {
@@ -194,8 +139,8 @@ fn run() -> Result<(), String> {
         let report = hopper_core::check(&library, &license, Some(&jar)).map_err(|e| e.0)?;
         (a.target.clone(), None, report)
     } else {
-        let (f, report) = fetch(&library, &a.target, a.game.as_deref())?;
-        (f.title, f.file, report)
+        let c = hopper_core::modrinth::check(&library, &a.target, a.game.as_deref(), MAX_JAR)?;
+        (c.title, c.file, c.report)
     };
     if a.json {
         println!("{}", serde_json::to_string_pretty(&report).map_err(|e| e.to_string())?);

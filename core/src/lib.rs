@@ -6,6 +6,8 @@
 pub mod classfile;
 pub mod library;
 pub mod license;
+#[cfg(feature = "modrinth")]
+pub mod modrinth;
 
 use classfile::Ref;
 use library::{Library, Status};

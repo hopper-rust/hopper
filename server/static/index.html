@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hopper: port Fabric mods to Horizon</title>
+<meta name="description" content="Paste a Modrinth link: Hopper checks the license and tells you which parts of a Fabric mod map to Horizon's mod API.">
+<link rel="icon" href="/logo.png">
+<style>
+  :root {
+    --bg: #f4f1ec; --card: #ffffff; --ink: #24262a; --muted: #5f636b; --line: #dcd6cc;
+    --accent: #d2602a; --accent-ink: #ffffff;
+    --direct: #2f7d4a; --direct-bg: #e3f1e7; --partial: #9a6a00; --partial-bg: #fbf0d4;
+    --missing: #b3261e; --missing-bg: #fbe3e1; --unknown: #5f636b; --unknown-bg: #ecebe8;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1b1c1f; --card: #25272b; --ink: #ecebe8; --muted: #a3a6ad; --line: #3a3d42;
+      --direct: #7ccf95; --direct-bg: #1f3326; --partial: #e9c46a; --partial-bg: #3a3120;
+      --missing: #f2918a; --missing-bg: #3d2220; --unknown: #a3a6ad; --unknown-bg: #303237;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 820px; margin: 0 auto; padding: 32px 16px 48px; }
+  header { display: flex; gap: 16px; align-items: center; }
+  header img { width: 56px; height: 56px; border-radius: 12px; }
+  h1 { margin: 0; font-size: 28px; }
+  .tag { margin: 2px 0 0; color: var(--muted); }
+  .note { margin: 20px 0 0; font-size: 14px; color: var(--muted); }
+  form { display: flex; flex-wrap: wrap; gap: 8px; margin: 24px 0 8px; }
+  input { font: inherit; padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--card); color: var(--ink); }
+  #mod { flex: 1 1 320px; min-width: 0; }
+  #game { width: 110px; }
+  button { font: inherit; font-weight: 600; padding: 10px 18px; border: 0; border-radius: 8px; background: var(--accent); color: var(--accent-ink); cursor: pointer; }
+  button:disabled { opacity: .6; cursor: wait; }
+  .examples { font-size: 14px; color: var(--muted); }
+  .examples a { color: inherit; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 20px; margin-top: 20px; }
+  .error { border-color: var(--missing); color: var(--missing); }
+  .mod { display: flex; gap: 14px; align-items: center; }
+  .mod img { width: 48px; height: 48px; border-radius: 8px; }
+  .mod h2 { margin: 0; font-size: 20px; }
+  .mod a { color: inherit; }
+  .small { font-size: 14px; color: var(--muted); }
+  .verdict { margin: 18px 0 4px; font-size: 22px; font-weight: 700; }
+  .v-easy { color: var(--direct); } .v-partial { color: var(--partial); } .v-needs_a_person { color: var(--accent); } .v-cant_port { color: var(--missing); }
+  h3 { margin: 22px 0 8px; font-size: 16px; }
+  .badge { display: inline-block; padding: 1px 8px; border-radius: 99px; font-size: 13px; font-weight: 600; white-space: nowrap; }
+  .b-direct, .b-ok { color: var(--direct); background: var(--direct-bg); }
+  .b-partial, .b-careful { color: var(--partial); background: var(--partial-bg); }
+  .b-missing, .b-stop { color: var(--missing); background: var(--missing-bg); }
+  .b-unknown { color: var(--unknown); background: var(--unknown-bg); }
+  ul { list-style: none; margin: 0; padding: 0; }
+  li { padding: 10px 0; border-top: 1px solid var(--line); }
+  li:first-child { border-top: 0; }
+  code { font: 13px/1.4 ui-monospace, "Cascadia Code", Consolas, monospace; overflow-wrap: anywhere; }
+  .arrow { color: var(--muted); margin: 0 6px; }
+  .notes { margin: 4px 0 0; font-size: 14px; color: var(--muted); }
+  details summary { cursor: pointer; font-weight: 600; margin-top: 18px; }
+  .stats { display: flex; flex-wrap: wrap; gap: 8px 20px; margin-top: 12px; font-size: 14px; color: var(--muted); }
+  footer { margin-top: 40px; font-size: 14px; color: var(--muted); }
+  footer a { color: inherit; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <img src="/logo.png" alt="">
+    <div>
+      <h1>Hopper</h1>
+      <p class="tag">Port Fabric client mods to Horizon.</p>
+    </div>
+  </header>
+  <p class="note">Paste a Modrinth link. Hopper checks the license first, then reads the names the mod uses (never its code) and says which parts map to Horizon's mod API. Hopper is not an official Horizon project.</p>
+
+  <form id="form">
+    <input id="mod" name="mod" placeholder="https://modrinth.com/mod/..." autocomplete="off" required aria-label="Modrinth link or project name">
+    <input id="game" name="game" value="26.3" aria-label="Minecraft version" title="Minecraft version">
+    <button id="go">Check</button>
+  </form>
+  <div class="examples">Try <a href="?mod=no-mining-cooldown">No Mining Cooldown</a>, <a href="?mod=commandkeys">CommandKeys</a> or <a href="?mod=sodium">Sodium</a>.</div>
+
+  <div id="out"></div>
+
+  <footer>
+    <span id="lib"></span>
+    No AI inside: Hopper is plain rules and a library written by people.
+    <a href="https://github.com/hopper-rust/hopper">GitHub</a> ·
+    <a href="https://github.com/hopper-rust/hopper/blob/main/CONTRIBUTING.md">Add a mapping</a>
+  </footer>
+</main>
+<script>
+const $ = (id) => document.getElementById(id);
+function el(tag, cls, text) {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (text !== undefined) e.textContent = text;
+  return e;
+}
+const VERDICT = { easy: "Easy", partial: "Partial", needs_a_person: "Needs a person", cant_port: "Can't port" };
+const LICENSE = { ok: "OK", careful: "Careful", stop: "Stop" };
+
+function render(c) {
+  const out = $("out");
+  out.replaceChildren();
+  const r = c.report, card = el("div", "card");
+  const mod = el("div", "mod");
+  if (c.icon_url) { const i = el("img"); i.src = c.icon_url; i.alt = ""; mod.append(i); }
+  const name = el("div");
+  const h = el("h2"); const a = el("a", "", c.title);
+  a.href = "https://modrinth.com/mod/" + encodeURIComponent(c.slug); h.append(a);
+  name.append(h);
+  if (c.file) name.append(el("div", "small", c.version + " · " + c.file));
+  mod.append(name); card.append(mod);
+
+  card.append(el("div", "verdict v-" + r.verdict, VERDICT[r.verdict] || r.verdict));
+  card.append(el("div", "small", r.summary));
+
+  card.append(el("h3", "", "License"));
+  const lic = el("div");
+  lic.append(el("span", "badge b-" + r.license.verdict, LICENSE[r.license.verdict]), " ", el("code", "", r.license.id || "none"));
+  card.append(lic, el("p", "notes", r.license.reason));
+
+  const s = r.scan;
+  if (s) {
+    const st = el("div", "stats");
+    st.append(el("span", "", s.classes + " classes"), el("span", "", s.mixins + " mixins"),
+      el("span", "", "side: " + (s.environment === "*" ? "client and server" : s.environment)));
+    if (s.bundled.length) st.append(el("span", "", "bundles " + s.bundled.length + " jars (not checked)"));
+    card.append(st);
+
+    card.append(el("h3", "", "Maps to Horizon (" + s.mapped.length + ")"));
+    const ul = el("ul");
+    if (!s.mapped.length) ul.append(el("li", "small", "Nothing yet."));
+    for (const m of s.mapped) {
+      const li = el("li");
+      const line = el("div");
+      line.append(el("span", "badge b-" + m.status, m.status), " ", el("code", "", m.fabric),
+        el("span", "arrow", "→"), el("code", "", m.horizon));
+      if (m.via === "mixin") line.append(" ", el("span", "small", "(mixin)"));
+      li.append(line, el("p", "notes", m.notes));
+      ul.append(li);
+    }
+    card.append(ul);
+
+    if (s.unknown.length) {
+      const d = el("details");
+      d.append(el("summary", "", "Not in the library yet: " + s.unknown.length + " classes"));
+      const u = el("ul");
+      for (const x of s.unknown) {
+        const li = el("li");
+        li.append(el("code", "", x.class));
+        li.append(el("p", "notes", x.members.length ? x.members.join(", ") : "used as a type"));
+        u.append(li);
+      }
+      d.append(u); card.append(d);
+    }
+    if (s.unknown_mixins.length) {
+      const d = el("details");
+      d.append(el("summary", "", "Mixin targets not in the library yet: " + s.unknown_mixins.length));
+      const u = el("ul");
+      for (const x of s.unknown_mixins) { const li = el("li"); li.append(el("code", "", x)); u.append(li); }
+      d.append(u); card.append(d);
+    }
+  }
+  out.append(card);
+}
+
+async function check(target, game) {
+  const go = $("go"), out = $("out");
+  go.disabled = true; go.textContent = "Checking…";
+  out.replaceChildren(el("div", "card small", "Asking Modrinth and reading the mod…"));
+  try {
+    const q = new URLSearchParams({ mod: target });
+    if (game) q.set("game", game);
+    const res = await fetch("/api/check?" + q);
+    const body = await res.json();
+    if (!res.ok) throw new Error(body.error || "The check failed.");
+    render(body);
+  } catch (e) {
+    out.replaceChildren(el("div", "card error", e.message));
+  } finally {
+    go.disabled = false; go.textContent = "Check";
+  }
+}
+
+$("form").addEventListener("submit", (ev) => {
+  ev.preventDefault();
+  const target = $("mod").value.trim(), game = $("game").value.trim();
+  const q = new URLSearchParams({ mod: target });
+  if (game) q.set("game", game);
+  history.replaceState(null, "", "?" + q);
+  check(target, game);
+});
+
+const start = new URLSearchParams(location.search);
+if (start.get("mod")) {
+  $("mod").value = start.get("mod");
+  if (start.get("game") !== null) $("game").value = start.get("game");
+  check($("mod").value, $("game").value.trim());
+}
+fetch("/api/library").then((r) => r.json()).then((l) => {
+  $("lib").textContent = "The library knows " + l.entries + " mappings. ";
+}).catch(() => {});
+</script>
+</body>
+</html>
