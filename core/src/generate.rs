@@ -316,8 +316,12 @@ fn lib_rs(id: &str, name: &str, source: &Source, scan: &Scan, entries: &BTreeMap
     if !keys.is_empty() {
         extra.push("KeyRegistration");
     }
-    if by_hook.keys().flat_map(|h| code(h)).flat_map(|b| &b.lines).any(|l| l.contains("Text::")) {
+    let any_code = |word: &str| by_hook.keys().flat_map(|h| code(h)).flat_map(|b| &b.lines).any(|l| l.contains(word));
+    if any_code("Text::") {
         extra.push("Text");
+    }
+    if any_code("Command::new") {
+        extra.push("Command");
     }
 
     let mut s = String::new();
@@ -398,7 +402,7 @@ fn lib_rs(id: &str, name: &str, source: &Source, scan: &Scan, entries: &BTreeMap
         let flow = sig.ends_with("-> Flow");
         // Several listeners on one hook: each in its own labelled block, so a `return` in one
         // doesn't skip the next.
-        let several = blocks.len() > 1 && blocks.iter().any(|b| b.lines.iter().any(|l| l.contains("return")));
+        let several = blocks.len() > 1 && blocks.iter().any(|b| b.lines.iter().any(|l| l.starts_with("return")));
         let mut ends_in_return = false;
         for (i, b) in blocks.iter().enumerate() {
             let _ = writeln!(s, "        // Converted from {} by Hopper's rules: check it.", b.file);

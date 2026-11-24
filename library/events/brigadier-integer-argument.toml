@@ -1,0 +1,11 @@
+[from]
+loader = "fabric"
+class = "com.mojang.brigadier.arguments.IntegerArgumentType"
+
+[to]
+hook = "command"
+
+[info]
+status = "partial"
+notes = "<name:integer> in the usage; in the command hook, parse that word: word.parse::<i64>()."
+since_api = "0.2"

@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource"
+member = "sendError"
+aliases = ["net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource#sendError"]
+
+[to]
+host = "host.chat_line"
+
+[info]
+status = "partial"
+notes = "host.chat_line(text): give the text a red colour (TextStyle color \"red\") to look like Fabric's error."
+since_api = "0.2"

@@ -1,0 +1,11 @@
+[from]
+loader = "fabric"
+class = "com.mojang.brigadier.context.CommandContext"
+
+[to]
+hook = "command"
+
+[info]
+status = "partial"
+notes = "No context object: the command hook gets the typed line as event.command (without the slash). Return Flow::Cancel when the mod ran it."
+since_api = "0.2"

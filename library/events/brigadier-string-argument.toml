@@ -1,0 +1,11 @@
+[from]
+loader = "fabric"
+class = "com.mojang.brigadier.arguments.StringArgumentType"
+
+[to]
+hook = "command"
+
+[info]
+status = "partial"
+notes = "word() and string() are <name:word>, greedyString() is <name:text> (the rest of the line, last)."
+since_api = "0.2"

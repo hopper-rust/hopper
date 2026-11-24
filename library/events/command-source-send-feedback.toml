@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource"
+member = "sendFeedback"
+aliases = ["net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource#sendFeedback"]
+
+[to]
+host = "host.chat_line"
+
+[info]
+status = "direct"
+notes = "host.chat_line(text) from the command hook: a line in this client's chat."
+since_api = "0.2"

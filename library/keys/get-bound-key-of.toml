@@ -1,0 +1,14 @@
+[from]
+loader = "fabric"
+class = "net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper"
+member = "getBoundKeyOf"
+aliases = ["net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper#getBoundKeyOf"]
+
+[to]
+host = "host.mod_key"
+
+[info]
+status = "partial"
+notes = "host.mod_key(mod_id, id) gives the bound key's name (\"key.keyboard.k\") and its modifiers."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/macro-keys"]

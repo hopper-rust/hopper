@@ -6,6 +6,7 @@
 //! nothing unconverted looks finished. Key mappings declared with `new KeyMapping(...)` also give
 //! their default keys to the generator.
 
+mod commands;
 mod java;
 
 pub use crate::generate::{Block, Converted};
@@ -30,6 +31,8 @@ pub enum Role {
     /// A chat message (`event.message`) and whether it is for the action bar (`event.overlay`).
     Message,
     Overlay,
+    /// A client command's context: its source answers in chat, its arguments are bound values.
+    Command,
     /// Something the hook has no equivalent for (a tick counter): any use stays Java.
     Other,
 }
@@ -55,6 +58,10 @@ fn shape(class: &str, field: &str) -> Option<HookShape> {
         ("HudRenderCallback", "EVENT") => s("render_gui_post", &[Draw, Other], false, false),
         ("ClientReceiveMessageEvents", "GAME") => s("client_chat_received", &[Message, Overlay], true, false),
         ("ClientReceiveMessageEvents", "ALLOW_GAME") => s("client_chat_received", &[Message, Overlay], true, true),
+        ("ClientPlayConnectionEvents", "JOIN") => s("client_player_logging_in", &[Other, Other, Client], false, false),
+        ("ClientPlayConnectionEvents", "DISCONNECT") => s("client_player_logging_out", &[Other, Client], false, false),
+        ("ClientLifecycleEvents", "CLIENT_STARTED") => s("client_setup", &[Client], false, false),
+        ("ClientLifecycleEvents", "CLIENT_STOPPING") => s("client_stopping", &[Client], false, false),
         _ => None,
     }
 }
@@ -108,6 +115,14 @@ const EVENT_PACKAGES: &[&str] = &[
     "net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents",
     "net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback",
     "net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents",
+    "net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents",
+    "net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents",
+];
+
+/// Fabric's client command registration (`v2`, and Yarn-era `v1`).
+const COMMANDS: &[&str] = &[
+    "net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback",
+    "net.fabricmc.fabric.api.client.command.v1.ClientCommandRegistrationCallback",
 ];
 
 /// `GLFW.GLFW_KEY_LEFT_SHIFT` → `key.keyboard.left.shift`, as Controls names keys.
@@ -235,6 +250,24 @@ pub fn convert(_library: &Library, files: &[JavaFile], key_id: &dyn Fn(&str) -> 
                 };
                 let class = text(class, src);
                 let full = imported.get(class).map(String::as_str).unwrap_or(class);
+                if COMMANDS.contains(&full) && text(field, src) == "EVENT" {
+                    // `ClientCommandRegistrationCallback.EVENT.register((dispatcher, context) -> ...)`
+                    let Some(args) = call.child_by_field_name("arguments") else { continue };
+                    let mut c = args.walk();
+                    let Some(listener) = args.named_children(&mut c).next() else { continue };
+                    let Some((_, body)) = listener_body(listener, root, src) else { continue };
+                    let found = commands::commands(body, root, src, &key_vars, key_id);
+                    out.statements += found.seen;
+                    out.converted += found.done;
+                    if !found.register.is_empty() {
+                        let block = Block { file: path.clone(), lines: found.register };
+                        out.hooks.entry("register_client_commands".into()).or_default().push(block);
+                    }
+                    if !found.run.is_empty() {
+                        out.hooks.entry("command".into()).or_default().push(Block { file: path.clone(), lines: found.run });
+                    }
+                    continue;
+                }
                 if !EVENT_PACKAGES.contains(&full) {
                     continue;
                 }
@@ -273,7 +306,7 @@ pub fn convert(_library: &Library, files: &[JavaFile], key_id: &dyn Fn(&str) -> 
 }
 
 /// A listener's parameter names and body: a lambda's, or the method a method reference names.
-fn listener_body<'t>(listener: Node<'t>, root: Node<'t>, src: &str) -> Option<(Vec<String>, Node<'t>)> {
+pub(super) fn listener_body<'t>(listener: Node<'t>, root: Node<'t>, src: &str) -> Option<(Vec<String>, Node<'t>)> {
     match listener.kind() {
         "lambda_expression" => {
             let params = listener.child_by_field_name("parameters")?;

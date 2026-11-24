@@ -9,5 +9,5 @@ api = "mod_api::Text::with_style"
 
 [info]
 status = "partial"
-notes = "text.with_style(mod_api::text::TextStyle { .. }) replaces the whole style; set the fields you need."
+notes = "text.with_style(style) replaces the whole style. TextStyle can't be built with { .. } from a mod (it is non_exhaustive): let mut s = mod_api::text::TextStyle::default(); s.color = Some(\"gold\".into()); then text.with_style(s)."
 since_api = "0.2"

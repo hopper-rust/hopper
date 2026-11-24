@@ -26,14 +26,15 @@ On top of the library, Hopper will have:
 
 **Status:** early, and working.
 
-- The library has about 150 mappings, each checked against Horizon's SDK and Minecraft 26.3.
+- The library has about 170 mappings, each checked against Horizon's SDK and Minecraft 26.3.
 - The checker works on the command line and as a website (`server/`, not online yet).
 - The generator writes a starting project that builds against Horizon's SDK, with TODOs where the logic goes.
-- The converter reads the mod's public source code (GitHub, open licenses only) and turns the code inside the Fabric events it knows (client tick, HUD drawing, chat messages) into Rust, one statement at a time. What it can't convert stays as a `// TODO (Java):` comment.
+- The converter reads the mod's public source code (GitHub, open licenses only) and turns the code inside the Fabric events it knows (client tick, HUD drawing and HUD elements, chat messages, client commands with their arguments, joining and leaving a server, game start and close) into Rust, one statement at a time. What it can't convert stays as a `// TODO (Java):` comment.
 
 ```sh
 cargo run -q -p hopper-cli -- check https://modrinth.com/mod/commandkeys
 cargo run -q -p hopper-cli -- port https://modrinth.com/mod/commandkeys --out commandkeys-horizon
+cargo run -q -p hopper-cli -- convert path/to/mod/src   # try the converter's rules on Java source
 ```
 
 ## No AI inside

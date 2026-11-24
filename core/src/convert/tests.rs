@@ -139,3 +139,85 @@ class D {
     assert_eq!(lines[2], "let small = 0x10;");
     assert_eq!(c.converted, 2);
 }
+
+#[test]
+fn client_commands() {
+    let c = run(r#"
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommands;
+class E {
+    void init() {
+        ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
+            dispatcher.register(ClientCommands.literal("hello")
+                .executes(context -> {
+                    context.getSource().sendFeedback(Component.literal("Hi!"));
+                    return 1;
+                })
+                .then(ClientCommands.literal("times")
+                    .then(ClientCommands.argument("count", IntegerArgumentType.integer())
+                        .executes(context -> {
+                            int count = IntegerArgumentType.getInteger(context, "count");
+                            context.getSource().sendFeedback(Component.literal("x" + count));
+                            return 1;
+                        }))));
+            dispatcher.register(ClientCommands.literal("say").then(ClientCommands.argument("message", StringArgumentType.greedyString())
+                .executes(ctx -> { ctx.getSource().sendFeedback(Component.literal(StringArgumentType.getString(ctx, "message"))); return 1; })));
+        });
+    }
+}"#);
+    assert_eq!(c.hooks["register_client_commands"][0].lines, &[
+        "event.commands.push(Command::new(\"hello\"));",
+        "event.commands.push(Command::new(\"hello times <count:integer>\"));",
+        "event.commands.push(Command::new(\"say <message:text>\"));",
+    ]);
+    let run = c.hooks["command"][0].lines.join("\n");
+    assert!(run.contains("if let [\"hello\"] = event.command.split_whitespace().collect::<Vec<_>>()[..] {\n    let _ = host.chat_line(Text::literal(\"Hi!\"));\n    return Flow::Cancel;\n}"), "{run}");
+    assert!(run.contains("if let [\"hello\", \"times\", count] = "), "{run}");
+    assert!(run.contains("    if let Ok(count) = count.parse::<i64>() {\n        let _ = host.chat_line("), "{run}");
+    assert!(run.contains("if let Some(message) = event.command.strip_prefix(\"say \") {\n    let _ = host.chat_line(Text::literal(message));"), "{run}");
+    assert_eq!(c.statements, c.converted);
+}
+
+#[test]
+fn join_and_leave() {
+    let c = run(r#"
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
+class F {
+    void init() {
+        ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> client.player.sendMessage(Text.literal("Welcome"), false));
+        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> { return; });
+    }
+}"#);
+    assert_eq!(c.hooks["client_player_logging_in"][0].lines, &["let _ = host.chat_line(Text::literal(\"Welcome\"));"]);
+    assert_eq!(c.hooks["client_player_logging_out"][0].lines, &["return;"]);
+}
+
+#[test]
+fn more_client_rules() {
+    let c = run(r#"
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.minecraft.client.KeyMapping;
+class G {
+    static KeyMapping MENU = new KeyMapping("key.g.menu", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_M, KeyMapping.Category.MISC);
+    void init() {
+        ClientTickEvents.END_CLIENT_TICK.register(c -> {
+            Minecraft mc = Minecraft.getInstance();
+            while (MENU != null && MENU.consumeClick()) {
+                if (mc.gui.screen() == null) {
+                    mc.player.sendSystemMessage(Component.literal("Menu").withStyle(ChatFormatting.GOLD));
+                }
+            }
+            mc.execute(() -> {
+                long now = System.currentTimeMillis();
+                if (Objects.equals(now, 0)) return;
+            });
+        });
+    }
+}"#);
+    let lines = c.hooks["client_tick_post"][0].lines.join("\n");
+    assert!(lines.starts_with("while host.consume_click(ID, \"menu\") {\n    if host.playing() {"), "{lines}");
+    assert!(lines.contains("host.chat_line(Text::literal(\"Menu\").with_style({ let mut s = mod_api::text::TextStyle::default(); s.color = Some(\"gold\".into()); s }))"), "{lines}");
+    assert!(lines.contains("{\n    let now = std::time::SystemTime::now()"), "{lines}");
+    assert!(lines.contains("    if now == 0 {\n        return;"), "{lines}");
+    assert_eq!(c.statements, c.converted, "{lines}");
+}

@@ -1,0 +1,12 @@
+[from]
+loader = "fabric"
+class = "net.fabricmc.fabric.api.client.screen.v1.ScreenEvents"
+member = "AFTER_INIT"
+
+[to]
+hook = "screen_init_post"
+
+[info]
+status = "partial"
+notes = "screen_init_post fires when a screen opens or changes size. It can't add Minecraft widgets to another screen: draw over it in screen_render_post and take its input in the screen hooks."
+since_api = "0.2"

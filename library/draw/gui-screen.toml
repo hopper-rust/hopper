@@ -9,6 +9,6 @@ host = "host.observed_screen_id"
 
 [info]
 status = "partial"
-notes = "host.observed_screen_id() says which screen is open, as the screen hooks name it; host.mod_screen() says whether a mod's own screen is."
+notes = "host.observed_screen_id() says which screen is open, as the screen hooks name it; host.mod_screen() says whether a mod's own screen is. A check for no screen (screen == null) is host.playing()."
 since_api = "0.2"
 seen_in = ["https://github.com/selfmonoraque5/macro-keys", "https://github.com/selfmonoraque5/earshot"]

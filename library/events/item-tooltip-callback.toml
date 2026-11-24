@@ -1,0 +1,12 @@
+[from]
+loader = "fabric"
+class = "net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback"
+member = "EVENT"
+
+[to]
+hook = "item_tooltip"
+
+[info]
+status = "partial"
+notes = "item_tooltip gets the whole tooltip of the stack: add, change or remove lines, each with a colour (u32::MAX keeps the text's own)."
+since_api = "0.2"

@@ -1,0 +1,14 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.player.LocalPlayer"
+member = "sendSystemMessage"
+aliases = ["net.minecraft.world.entity.player.Player#sendSystemMessage"]
+
+[to]
+host = "host.chat_line"
+
+[info]
+status = "direct"
+notes = "host.chat_line(text): a line in this client's chat only."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/first-person-body"]

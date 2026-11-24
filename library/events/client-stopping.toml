@@ -1,0 +1,12 @@
+[from]
+loader = "fabric"
+class = "net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents"
+member = "CLIENT_STOPPING"
+
+[to]
+hook = "client_stopping"
+
+[info]
+status = "direct"
+notes = "Once, as the game closes, after the world is left and saved: save the mod's own state here."
+since_api = "0.2"

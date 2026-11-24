@@ -18,13 +18,15 @@ pub struct Translator<'a> {
     reassigned: BTreeSet<String>,
     /// Each converted `let`: its Rust name and the Java it came from, checked once the body is done.
     lets: Vec<(String, String)>,
+    /// A command's arguments: Java name → the Rust value bound for it.
+    args: BTreeMap<String, String>,
     /// Statements seen, and converted.
     pub seen: usize,
     pub done: usize,
 }
 
 /// `camelCase` → `snake_case`.
-fn snake(name: &str) -> String {
+pub fn snake(name: &str) -> String {
     let mut out = String::new();
     for (i, c) in name.chars().enumerate() {
         if c.is_ascii_uppercase() {
@@ -61,9 +63,16 @@ impl<'a> Translator<'a> {
             locals: BTreeMap::new(),
             reassigned: BTreeSet::new(),
             lets: Vec::new(),
+            args: BTreeMap::new(),
             seen: 0,
             done: 0,
         }
+    }
+
+    /// A command's arguments, bound before its code runs.
+    pub fn with_args(mut self, args: BTreeMap<String, String>) -> Self {
+        self.args = args;
+        self
     }
 
     fn t(&self, node: Node) -> &'a str {
@@ -112,6 +121,21 @@ impl<'a> Translator<'a> {
     /// A converted variable that no converted line uses goes back to Java (it would only be an
     /// unused variable), and one no converted line changes loses its `mut`.
     fn tidy_lets(&mut self, mut lines: Vec<String>) -> Vec<String> {
+        // Later variables first, and again until nothing changes: a variable used only by one
+        // that goes back to Java goes back too.
+        let mut lets = std::mem::take(&mut self.lets);
+        lets.reverse();
+        loop {
+            let before = lines.len();
+            lines = self.tidy_once(lines, &lets);
+            if lines.len() == before {
+                break;
+            }
+        }
+        lines
+    }
+
+    fn tidy_once(&mut self, mut lines: Vec<String>, lets: &[(String, String)]) -> Vec<String> {
         let code = |lines: &[String], skip: usize| -> Vec<String> {
             lines
                 .iter()
@@ -128,7 +152,8 @@ impl<'a> Translator<'a> {
                 edge(before) && edge(after)
             })
         };
-        for (name, java) in std::mem::take(&mut self.lets) {
+        for (name, java) in lets {
+            let (name, java) = (name.clone(), java.clone());
             let Some(at) = lines.iter().position(|l| {
                 let t = l.trim_start();
                 t.starts_with(&format!("let {name} = ")) || t.starts_with(&format!("let mut {name} = "))
@@ -228,7 +253,10 @@ impl<'a> Translator<'a> {
             "return_statement" => {
                 self.seen += 1;
                 let value = named(s).into_iter().next();
+                let command = self.shape.hook == "command";
                 let line = match (value.map(|v| self.t(v)), self.shape.flow, self.shape.allow) {
+                    // A command's code returns a result: it ran.
+                    (_, _, _) if command => Some("return Flow::Cancel;".to_string()),
                     (None, false, _) => Some("return;".to_string()),
                     (None, true, _) => Some("return Flow::Continue;".to_string()),
                     (Some("true"), true, true) => Some("return Flow::Continue;".to_string()),
@@ -250,10 +278,20 @@ impl<'a> Translator<'a> {
                     let (Some(name), Some(value)) = (d.child_by_field_name("name"), d.child_by_field_name("value")) else {
                         return self.keep_java(s, depth);
                     };
+                    // `Minecraft client = Minecraft.getInstance();`: the host stands for it.
+                    if self.is_client(value) && !self.reassigned.contains(self.t(name)) {
+                        self.roles.insert(self.t(name).to_string(), Role::Client);
+                        continue;
+                    }
                     let Some(v) = self.expr(value) else { return self.keep_java(s, depth) };
                     let java = self.t(name).to_string();
                     let rust = snake(&java);
                     let m = if self.reassigned.contains(&java) { "mut " } else { "" };
+                    // `int count = getInteger(context, "count")`: already bound by that name.
+                    if v == rust && m.is_empty() {
+                        self.locals.insert(java, rust);
+                        continue;
+                    }
                     out.push(format!("{pad}let {m}{rust} = {v};"));
                     self.lets.push((rust.clone(), self.t(s).to_string()));
                     self.locals.insert(java, rust);
@@ -264,6 +302,13 @@ impl<'a> Translator<'a> {
             "expression_statement" => {
                 self.seen += 1;
                 let Some(e) = named(s).into_iter().next() else { return Vec::new() };
+                if let Some(body) = self.client_execute(e) {
+                    self.done += 1;
+                    let mut out = vec![format!("{pad}{{")];
+                    out.extend(self.nested(body, depth + 1));
+                    out.push(format!("{pad}}}"));
+                    return out;
+                }
                 match self.statement_expr(e) {
                     Some(line) => {
                         self.done += 1;
@@ -311,6 +356,39 @@ impl<'a> Translator<'a> {
                 }
             }
             _ => None,
+        }
+    }
+
+    /// `client.execute(() -> { ... })`: the hooks already run on the game's thread, so the code
+    /// runs in place. Its body, when `e` is such a call.
+    fn client_execute<'t>(&self, e: Node<'t>) -> Option<Node<'t>> {
+        if e.kind() != "method_invocation" || e.child_by_field_name("name").map(|n| self.t(n)) != Some("execute") {
+            return None;
+        }
+        if !e.child_by_field_name("object").is_some_and(|o| self.is_client(o)) {
+            return None;
+        }
+        let [lambda] = self.arg_nodes(e)[..] else { return None };
+        let params = lambda.child_by_field_name("parameters")?;
+        (lambda.kind() == "lambda_expression" && named(params).is_empty()).then(|| lambda.child_by_field_name("body"))?
+    }
+
+    /// `client.gui.screen()` (26.x), `client.screen` (Mojang) or `client.currentScreen` (Yarn).
+    fn is_screen(&self, e: Node) -> bool {
+        let (object, name) = match e.kind() {
+            "field_access" => (e.child_by_field_name("object"), e.child_by_field_name("field")),
+            "method_invocation" if self.arg_nodes(e).is_empty() => (e.child_by_field_name("object"), e.child_by_field_name("name")),
+            _ => return false,
+        };
+        let (Some(object), Some(name)) = (object, name) else { return false };
+        match self.t(name) {
+            "screen" | "currentScreen" => {
+                self.is_client(object)
+                    || (object.kind() == "field_access"
+                        && object.child_by_field_name("field").map(|f| self.t(f)) == Some("gui")
+                        && object.child_by_field_name("object").is_some_and(|c| self.is_client(c)))
+            }
+            _ => false,
         }
     }
 
@@ -371,6 +449,29 @@ impl<'a> Translator<'a> {
         let object = e.child_by_field_name("object");
         let args = self.arg_nodes(e);
 
+        // Commands: `context.getSource().sendFeedback(text)` / `sendError(text)`.
+        if matches!(name, "sendFeedback" | "sendError") {
+            let source = object.filter(|o| {
+                o.kind() == "method_invocation"
+                    && o.child_by_field_name("name").map(|n| self.t(n)) == Some("getSource")
+                    && o.child_by_field_name("object").and_then(|c| self.role(c)) == Some(Role::Command)
+            });
+            if source.is_some() {
+                let [text] = args.as_slice() else { return None };
+                let text = self.expr(*text)?;
+                return Some((format!("host.chat_line({text})"), true));
+            }
+        }
+        // A command's argument: `IntegerArgumentType.getInteger(context, "count")`.
+        if name.starts_with("get") && name.len() > 3 && object.is_some_and(|o| self.t(o).ends_with("ArgumentType")) {
+            let [ctx, arg] = args.as_slice() else { return None };
+            if self.role(*ctx) != Some(Role::Command) || arg.kind() != "string_literal" {
+                return None;
+            }
+            let value = self.args.get(self.t(*arg).trim_matches('"'))?.clone();
+            return Some((value, false));
+        }
+
         // Key mappings: `KEY.consumeClick()` / Yarn's `KEY.wasPressed()`, `isDown()` / `isPressed()`.
         if let Some(id) = object.and_then(|o| self.key_var(o)) {
             return match (name, args.len()) {
@@ -394,6 +495,11 @@ impl<'a> Translator<'a> {
 
         // The local player's chat: `client.player.sendMessage(text, false)` (Yarn) or
         // `displayClientMessage(text, false)` (Mojang): a line in this client's chat.
+        if object.is_some_and(|o| self.is_player(o)) && name == "sendSystemMessage" {
+            let [text] = args.as_slice() else { return None };
+            let text = self.expr(*text)?;
+            return Some((format!("host.chat_line({text})"), true));
+        }
         if object.is_some_and(|o| self.is_player(o)) && matches!(name, "sendMessage" | "displayClientMessage") {
             let [text, overlay] = args.as_slice() else { return None };
             if self.t(*overlay) != "false" {
@@ -414,6 +520,39 @@ impl<'a> Translator<'a> {
                 "sendChatMessage" | "sendChat" => (format!("host.send_chat(&{s})"), true),
                 _ => (format!("host.send_chat(&format!(\"/{{}}\", {s}))"), true),
             });
+        }
+
+        // `text.withStyle(ChatFormatting.RED)` (Mojang) / `text.formatted(Formatting.RED)` (Yarn).
+        if matches!(name, "withStyle" | "formatted") {
+            let [format] = args.as_slice() else { return None };
+            let field = self.t(*format).rsplit('.').next()?;
+            let setting = match field {
+                "BOLD" => "s.bold = Some(true)".to_string(),
+                "ITALIC" => "s.italic = Some(true)".to_string(),
+                "UNDERLINE" => "s.underlined = Some(true)".to_string(),
+                "STRIKETHROUGH" => "s.strikethrough = Some(true)".to_string(),
+                "OBFUSCATED" => "s.obfuscated = Some(true)".to_string(),
+                "BLACK" | "DARK_BLUE" | "DARK_GREEN" | "DARK_AQUA" | "DARK_RED" | "DARK_PURPLE" | "GOLD" | "GRAY" | "DARK_GRAY"
+                | "BLUE" | "GREEN" | "AQUA" | "RED" | "LIGHT_PURPLE" | "YELLOW" | "WHITE" => {
+                    format!("s.color = Some({:?}.into())", field.to_ascii_lowercase())
+                }
+                _ => return None,
+            };
+            let text = self.expr(object?)?;
+            return Some((
+                format!("{text}.with_style({{ let mut s = mod_api::text::TextStyle::default(); {setting}; s }})"),
+                false,
+            ));
+        }
+        // `System.currentTimeMillis()`.
+        if name == "currentTimeMillis" && object.map(|o| self.t(o)) == Some("System") && args.is_empty() {
+            let now = "std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).map_or(0, |d| d.as_millis() as i64)";
+            return Some((now.to_string(), false));
+        }
+        // `Objects.equals(a, b)`.
+        if name == "equals" && object.map(|o| self.t(o)) == Some("Objects") {
+            let [a, b] = args.as_slice() else { return None };
+            return Some((format!("{} == {}", self.expr(*a)?, self.expr(*b)?), false));
         }
 
         // The HUD: `context.fill(x1, y1, x2, y2, color)` and `drawString` / `text` / Yarn's
@@ -521,6 +660,14 @@ impl<'a> Translator<'a> {
                 let test = if op == "==" { "is_none" } else { "is_some" };
                 return Some(format!("host.local_player().{test}()"));
             }
+            // No screen open: playing.
+            if self.is_screen(other) {
+                return Some(if op == "==" { "host.playing()" } else { "!host.playing()" }.to_string());
+            }
+            // A key mapping is never null on Horizon: it is registered.
+            if self.key_var(other).is_some() {
+                return Some((op == "!=").to_string());
+            }
             return None;
         }
         // String joining: `"FPS: " + fps`.
@@ -530,6 +677,15 @@ impl<'a> Translator<'a> {
         }
         if !matches!(op, "+" | "-" | "*" | "/" | "%" | "<" | ">" | "<=" | ">=" | "==" | "!=" | "&&" | "||") {
             return None;
+        }
+        // `KEY != null && KEY.consumeClick()`: the always-true half goes.
+        if op == "&&" {
+            let (a, b) = (self.expr(l)?, self.expr(r)?);
+            return Some(match (a.as_str(), b.as_str()) {
+                ("true", _) => b,
+                (_, "true") => a,
+                _ => format!("{a} && {b}"),
+            });
         }
         Some(format!("{} {op} {}", self.expr(l)?, self.expr(r)?))
     }
