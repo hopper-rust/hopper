@@ -4,11 +4,15 @@
 //! jar is only read for a license that allows porting.
 
 pub mod classfile;
+#[cfg(feature = "convert")]
+pub mod convert;
 pub mod generate;
 pub mod library;
 pub mod license;
 #[cfg(feature = "modrinth")]
 pub mod modrinth;
+#[cfg(all(feature = "modrinth", feature = "convert"))]
+pub mod port;
 
 use classfile::Ref;
 use library::{Library, Status};

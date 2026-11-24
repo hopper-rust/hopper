@@ -22,14 +22,14 @@ On top of the library, Hopper will have:
 
 1. **Checker:** paste a Modrinth link. Hopper checks the license, looks at what the mod uses, and says which parts map to Horizon and which don't: *easy*, *partial* or *needs a person*.
 2. **Generator:** makes the Horizon mod project (`Cargo.toml`, `horizon-mod.toml`, hooks, settings, key binds, lang file, credits), with TODOs where the logic goes.
-3. **Converter (later):** turns common Java patterns inside those hooks into Rust. It gets better as the library grows.
+3. **Converter:** turns common Java patterns inside those hooks into Rust, from the mod's public source code. It only converts what it has a rule for, and grows rule by rule.
 
 **Status:** early, and working.
 
 - The library has about 150 mappings, each checked against Horizon's SDK and Minecraft 26.3.
 - The checker works on the command line and as a website (`server/`, not online yet).
 - The generator writes a starting project that builds against Horizon's SDK, with TODOs where the logic goes.
-- The converter isn't started.
+- The converter reads the mod's public source code (GitHub, open licenses only) and turns the code inside the Fabric events it knows (client tick, HUD drawing, chat messages) into Rust, one statement at a time. What it can't convert stays as a `// TODO (Java):` comment.
 
 ```sh
 cargo run -q -p hopper-cli -- check https://modrinth.com/mod/commandkeys
@@ -44,6 +44,7 @@ Everything in Hopper is rule-based: the library is plain files written by people
 
 - **License first.** Hopper never helps port a mod that is all rights reserved, has no license, or is obfuscated. Mods under a copyleft license (GPL, LGPL, MPL...) are flagged: a port that reuses their code must keep that license.
 - **Credit the original.** Every generated project credits the mod it came from, in `horizon-mod.toml` and the README.
+- **Source code only when allowed.** The checker reads only the names a mod uses, never decompiling it. The converter reads a mod's public source code, and only for licenses that allow porting.
 - **Honest output.** Hopper always says what was not ported. A generated project with TODOs is a starting point, not a finished mod.
 - **Test in game.** A ported mod must be tested in game before it goes to the Horizon mod registry.
 

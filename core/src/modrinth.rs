@@ -70,6 +70,8 @@ pub struct Fetched {
     pub checked: Checked,
     pub license: String,
     pub jar: Option<Vec<u8>>,
+    /// The project's source code link, when it gives one.
+    pub source_url: Option<String>,
 }
 
 /// [`check`], keeping the jar (for the generator).
@@ -86,10 +88,11 @@ pub fn fetch(library: &Library, target: &str, game: Option<&str>, max_jar: u64) 
     let title = project["title"].as_str().unwrap_or(&slug).to_string();
     let icon_url = project["icon_url"].as_str().map(str::to_string);
     let license = project["license"]["id"].as_str().unwrap_or_default().to_string();
+    let source_url = project["source_url"].as_str().map(str::to_string);
     if let Ok(report) = crate::check(library, &license, None) {
         // Stopped at the license: nothing is downloaded.
         let checked = Checked { slug, title, icon_url, version: None, file: None, report };
-        return Ok(Fetched { checked, license, jar: None });
+        return Ok(Fetched { checked, license, jar: None, source_url });
     }
     let mut url = format!("{API}/project/{slug}/version?loaders=%5B%22fabric%22%5D");
     if let Some(g) = game {
@@ -119,12 +122,63 @@ pub fn fetch(library: &Library, target: &str, game: Option<&str>, max_jar: u64) 
     let report = crate::check(library, &license, Some(&bytes)).map_err(|e| e.0)?;
     let version = version["version_number"].as_str().map(str::to_string);
     let checked = Checked { slug, title, icon_url, version, file: Some(name), report };
-    Ok(Fetched { checked, license, jar: Some(bytes) })
+    Ok(Fetched { checked, license, jar: Some(bytes), source_url })
+}
+
+/// `https://github.com/owner/repo` (maybe with `.git` or a `/tree/...` path): owner and repo.
+pub fn github_repo(url: &str) -> Option<(&str, &str)> {
+    let rest = url.trim().strip_prefix("https://github.com/")?;
+    let mut parts = rest.split('/');
+    let (owner, repo) = (parts.next()?, parts.next()?.trim_end_matches(".git"));
+    let ok = |s: &str| !s.is_empty() && s.chars().all(|c| c.is_ascii_alphanumeric() || "-_.".contains(c));
+    (ok(owner) && ok(repo)).then_some((owner, repo))
+}
+
+/// The Java files of a GitHub repository's default branch: path and text, without tests and
+/// without Forge or NeoForge folders of a multi-loader project. At most `max` bytes are downloaded.
+pub fn java_sources(source_url: &str, max: u64) -> Result<Vec<(String, String)>, String> {
+    let (owner, repo) = github_repo(source_url).ok_or("Hopper reads source code from GitHub only, for now")?;
+    let url = format!("https://codeload.github.com/{owner}/{repo}/zip/HEAD");
+    let mut bytes = Vec::new();
+    get(&url)
+        .map_err(|e| format!("couldn't download the source: {e}"))?
+        .into_reader()
+        .take(max + 1)
+        .read_to_end(&mut bytes)
+        .map_err(|e| e.to_string())?;
+    if bytes.len() as u64 > max {
+        return Err("the source is larger than Hopper downloads".into());
+    }
+    let mut zip = zip::ZipArchive::new(std::io::Cursor::new(bytes)).map_err(|e| format!("the source isn't a zip: {e}"))?;
+    let mut out = Vec::new();
+    for i in 0..zip.len() {
+        let mut f = zip.by_index(i).map_err(|e| e.to_string())?;
+        // Paths start with the `<repo>-<branch>/` folder.
+        let name = f.name().split_once('/').map_or("", |(_, rest)| rest).to_string();
+        let skip = name.split('/').any(|seg| matches!(seg, "test" | "tests" | "forge" | "neoforge"));
+        if !name.ends_with(".java") || skip || f.size() > 1 << 20 {
+            continue;
+        }
+        let mut text = String::new();
+        if f.read_to_string(&mut text).is_ok() {
+            out.push((name, text));
+        }
+    }
+    Ok(out)
 }
 
 #[cfg(test)]
 mod tests {
-    use super::slug;
+    use super::{github_repo, slug};
+
+    #[test]
+    fn reads_github_links() {
+        assert_eq!(github_repo("https://github.com/TerminalMC/CommandKeys/"), Some(("TerminalMC", "CommandKeys")));
+        assert_eq!(github_repo("https://github.com/a/b.git"), Some(("a", "b")));
+        assert_eq!(github_repo("https://github.com/a/b/tree/main/x"), Some(("a", "b")));
+        assert_eq!(github_repo("https://codeberg.org/a/b"), None);
+        assert_eq!(github_repo("https://github.com/a/b?x"), None);
+    }
 
     #[test]
     fn reads_links_and_names() {

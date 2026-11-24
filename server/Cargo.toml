@@ -11,7 +11,7 @@ name = "hopper-server"
 path = "src/main.rs"
 
 [dependencies]
-hopper-core = { path = "../core", features = ["modrinth"] }
+hopper-core = { path = "../core", features = ["modrinth", "convert"] }
 axum = "0.8"
 tokio = { version = "1", features = ["macros", "rt-multi-thread", "sync", "signal"] }
 serde = { version = "1", features = ["derive"] }

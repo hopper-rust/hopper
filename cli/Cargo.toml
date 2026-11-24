@@ -11,5 +11,5 @@ name = "hopper"
 path = "src/main.rs"
 
 [dependencies]
-hopper-core = { path = "../core", features = ["modrinth"] }
+hopper-core = { path = "../core", features = ["modrinth", "convert"] }
 serde_json = "1"

@@ -12,7 +12,11 @@ serde_json = "1"
 toml = "0.8"
 zip = { version = "2", default-features = false, features = ["deflate"] }
 ureq = { version = "2", optional = true }
+tree-sitter = { version = "0.25", optional = true }
+tree-sitter-java = { version = "0.23", optional = true }
 
 [features]
 # Checking mods straight from Modrinth (needs the network).
 modrinth = ["dep:ureq"]
+# The converter: reads Java source and turns the patterns it has rules for into Rust.
+convert = ["dep:tree-sitter", "dep:tree-sitter-java"]

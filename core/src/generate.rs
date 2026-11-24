@@ -22,6 +22,37 @@ pub struct Source<'a> {
     pub url: &'a str,
     /// Its SPDX license id.
     pub license: &'a str,
+    /// What the converter made of the mod's source code, and where that code is.
+    pub converted: Option<(&'a Converted, &'a str)>,
+}
+
+/// Code converted for one hook, from one listener.
+#[derive(Clone, Debug)]
+pub struct Block {
+    /// The Java file it came from.
+    pub file: String,
+    /// The Rust lines, indented from the hook body's level.
+    pub lines: Vec<String>,
+}
+
+/// What the converter made of a mod's Java source (see `convert`).
+#[derive(Debug, Default)]
+pub struct Converted {
+    /// Hook name → the code converted for it.
+    pub hooks: BTreeMap<String, Vec<Block>>,
+    /// Lang key of a key mapping (`key.showfps.open_config`) → its default key (`key.keyboard.n`).
+    pub key_defaults: BTreeMap<String, String>,
+    /// Java statements seen inside listeners, and how many became Rust.
+    pub statements: usize,
+    pub converted: usize,
+}
+
+/// The id a key mapping is registered under: `key.<mod>.main.edit` becomes `main_edit`, unique
+/// and a plain id.
+pub fn key_id(lang_key: &str) -> String {
+    let rest = lang_key.strip_prefix("key.").unwrap_or(lang_key);
+    let rest = rest.split_once('.').map_or(rest, |(_, r)| r);
+    rest.chars().map(|c| if c.is_ascii_alphanumeric() { c.to_ascii_lowercase() } else { '_' }).collect()
 }
 
 /// The generated files: paths relative to the project folder, and their contents.
@@ -270,10 +301,24 @@ fn lib_rs(id: &str, name: &str, source: &Source, scan: &Scan, entries: &BTreeMap
             _ => elsewhere.push(m),
         }
     }
+    let converted = source.converted.map(|(c, _)| c);
+    let code = |hook: &str| converted.and_then(|c| c.hooks.get(hook)).map(Vec::as_slice).unwrap_or(&[]);
+    // A hook the converter wrote code for also gets its method.
+    for hook in converted.iter().flat_map(|c| c.hooks.keys()) {
+        if let Some((name, _)) = sigs.get_key_value(hook.as_str()) {
+            by_hook.entry(name).or_default();
+        }
+    }
     let register = sigs.get("register").copied().unwrap_or("fn register(&self, r: &mut dyn Registrar, cx: &RegistrationContext)");
     let mut used: Vec<&str> = vec![register];
     used.extend(by_hook.keys().filter_map(|h| sigs.get(h).copied()));
-    let extra: &[&str] = if keys.is_empty() { &["Hooks"] } else { &["Hooks", "KeyRegistration"] };
+    let mut extra: Vec<&str> = vec!["Hooks"];
+    if !keys.is_empty() {
+        extra.push("KeyRegistration");
+    }
+    if by_hook.keys().flat_map(|h| code(h)).flat_map(|b| &b.lines).any(|l| l.contains("Text::")) {
+        extra.push("Text");
+    }
 
     let mut s = String::new();
     let _ = writeln!(s, "//! {name} for Horizon: a port of {} ({}), started with Hopper.", source.title, source.url);
@@ -289,7 +334,7 @@ fn lib_rs(id: &str, name: &str, source: &Source, scan: &Scan, entries: &BTreeMap
         }
     }
     s.push('\n');
-    let _ = writeln!(s, "{}", imports(&used, extra));
+    let _ = writeln!(s, "{}", imports(&used, &extra));
     s.push('\n');
     let _ = writeln!(s, "pub const ID: &str = {};", toml_str(id));
     s.push('\n');
@@ -302,18 +347,24 @@ fn lib_rs(id: &str, name: &str, source: &Source, scan: &Scan, entries: &BTreeMap
     let reg = if keys.is_empty() { register.replace("r:", "_r:") } else { register.to_string() }.replace("cx:", "_cx:");
     let _ = writeln!(s, "    {reg} {{");
     for k in keys {
-        // `key.<mod>.main.edit` becomes `main_edit`: unique, and a plain id.
-        let rest = k.strip_prefix("key.").unwrap_or(k);
-        let rest = rest.split_once('.').map_or(rest, |(_, r)| r);
-        let action: String =
-            rest.chars().map(|c| if c.is_ascii_alphanumeric() { c.to_ascii_lowercase() } else { '_' }).collect();
+        let action = key_id(k);
         let action = action.as_str();
+        let default = converted.and_then(|c| c.key_defaults.get(k));
+        if default.is_none() {
+            let _ = writeln!(
+                s,
+                "        // TODO: pick a default key (\"key.keyboard.k\"); read it with host.consume_click(ID, {}).",
+                toml_str(action)
+            );
+        }
+        let key = default.map_or("key.keyboard.unknown", String::as_str);
         let _ = writeln!(
             s,
-            "        // TODO: pick a default key (\"key.keyboard.k\"); read it with host.consume_click(ID, {}).",
-            toml_str(action)
+            "        r.register_key_mapping(KeyRegistration::new({}, {}).label({}));",
+            toml_str(action),
+            toml_str(key),
+            toml_str(k)
         );
-        let _ = writeln!(s, "        r.register_key_mapping(KeyRegistration::new({}, \"key.keyboard.unknown\").label({}));", toml_str(action), toml_str(k));
     }
     if config {
         let _ = writeln!(s, "        // TODO: one SettingSpec per option of the original's config screen (r.register_setting).");
@@ -324,8 +375,17 @@ fn lib_rs(id: &str, name: &str, source: &Source, scan: &Scan, entries: &BTreeMap
     let _ = writeln!(s, "    }}");
 
     for (hook, rows) in &by_hook {
-        let sig = sigs[hook];
-        let sig = sig.replace("host:", "_host:").replace("event:", "_event:");
+        let blocks = code(hook);
+        let uses = |word: &str| {
+            blocks.iter().flat_map(|b| &b.lines).any(|l| !l.trim_start().starts_with("//") && l.contains(word))
+        };
+        let mut sig = sigs[hook].to_string();
+        if !uses("host.") {
+            sig = sig.replace("host:", "_host:");
+        }
+        if !uses("event.") {
+            sig = sig.replace("event:", "_event:");
+        }
         s.push('\n');
         let _ = writeln!(s, "    {sig} {{");
         for m in rows {
@@ -335,7 +395,31 @@ fn lib_rs(id: &str, name: &str, source: &Source, scan: &Scan, entries: &BTreeMap
                 let _ = writeln!(s, "        //   {}", comment_line(&m.notes));
             }
         }
-        if sig.ends_with("-> Flow") {
+        let flow = sig.ends_with("-> Flow");
+        // Several listeners on one hook: each in its own labelled block, so a `return` in one
+        // doesn't skip the next.
+        let several = blocks.len() > 1 && blocks.iter().any(|b| b.lines.iter().any(|l| l.contains("return")));
+        let mut ends_in_return = false;
+        for (i, b) in blocks.iter().enumerate() {
+            let _ = writeln!(s, "        // Converted from {} by Hopper's rules: check it.", b.file);
+            if several && flow {
+                let _ = writeln!(s, "        // TODO: several listeners here; a return in this one skips the ones below.");
+            }
+            let label = several && !flow;
+            if label {
+                let _ = writeln!(s, "        'listener{i}: {{");
+            }
+            for l in &b.lines {
+                let l = if label { l.replace("return;", &format!("break 'listener{i};")) } else { l.clone() };
+                let pad = if label { "            " } else { "        " };
+                let _ = writeln!(s, "{pad}{l}");
+            }
+            if label {
+                let _ = writeln!(s, "        }}");
+            }
+            ends_in_return = !label && b.lines.last().is_some_and(|l| l.starts_with("return"));
+        }
+        if flow && !ends_in_return {
             let _ = writeln!(s, "        Flow::Continue");
         }
         let _ = writeln!(s, "    }}");
@@ -354,6 +438,18 @@ fn readme(name: &str, source: &Source, license: &str, credits: &str, scan: &Scan
         let _ = writeln!(s, "{license}, as the original: see [LICENSE](LICENSE). Keep the original's copyright notice, and say what you changed.\n");
     } else {
         let _ = writeln!(s, "{license}, as the original. **TODO:** the jar had no license file; add the original's license text as `LICENSE`.\n");
+    }
+    if let Some((c, from)) = source.converted {
+        let _ = writeln!(s, "## Converted code\n");
+        if c.statements == 0 {
+            let _ = writeln!(s, "Hopper read the source at {from}, but found no event listeners it has rules for.\n");
+        } else {
+            let _ = writeln!(
+                s,
+                "Hopper converted {} of the {} Java statements in the listeners it knows, from the source at {from}. Each converted block starts with `// Converted from ...: check it.`, and what it couldn't convert is kept as `// TODO (Java):` lines. Converted code may still need fixing before it builds.\n",
+                c.converted, c.statements
+            );
+        }
     }
     let missing: Vec<&Mapped> = scan.mapped.iter().filter(|m| m.status == Status::Missing).collect();
     let _ = writeln!(s, "## Not ported\n");

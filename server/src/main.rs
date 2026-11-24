@@ -94,14 +94,8 @@ async fn port(State(app): State<Arc<App>>, Query(q): Query<CheckQuery>) -> Respo
     let worker = app.clone();
     let slug = slug.to_string();
     let done = tokio::task::spawn_blocking(move || -> Result<(String, Vec<u8>), String> {
-        let f = hopper_core::modrinth::fetch(&worker.library, &slug, game.as_deref(), MAX_JAR)?;
-        let c = &f.checked;
-        let Some(jar) = &f.jar else {
-            return Err(c.report.summary.clone());
-        };
-        let url = format!("https://modrinth.com/mod/{}", c.slug);
-        let source = hopper_core::generate::Source { title: &c.title, url: &url, license: &f.license };
-        let project = hopper_core::generate::generate(&worker.library, &source, jar)?;
+        let ported = hopper_core::port::port(&worker.library, &slug, game.as_deref(), MAX_JAR)?;
+        let project = ported.project;
         Ok((project.id.clone(), zip_project(&project).map_err(|e| e.to_string())?))
     })
     .await;

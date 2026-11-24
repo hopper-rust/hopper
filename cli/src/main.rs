@@ -167,14 +167,8 @@ fn port(library: &Library, a: &Args) -> Result<(), String> {
     if out.exists() {
         return Err(format!("{} already exists", out.display()));
     }
-    let f = hopper_core::modrinth::fetch(library, &a.target, a.game.as_deref(), MAX_JAR)?;
-    let c = &f.checked;
-    let Some(jar) = &f.jar else {
-        return Err(c.report.summary.clone());
-    };
-    let url = format!("https://modrinth.com/mod/{}", c.slug);
-    let source = hopper_core::generate::Source { title: &c.title, url: &url, license: &f.license };
-    let project = hopper_core::generate::generate(library, &source, jar)?;
+    let ported = hopper_core::port::port(library, &a.target, a.game.as_deref(), MAX_JAR)?;
+    let (c, project) = (&ported.checked, &ported.project);
     for (path, bytes) in &project.files {
         let path = out.join(path);
         if let Some(dir) = path.parent() {
@@ -184,6 +178,9 @@ fn port(library: &Library, a: &Args) -> Result<(), String> {
     }
     print(&c.title, c.file.as_deref(), &c.report, false);
     println!();
+    if let Some(note) = &ported.source_note {
+        println!("{note}");
+    }
     println!("Wrote {} ({} files) to {}. Start with its README.md.", project.id, project.files.len(), out.display());
     Ok(())
 }
