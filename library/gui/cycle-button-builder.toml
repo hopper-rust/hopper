@@ -1,0 +1,12 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.gui.components.CycleButton$Builder"
+aliases = ["net.minecraft.client.gui.widget.CyclingButtonWidget$Builder"]
+
+[to]
+api = "mod_api::client::widgets::Button"
+
+[info]
+status = "partial"
+notes = "Button::new([x, y, w, h], label) instead of the builder; see the CycleButton entry."
+since_api = "0.2"

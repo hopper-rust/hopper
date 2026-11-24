@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.gui.components.DebugScreenOverlay"
+member = "showDebugScreen"
+aliases = ["net.minecraft.client.gui.hud.DebugHud#shouldShowDebugHud"]
+
+[to]
+host = "host.native_corner_shown"
+
+[info]
+status = "partial"
+notes = "!host.native_corner_shown(corner) for the corner the mod draws in: both top corners are taken while F3 is open."
+since_api = "0.2"

@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.gui.components.CycleButton"
+aliases = ["net.minecraft.client.gui.widget.CyclingButtonWidget"]
+
+[to]
+api = "mod_api::client::widgets::Button"
+
+[info]
+status = "partial"
+notes = "No cycling button: a Button whose label you set (\"Show FPS: ON\"), changed when its Outcome::Pressed comes. Keep the value in a setting (host.set_setting)."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/macro-keys"]

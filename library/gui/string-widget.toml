@@ -1,0 +1,12 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.gui.components.StringWidget"
+aliases = ["net.minecraft.client.gui.widget.TextWidget"]
+
+[to]
+host = "draw.text"
+
+[info]
+status = "partial"
+notes = "No text widget: draw the line with event.draw.text in screen_render_post (host.text_string turns a translated Text into a string)."
+since_api = "0.2"

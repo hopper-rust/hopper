@@ -59,6 +59,50 @@ fn shape(class: &str, field: &str) -> Option<HookShape> {
     }
 }
 
+/// Fabric's HUD element registry: `addLast(id, element)`, `attachElementBefore(layer, id, element)`.
+const HUD_REGISTRY: &str = "net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry";
+
+/// A `VanillaHudElements` constant's Horizon HUD layer (`event.layer` in `gui_layer_pre`/`_post`).
+fn hud_layer(fabric: &str) -> Option<&'static str> {
+    Some(match fabric {
+        "CROSSHAIR" => "crosshair",
+        "HOTBAR" => "hotbar",
+        "HEALTH_BAR" | "ARMOR_BAR" | "FOOD_BAR" | "AIR_BAR" => "player_health",
+        "MOUNT_HEALTH" => "vehicle_health",
+        "INFO_BAR" | "EXPERIENCE_LEVEL" | "INFO_BAR_FOREGROUND" => "contextual_info_bar",
+        "HELD_ITEM_TOOLTIP" => "selected_item_name",
+        "MOB_EFFECTS" => "effects",
+        "BOSS_BAR" => "boss_overlay",
+        "SLEEP" => "sleep_overlay",
+        "SCOREBOARD" => "scoreboard_sidebar",
+        "OVERLAY_MESSAGE" => "overlay_message",
+        "TITLE_AND_SUBTITLE" => "title",
+        "CHAT" => "chat",
+        "PLAYER_LIST" => "tab_list",
+        "SUBTITLES" => "subtitle_overlay",
+        _ => return None,
+    })
+}
+
+/// A `HudElementRegistry` call: the hook its element draws in, the layer it is tied to, and the
+/// element (its last argument).
+fn hud_element<'t>(call: Node<'t>, name: &str, src: &str) -> Option<(HookShape, Option<&'static str>, Node<'t>)> {
+    use Role::*;
+    let args = call.child_by_field_name("arguments")?;
+    let mut c = args.walk();
+    let args: Vec<Node> = args.named_children(&mut c).collect();
+    let element = *args.last()?;
+    let layer_of = |n: Option<&Node>| n.and_then(|n| hud_layer(text(*n, src).rsplit('.').next()?));
+    let shape = |hook, flow| HookShape { hook, params: &[Draw, Other], flow, allow: false };
+    Some(match name {
+        "addLast" => (shape("render_gui_post", false), None, element),
+        "addFirst" => (shape("gui_layer_pre", true), Some("crosshair"), element),
+        "attachElementBefore" => (shape("gui_layer_pre", true), Some(layer_of(args.first())?), element),
+        "attachElementAfter" => (shape("gui_layer_post", false), Some(layer_of(args.first())?), element),
+        _ => return None,
+    })
+}
+
 /// The Fabric event classes the converter knows, as their packages name them.
 const EVENT_PACKAGES: &[&str] = &[
     "net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents",
@@ -182,28 +226,44 @@ pub fn convert(_library: &Library, files: &[JavaFile], key_id: &dyn Fn(&str) -> 
         let mut nodes = Vec::new();
         walk(root, &mut nodes);
         for call in nodes.iter().filter(|n| n.kind() == "method_invocation") {
-            // `ClientTickEvents.END_CLIENT_TICK.register(listener)`
-            if call.child_by_field_name("name").map(|n| text(n, src)) != Some("register") {
-                continue;
-            }
-            let Some(object) = call.child_by_field_name("object").filter(|o| o.kind() == "field_access") else { continue };
-            let (Some(class), Some(field)) = (object.child_by_field_name("object"), object.child_by_field_name("field")) else {
-                continue;
+            let Some(name) = call.child_by_field_name("name").map(|n| text(n, src)) else { continue };
+            let Some(object) = call.child_by_field_name("object") else { continue };
+            let (shape, layer, listener) = if name == "register" && object.kind() == "field_access" {
+                // `ClientTickEvents.END_CLIENT_TICK.register(listener)`
+                let (Some(class), Some(field)) = (object.child_by_field_name("object"), object.child_by_field_name("field")) else {
+                    continue;
+                };
+                let class = text(class, src);
+                let full = imported.get(class).map(String::as_str).unwrap_or(class);
+                if !EVENT_PACKAGES.contains(&full) {
+                    continue;
+                }
+                let Some(shape) = shape(class, text(field, src)) else { continue };
+                let Some(args) = call.child_by_field_name("arguments") else { continue };
+                let mut c = args.walk();
+                let Some(listener) = args.named_children(&mut c).next() else { continue };
+                (shape, None, listener)
+            } else {
+                // `HudElementRegistry.attachElementBefore(VanillaHudElements.CHAT, id, element)`
+                let class = text(object, src);
+                if imported.get(class).map(String::as_str) != Some(HUD_REGISTRY) {
+                    continue;
+                }
+                let Some(found) = hud_element(*call, name, src) else { continue };
+                found
             };
-            let class = text(class, src);
-            let full = imported.get(class).map(String::as_str).unwrap_or(class);
-            if !EVENT_PACKAGES.contains(&full) {
-                continue;
-            }
-            let Some(shape) = shape(class, text(field, src)) else { continue };
-            let Some(args) = call.child_by_field_name("arguments") else { continue };
-            let mut c = args.walk();
-            let Some(listener) = args.named_children(&mut c).next() else { continue };
             let Some((params, body)) = listener_body(listener, root, src) else { continue };
             let roles: BTreeMap<String, Role> =
                 params.iter().zip(shape.params.iter()).map(|(p, r)| (p.clone(), *r)).collect();
             let mut t = Translator::new(src, roles, &key_vars, key_id, shape);
-            let lines = t.body(body);
+            let mut lines = t.body(body);
+            if let Some(layer) = layer {
+                // Only around that layer: the hook fires for each.
+                lines = std::iter::once(format!("if event.layer.ends_with(\"{layer}\") {{"))
+                    .chain(lines.into_iter().map(|l| format!("    {l}")))
+                    .chain(std::iter::once("}".to_string()))
+                    .collect();
+            }
             out.statements += t.seen;
             out.converted += t.done;
             out.hooks.entry(shape.hook.to_string()).or_default().push(Block { file: path.clone(), lines });

@@ -1,0 +1,12 @@
+[from]
+loader = "fabric"
+class = "net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry"
+member = "attachElementAfter"
+
+[to]
+hook = "gui_layer_post"
+
+[info]
+status = "partial"
+notes = "Draw in gui_layer_post when event.layer is the layer to go over. Layer ids differ from VanillaHudElements: see its entry."
+since_api = "0.2"

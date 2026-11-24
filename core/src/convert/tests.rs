@@ -95,3 +95,47 @@ fn glfw_names() {
     assert_eq!(glfw_key_name("GLFW_KEY_F3").as_deref(), Some("key.keyboard.f3"));
     assert_eq!(glfw_key_name("x"), None);
 }
+
+#[test]
+fn hud_elements_by_layer() {
+    let c = run(r#"
+import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
+class C {
+    void init() {
+        HudElementRegistry.attachElementBefore(VanillaHudElements.CHAT, Identifier.fromNamespaceAndPath("x", "y"), this::draw);
+        HudElementRegistry.addLast(Identifier.fromNamespaceAndPath("x", "z"), (graphics, delta) -> graphics.fill(0, 0, 4, 4, 0xFF000000));
+    }
+    private void draw(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker) {
+        if (!enabled) return;
+        graphics.fill(1, 1, 2, 2, 0xFFFFFFFF);
+    }
+}"#);
+    let pre = &c.hooks["gui_layer_pre"][0].lines;
+    assert_eq!(pre[0], "if event.layer.ends_with(\"chat\") {");
+    assert_eq!(pre[1], "    // TODO (Java): if (!enabled) return;");
+    assert!(pre[2].starts_with("    event.draw.fill("));
+    assert_eq!(pre[3], "}");
+    assert!(c.hooks["render_gui_post"][0].lines[0].starts_with("event.draw.fill("));
+}
+
+#[test]
+fn unused_variables_stay_java() {
+    let c = run(r#"
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+class D {
+    void init() {
+        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            int color = 0xFFFFFFFF;
+            if (client.options.foo) color = 0xFF00FF00;
+            int small = 0x10;
+            client.player.sendMessage(Text.literal("x" + small), false);
+        });
+    }
+}"#);
+    let lines = &c.hooks["client_tick_post"][0].lines;
+    assert_eq!(lines[0], "// TODO (Java): int color = 0xFFFFFFFF;");
+    assert_eq!(lines[1], "// TODO (Java): if (client.options.foo) color = 0xFF00FF00;");
+    assert_eq!(lines[2], "let small = 0x10;");
+    assert_eq!(c.converted, 2);
+}

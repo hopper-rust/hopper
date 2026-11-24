@@ -1,0 +1,12 @@
+[from]
+loader = "fabric"
+class = "net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry"
+member = "addFirst"
+
+[to]
+hook = "gui_layer_pre"
+
+[info]
+status = "partial"
+notes = "Under all of the HUD: draw in gui_layer_pre when event.layer is minecraft:crosshair, the first layer drawn."
+since_api = "0.2"

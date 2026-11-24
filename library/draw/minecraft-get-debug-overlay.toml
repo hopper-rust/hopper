@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.Minecraft"
+member = "getDebugOverlay"
+aliases = ["net.minecraft.client.MinecraftClient#getDebugHud"]
+
+[to]
+host = "host.native_corner_shown"
+
+[info]
+status = "partial"
+notes = "No overlay object: host.native_corner_shown(Corner::TopLeft) is false while F3's debug screen takes that corner, which is what HUD mods check it for."
+since_api = "0.2"

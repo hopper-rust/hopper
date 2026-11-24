@@ -1,0 +1,12 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.gui.components.CycleButton$OnValueChange"
+aliases = ["net.minecraft.client.gui.widget.CyclingButtonWidget$UpdateCallback"]
+
+[to]
+api = "mod_api::client::widgets::Outcome"
+
+[info]
+status = "partial"
+notes = "No callback: act on Outcome::Pressed(id) from the Widgets input calls in the screen hooks."
+since_api = "0.2"

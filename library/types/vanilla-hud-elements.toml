@@ -1,0 +1,12 @@
+[from]
+loader = "fabric"
+class = "net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements"
+
+[to]
+hook = "gui_layer_pre"
+
+[info]
+status = "partial"
+notes = "Horizon's HUD layers (event.layer in gui_layer_pre / gui_layer_post), by Fabric's name: CROSSHAIR = crosshair, HOTBAR = hotbar, HEALTH_BAR / ARMOR_BAR / FOOD_BAR / AIR_BAR = player_health (one layer), MOUNT_HEALTH = vehicle_health, INFO_BAR / EXPERIENCE_LEVEL / INFO_BAR_FOREGROUND = contextual_info_bar, HELD_ITEM_TOOLTIP = selected_item_name, MOB_EFFECTS = effects, BOSS_BAR = boss_overlay, SLEEP = sleep_overlay, SCOREBOARD = scoreboard_sidebar, OVERLAY_MESSAGE = overlay_message, TITLE_AND_SUBTITLE = title, CHAT = chat, PLAYER_LIST = tab_list, SUBTITLES = subtitle_overlay. MISC_OVERLAYS, SPECTATOR_MENU, SPECTATOR_TOOLTIP and DEMO_TIMER have no layer."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/skyblock-hud"]

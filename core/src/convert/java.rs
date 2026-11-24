@@ -16,6 +16,8 @@ pub struct Translator<'a> {
     locals: BTreeMap<String, String>,
     /// Locals assigned after their declaration, which need `let mut`.
     reassigned: BTreeSet<String>,
+    /// Each converted `let`: its Rust name and the Java it came from, checked once the body is done.
+    lets: Vec<(String, String)>,
     /// Statements seen, and converted.
     pub seen: usize,
     pub done: usize,
@@ -50,7 +52,18 @@ impl<'a> Translator<'a> {
         key_id: &'a dyn Fn(&str) -> String,
         shape: HookShape,
     ) -> Self {
-        Self { src, roles, keys, key_id, shape, locals: BTreeMap::new(), reassigned: BTreeSet::new(), seen: 0, done: 0 }
+        Self {
+            src,
+            roles,
+            keys,
+            key_id,
+            shape,
+            locals: BTreeMap::new(),
+            reassigned: BTreeSet::new(),
+            lets: Vec::new(),
+            seen: 0,
+            done: 0,
+        }
     }
 
     fn t(&self, node: Node) -> &'a str {
@@ -61,7 +74,8 @@ impl<'a> Translator<'a> {
     pub fn body(&mut self, body: Node) -> Vec<String> {
         self.find_reassigned(body);
         if body.kind() == "block" {
-            self.block(body, 0)
+            let lines = self.block(body, 0);
+            self.tidy_lets(lines)
         } else {
             self.seen += 1;
             match self.statement_expr(body) {
@@ -93,6 +107,51 @@ impl<'a> Translator<'a> {
             let mut c = n.walk();
             stack.extend(n.children(&mut c));
         }
+    }
+
+    /// A converted variable that no converted line uses goes back to Java (it would only be an
+    /// unused variable), and one no converted line changes loses its `mut`.
+    fn tidy_lets(&mut self, mut lines: Vec<String>) -> Vec<String> {
+        let code = |lines: &[String], skip: usize| -> Vec<String> {
+            lines
+                .iter()
+                .enumerate()
+                .filter(|(i, l)| *i != skip && !l.trim_start().starts_with("//"))
+                .map(|(_, l)| l.clone())
+                .collect()
+        };
+        let word = |line: &str, name: &str| {
+            line.match_indices(name).any(|(i, _)| {
+                let before = line[..i].chars().next_back();
+                let after = line[i + name.len()..].chars().next();
+                let edge = |c: Option<char>| c.is_none_or(|c| !(c.is_ascii_alphanumeric() || c == '_'));
+                edge(before) && edge(after)
+            })
+        };
+        for (name, java) in std::mem::take(&mut self.lets) {
+            let Some(at) = lines.iter().position(|l| {
+                let t = l.trim_start();
+                t.starts_with(&format!("let {name} = ")) || t.starts_with(&format!("let mut {name} = "))
+            }) else {
+                continue;
+            };
+            let rest = code(&lines, at);
+            let pad: String = lines[at].chars().take_while(|c| *c == ' ').collect();
+            if !rest.iter().any(|l| word(l, &name)) {
+                let back: Vec<String> = java.lines().map(str::trim).filter(|l| !l.is_empty()).map(|l| format!("{pad}// TODO (Java): {l}")).collect();
+                lines.splice(at..=at, back);
+                self.done -= 1;
+                continue;
+            }
+            let changed = rest.iter().any(|l| {
+                let t = l.trim_start();
+                ["=", "+=", "-=", "*=", "/="].iter().any(|op| t.starts_with(&format!("{name} {op} ")))
+            });
+            if !changed {
+                lines[at] = lines[at].replacen("let mut ", "let ", 1);
+            }
+        }
+        lines
     }
 
     /// Keeps `node`'s Java as TODO comments, one per line.
@@ -196,6 +255,7 @@ impl<'a> Translator<'a> {
                     let rust = snake(&java);
                     let m = if self.reassigned.contains(&java) { "mut " } else { "" };
                     out.push(format!("{pad}let {m}{rust} = {v};"));
+                    self.lets.push((rust.clone(), self.t(s).to_string()));
                     self.locals.insert(java, rust);
                 }
                 self.done += 1;
@@ -421,7 +481,13 @@ impl<'a> Translator<'a> {
         let t = self.t(e);
         match e.kind() {
             "string_literal" => (!t.contains("\\u")).then(|| t.to_string()),
-            "decimal_integer_literal" | "hex_integer_literal" => Some(t.trim_end_matches(['L', 'l']).replace('_', "")),
+            "decimal_integer_literal" => Some(t.trim_end_matches(['L', 'l']).replace('_', "")),
+            // Java's int wraps `0xFFFFFFFF` round to -1; in Rust it is a u32 (as colours are).
+            "hex_integer_literal" => {
+                let n = t.trim_end_matches(['L', 'l']).replace('_', "");
+                let big = u64::from_str_radix(n.trim_start_matches("0x").trim_start_matches("0X"), 16).is_ok_and(|v| v > i32::MAX as u64);
+                Some(if big { format!("{n}u32") } else { n })
+            }
             "decimal_floating_point_literal" => {
                 let n = t.trim_end_matches(['f', 'F', 'd', 'D']);
                 Some(if n.contains('.') || n.contains('e') || n.contains('E') { n.to_string() } else { format!("{n}.0") })

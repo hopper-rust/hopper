@@ -1,0 +1,12 @@
+[from]
+loader = "fabric"
+class = "net.fabricmc.fabric.api.client.rendering.v1.hud.HudElement"
+
+[to]
+hook = "render_gui_post"
+
+[info]
+status = "partial"
+notes = "The callback type HudElementRegistry takes: its body draws in render_gui_post (over the HUD) or in gui_layer_pre / gui_layer_post (around one layer), with event.draw."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/skyblock-hud"]
