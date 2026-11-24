@@ -4,6 +4,7 @@ Hopper's website: the page, and a small JSON API.
 
 - `GET /`: the page.
 - `GET /api/check?mod=<Modrinth link or slug>&game=<Minecraft version>`: the checker's report, as JSON. `game` is optional; without it the newest Fabric version is checked.
+- `GET /api/port?mod=...&game=...`: a zip of the starting Horizon project the generator writes (the page's Download starter project button). Refused for licenses that stop porting.
 - `GET /api/library`: how many mappings the library has.
 
 Reports are kept for an hour, so a mod checked twice is downloaded once. At most 4 checks run at once, and jars over 50 MB aren't downloaded.

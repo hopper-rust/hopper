@@ -1,5 +1,6 @@
-//! Hopper's website: the page, and `GET /api/check?mod=<link or slug>&game=<version>`, which
-//! answers the checker's report as JSON. Reports are kept for an hour, so a mod checked twice is
+//! Hopper's website: the page, `GET /api/check?mod=<link or slug>&game=<version>`, which
+//! answers the checker's report as JSON, and `GET /api/port` (same query), which answers a zip
+//! of the starting Horizon project the generator writes. Reports are kept for an hour, so a mod checked twice is
 //! downloaded once. Meant to run behind a reverse proxy that adds HTTPS (see `server/README.md`).
 
 use axum::extract::{Query, State};
@@ -82,6 +83,54 @@ async fn check(State(app): State<Arc<App>>, Query(q): Query<CheckQuery>) -> Resp
     }
 }
 
+async fn port(State(app): State<Arc<App>>, Query(q): Query<CheckQuery>) -> Response {
+    let Some(slug) = hopper_core::modrinth::slug(&q.target) else {
+        return error(StatusCode::BAD_REQUEST, "That isn't a Modrinth link or project name.");
+    };
+    let game = q.game.filter(|g| !g.trim().is_empty());
+    let Ok(_turn) = app.turns.acquire().await else {
+        return error(StatusCode::SERVICE_UNAVAILABLE, "Hopper is shutting down.");
+    };
+    let worker = app.clone();
+    let slug = slug.to_string();
+    let done = tokio::task::spawn_blocking(move || -> Result<(String, Vec<u8>), String> {
+        let f = hopper_core::modrinth::fetch(&worker.library, &slug, game.as_deref(), MAX_JAR)?;
+        let c = &f.checked;
+        let Some(jar) = &f.jar else {
+            return Err(c.report.summary.clone());
+        };
+        let url = format!("https://modrinth.com/mod/{}", c.slug);
+        let source = hopper_core::generate::Source { title: &c.title, url: &url, license: &f.license };
+        let project = hopper_core::generate::generate(&worker.library, &source, jar)?;
+        Ok((project.id.clone(), zip_project(&project).map_err(|e| e.to_string())?))
+    })
+    .await;
+    match done {
+        Ok(Ok((id, bytes))) => (
+            [
+                (header::CONTENT_TYPE, "application/zip".to_string()),
+                (header::CONTENT_DISPOSITION, format!("attachment; filename=\"{id}-horizon.zip\"")),
+            ],
+            bytes,
+        )
+            .into_response(),
+        Ok(Err(message)) => error(StatusCode::BAD_GATEWAY, message),
+        Err(_) => error(StatusCode::INTERNAL_SERVER_ERROR, "The port failed."),
+    }
+}
+
+/// The project's files in a zip, under a folder named after the mod.
+fn zip_project(project: &hopper_core::generate::Project) -> zip::result::ZipResult<Vec<u8>> {
+    use std::io::Write;
+    let mut zip = zip::ZipWriter::new(std::io::Cursor::new(Vec::new()));
+    let options = zip::write::SimpleFileOptions::default().compression_method(zip::CompressionMethod::Deflated);
+    for (path, bytes) in &project.files {
+        zip.start_file(format!("{}/{path}", project.id), options)?;
+        zip.write_all(bytes)?;
+    }
+    Ok(zip.finish()?.into_inner())
+}
+
 fn kept(app: &App, key: &str) -> Option<Arc<String>> {
     let kept = app.kept.lock().unwrap_or_else(std::sync::PoisonError::into_inner);
     kept.get(key).filter(|(at, _)| at.elapsed() < KEEP).map(|(_, body)| body.clone())
@@ -147,6 +196,7 @@ async fn main() -> Result<(), String> {
         .route("/", get(page))
         .route("/logo.png", get(logo))
         .route("/api/check", get(check))
+        .route("/api/port", get(port))
         .route("/api/library", get(library_stats))
         .with_state(app);
     let listener = tokio::net::TcpListener::bind(a.listen).await.map_err(|e| format!("{}: {e}", a.listen))?;

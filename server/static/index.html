@@ -34,6 +34,10 @@
   #game { width: 110px; }
   button { font: inherit; font-weight: 600; padding: 10px 18px; border: 0; border-radius: 8px; background: var(--accent); color: var(--accent-ink); cursor: pointer; }
   button:disabled { opacity: .6; cursor: wait; }
+  .port { margin-top: 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
+  .port button { background: var(--ink); color: var(--bg); }
+  .port .msg { font-size: 14px; color: var(--muted); }
+  .port .msg.bad { color: var(--missing); }
   .examples { font-size: 14px; color: var(--muted); }
   .examples a { color: inherit; }
   .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 20px; margin-top: 20px; }
@@ -116,6 +120,7 @@ function render(c) {
 
   card.append(el("div", "verdict v-" + r.verdict, VERDICT[r.verdict] || r.verdict));
   card.append(el("div", "small", r.summary));
+  if (r.scan && r.verdict !== "cant_port") card.append(portButton(c));
 
   card.append(el("h3", "", "License"));
   const lic = el("div");
@@ -165,6 +170,39 @@ function render(c) {
     }
   }
   out.append(card);
+}
+
+// The starting project: fetched first, so an error shows here instead of downloading as a file.
+function portButton(c) {
+  const box = el("div", "port");
+  const b = el("button", "", "Download starter project");
+  b.type = "button";
+  const msg = el("span", "msg", "A Horizon project with the hooks in place and TODOs for the logic.");
+  b.addEventListener("click", async () => {
+    b.disabled = true; msg.className = "msg"; msg.textContent = "Writing the project…";
+    try {
+      const q = new URLSearchParams({ mod: c.slug });
+      const game = $("game").value.trim();
+      if (game) q.set("game", game);
+      const res = await fetch("/api/port?" + q);
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.error || "The port failed.");
+      }
+      const blob = await res.blob();
+      const name = (/filename="([^"]+)"/.exec(res.headers.get("Content-Disposition") || "") || [])[1] || c.slug + "-horizon.zip";
+      const a = el("a"); a.href = URL.createObjectURL(blob); a.download = name;
+      document.body.append(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(a.href), 10000);
+      msg.textContent = "Downloaded " + name + ". Start with its README.md, and test in game before publishing.";
+    } catch (e) {
+      msg.className = "msg bad"; msg.textContent = e.message;
+    } finally {
+      b.disabled = false;
+    }
+  });
+  box.append(b, msg);
+  return box;
 }
 
 async function check(target, game) {
