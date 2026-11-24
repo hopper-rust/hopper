@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.gui.screens.Screen"
+aliases = ["net.minecraft.client.gui.screen.Screen"]
+
+[to]
+host = "host.mod_screen_open"
+
+[info]
+status = "partial"
+notes = "No Screen subclass: host.mod_screen_open(mod_id) opens the mod's own screen; draw it in screen_render_post and take input in the screen_* hooks, checking that host.mod_screen() is the mod's id. Close it with host.mod_screen_close."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/macro-keys", "https://github.com/selfmonoraque5/earshot"]

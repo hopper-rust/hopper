@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.fabricmc.fabric.api.client.screen.v1.ScreenKeyboardEvents"
+member = "allowKeyPress"
+
+[to]
+hook = "screen_key_pressed_pre"
+
+[info]
+status = "direct"
+notes = "Return Flow::Cancel to stop the key. event.key is the GLFW key, event.modifiers GLFW's modifier bits."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/macro-keys", "https://github.com/selfmonoraque5/earshot"]

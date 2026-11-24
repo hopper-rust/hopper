@@ -1,0 +1,14 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.KeyMapping"
+member = "isDown"
+aliases = ["net.minecraft.client.option.KeyBinding#isPressed"]
+
+[to]
+host = "host.is_down"
+
+[info]
+status = "partial"
+notes = "host.is_down(mod_id, key_id) for the mod's own keys; for vanilla ones (key.attack, key.use...) read host.mapping(name) and its down field."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/living-hands"]

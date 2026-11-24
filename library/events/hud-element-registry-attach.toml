@@ -1,0 +1,12 @@
+[from]
+loader = "fabric"
+class = "net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry"
+member = "attachElementBefore"
+
+[to]
+hook = "gui_layer_pre"
+
+[info]
+status = "partial"
+notes = "Draw in gui_layer_pre to go under a vanilla layer, or in gui_layer_post to go over it (attachElementAfter). Layer ids differ from VanillaHudElements: the gui_layer_pre docs list them."
+since_api = "0.2"

@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.renderer.FirstPersonHandsAndItemsRenderer"
+member = "submitArmWithItem"
+
+[to]
+missing = "https://github.com/horizon-rust/horizon/issues/19904"
+
+[info]
+status = "missing"
+notes = "Drawing the player's own arm, with their skin, under a held item. Not in mod API 0.2: Living Hands patches hand_geometry to read the skin. The request was closed as done on 2026-11-24; recheck with the next SDK."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/living-hands"]

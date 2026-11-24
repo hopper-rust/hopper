@@ -1,0 +1,14 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.renderer.FirstPersonHandsAndItemsRenderer"
+member = "renderPlayerArm"
+aliases = ["net.minecraft.client.renderer.ItemInHandRenderer#renderPlayerArm", "net.minecraft.client.render.item.HeldItemRenderer#renderArmHoldingItem"]
+
+[to]
+hook = "render_arm"
+
+[info]
+status = "direct"
+notes = "The empty hand's arm. Return Flow::Cancel to hide it."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/first-person-body"]

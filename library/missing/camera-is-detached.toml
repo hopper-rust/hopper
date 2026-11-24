@@ -1,0 +1,14 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.Camera"
+member = "isDetached"
+aliases = ["net.minecraft.client.render.Camera#isThirdPerson"]
+
+[to]
+missing = "unrequested"
+
+[info]
+status = "missing"
+notes = "Mods that draw your own body in first person usually make the game think the camera is detached. Horizon has no hook for this: First Person Body patches the game with native mixins (own_body_in_view, player_model_geometry) and needs an update when Horizon changes them."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/first-person-body"]

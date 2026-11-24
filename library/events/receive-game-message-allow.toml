@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents"
+member = "ALLOW_GAME"
+
+[to]
+hook = "client_chat_received"
+
+[info]
+status = "direct"
+notes = "Return Flow::Cancel to hide the message (returning false in Fabric)."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/skyblock-hud"]

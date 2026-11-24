@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.gui.screens.ChatScreen"
+aliases = ["net.minecraft.client.gui.screen.ChatScreen"]
+
+[to]
+host = "host.open_chat"
+
+[info]
+status = "partial"
+notes = "Instead of setScreen(new ChatScreen(text)): host.open_chat(text). It fails while another screen is open."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/macro-keys"]

@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents"
+member = "MODIFY_GAME"
+
+[to]
+hook = "client_chat_received"
+
+[info]
+status = "direct"
+notes = "Replace *event.message with the new text and return Flow::Continue."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/skyblock-hud"]

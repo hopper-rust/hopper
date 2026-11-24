@@ -1,0 +1,14 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.KeyMapping"
+member = "consumeClick"
+aliases = ["net.minecraft.client.option.KeyBinding#wasPressed"]
+
+[to]
+host = "host.consume_click"
+
+[info]
+status = "direct"
+notes = "host.consume_click(mod_id, key_id) in client_tick_post, in a while loop like Fabric's wasPressed loop."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/macro-keys", "https://github.com/selfmonoraque5/living-hands", "https://github.com/selfmonoraque5/first-person-body"]

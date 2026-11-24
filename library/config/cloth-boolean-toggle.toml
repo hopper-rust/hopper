@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "me.shedaniel.clothconfig2.api.ConfigEntryBuilder"
+member = "startBooleanToggle"
+
+[to]
+host = "SettingSpec::toggle"
+
+[info]
+status = "direct"
+notes = "SettingSpec::toggle(key, label, default), with .tooltip(lang key) for a tooltip. Read with host.setting_bool."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/living-hands", "https://github.com/selfmonoraque5/earshot"]

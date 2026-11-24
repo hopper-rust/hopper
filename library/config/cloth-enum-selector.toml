@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "me.shedaniel.clothconfig2.api.ConfigEntryBuilder"
+member = "startEnumSelector"
+
+[to]
+host = "SettingSpec::choice"
+
+[info]
+status = "direct"
+notes = "SettingSpec::choice(key, label, option lang keys, default index). Read the picked index with host.setting_choice."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/skyblock-hud", "https://github.com/selfmonoraque5/first-person-body"]

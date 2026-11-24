@@ -1,0 +1,14 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.gui.Hud"
+member = "extractPlayerHealth"
+aliases = ["net.minecraft.client.gui.Gui#renderPlayerHealth", "net.minecraft.client.gui.hud.InGameHud#renderStatusBars"]
+
+[to]
+hook = "gui_layer_pre"
+
+[info]
+status = "partial"
+notes = "No mixin needed to hide or replace the hearts, armour, food and air: cancel gui_layer_pre when event.layer ends with player_health, and draw your own in render_gui_post. The rows go together."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/skyblock-hud"]

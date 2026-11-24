@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry"
+member = "addLast"
+
+[to]
+hook = "render_gui_post"
+
+[info]
+status = "direct"
+notes = "Draw over the HUD with event.draw; draw.size() is the GUI size. Not drawn under F1."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/skyblock-hud", "https://github.com/selfmonoraque5/earshot"]

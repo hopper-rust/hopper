@@ -1,0 +1,12 @@
+[from]
+loader = "fabric"
+class = "net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents"
+member = "JOIN"
+
+[to]
+hook = "client_player_logging_in"
+
+[info]
+status = "direct"
+notes = "Fires once per connection, single player included."
+since_api = "0.2"

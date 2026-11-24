@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents"
+member = "END_CLIENT_TICK"
+
+[to]
+hook = "client_tick_post"
+
+[info]
+status = "direct"
+notes = "Runs once per client tick, after the game's own tick. Horizon's docs name this Fabric event for the hook."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/macro-keys", "https://github.com/selfmonoraque5/skyblock-hud", "https://github.com/selfmonoraque5/living-hands", "https://github.com/selfmonoraque5/first-person-body", "https://github.com/selfmonoraque5/earshot"]

@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.gui.GuiGraphicsExtractor"
+member = "fillGradient"
+aliases = ["net.minecraft.client.gui.GuiGraphics#fillGradient", "net.minecraft.client.gui.DrawContext#fillGradient"]
+
+[to]
+host = "draw.fill_gradient"
+
+[info]
+status = "partial"
+notes = "draw.fill_gradient([x, y, width, height], top, bottom): a width and height, not corners."
+since_api = "0.2"

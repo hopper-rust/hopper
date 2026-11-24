@@ -1,0 +1,12 @@
+[from]
+loader = "fabric"
+class = "me.shedaniel.clothconfig2.api.ConfigBuilder"
+
+[to]
+host = "Registrar.register_setting"
+
+[info]
+status = "partial"
+notes = "No screen to build: each option becomes a SettingSpec registered in the register hook, and Horizon draws the settings page and saves the values. Read them with host.setting_bool, setting_f64 or setting_choice; setting_changed says when one changes."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/skyblock-hud", "https://github.com/selfmonoraque5/living-hands", "https://github.com/selfmonoraque5/first-person-body", "https://github.com/selfmonoraque5/earshot"]

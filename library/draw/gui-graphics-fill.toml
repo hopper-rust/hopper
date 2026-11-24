@@ -1,0 +1,14 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.gui.GuiGraphicsExtractor"
+member = "fill"
+aliases = ["net.minecraft.client.gui.GuiGraphics#fill", "net.minecraft.client.gui.DrawContext#fill"]
+
+[to]
+host = "draw.fill"
+
+[info]
+status = "partial"
+notes = "draw.fill([x, y, width, height], argb): Horizon takes a width and height where Minecraft takes the two corners. Floats, in GUI pixels."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/skyblock-hud"]

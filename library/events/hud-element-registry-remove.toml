@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry"
+member = "removeElement"
+
+[to]
+hook = "gui_layer_pre"
+
+[info]
+status = "partial"
+notes = "Return Flow::Cancel from gui_layer_pre for that layer. Horizon draws health, armour, food and air as one layer, minecraft:player_health, so they can only be hidden together."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/skyblock-hud"]

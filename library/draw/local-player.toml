@@ -1,0 +1,14 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.Minecraft"
+member = "player"
+aliases = ["net.minecraft.client.MinecraftClient#player"]
+
+[to]
+host = "host.local_player"
+
+[info]
+status = "partial"
+notes = "host.local_player() gives a PlayerRef; its entity() reads position, rotation, sprinting and so on through the host, each returning an Option."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/skyblock-hud", "https://github.com/selfmonoraque5/living-hands"]

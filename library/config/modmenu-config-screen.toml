@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "com.terraformersmc.modmenu.api.ModMenuApi"
+member = "getModConfigScreenFactory"
+
+[to]
+host = "Registrar.register_setting"
+
+[info]
+status = "partial"
+notes = "Not needed: a mod that registers settings gets its settings page in Horizon's mod list on its own."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/skyblock-hud", "https://github.com/selfmonoraque5/living-hands", "https://github.com/selfmonoraque5/first-person-body"]

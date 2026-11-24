@@ -1,0 +1,14 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.gui.GuiGraphicsExtractor"
+member = "text"
+aliases = ["net.minecraft.client.gui.GuiGraphics#drawString", "net.minecraft.client.gui.DrawContext#drawText"]
+
+[to]
+host = "draw.text"
+
+[info]
+status = "direct"
+notes = "draw.text(text, [x, y], argb, shadow). No Font argument."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/skyblock-hud"]

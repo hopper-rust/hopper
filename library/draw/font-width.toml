@@ -1,0 +1,14 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.gui.Font"
+member = "width"
+aliases = ["net.minecraft.client.font.TextRenderer#getWidth"]
+
+[to]
+host = "host.text_width"
+
+[info]
+status = "direct"
+notes = "host.text_width(&Text) returns a Result; fall back to about 6 pixels a character on error."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/skyblock-hud", "https://github.com/selfmonoraque5/earshot"]

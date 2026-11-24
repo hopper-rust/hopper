@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking"
+member = "registerGlobalReceiver"
+
+[to]
+hook = "client_packet"
+
+[info]
+status = "partial"
+notes = "client_packet hears every play packet: check event.packet.custom_payload for your channel and decode its data yourself (raw bytes, no payload codecs). Read-only."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/earshot"]

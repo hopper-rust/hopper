@@ -1,0 +1,12 @@
+[from]
+loader = "fabric"
+class = "net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents"
+member = "START_CLIENT_TICK"
+
+[to]
+hook = "client_tick_pre"
+
+[info]
+status = "direct"
+notes = "Runs once per client tick, before the game's own tick. Horizon's docs name this Fabric event for the hook."
+since_api = "0.2"

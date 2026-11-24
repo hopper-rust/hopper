@@ -1,0 +1,12 @@
+[from]
+loader = "fabric"
+class = "net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents"
+member = "START_SERVER_TICK"
+
+[to]
+hook = "server_tick"
+
+[info]
+status = "direct"
+notes = "One hook for both phases: check the event's phase (ServerTickStart). Horizon's docs name this Fabric event for the hook."
+since_api = "0.2"

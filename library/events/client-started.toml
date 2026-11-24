@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents"
+member = "CLIENT_STARTED"
+
+[to]
+hook = "client_setup"
+
+[info]
+status = "direct"
+notes = "Once per game start, after the first resource load and before the title screen. Good for baking models."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/living-hands"]

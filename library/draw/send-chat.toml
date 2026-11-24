@@ -1,0 +1,14 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.multiplayer.ClientPacketListener"
+member = "sendChat"
+aliases = ["net.minecraft.client.network.ClientPlayNetworkHandler#sendChatMessage"]
+
+[to]
+host = "host.send_chat"
+
+[info]
+status = "direct"
+notes = "host.send_chat(message) from a client hook; it returns an error when not on a server. Keep under the server's spam limit."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/macro-keys"]

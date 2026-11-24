@@ -1,0 +1,12 @@
+[from]
+loader = "fabric"
+class = "dev.isxander.yacl3.api.YetAnotherConfigLib"
+
+[to]
+host = "Registrar.register_setting"
+
+[info]
+status = "partial"
+notes = "Same as Cloth Config: one SettingSpec per option (toggle, range or choice). Categories and groups have no Horizon equivalent; order the options instead."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/living-hands"]

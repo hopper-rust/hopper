@@ -1,0 +1,14 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.multiplayer.ClientPacketListener"
+member = "sendCommand"
+aliases = ["net.minecraft.client.network.ClientPlayNetworkHandler#sendChatCommand"]
+
+[to]
+host = "host.send_chat"
+
+[info]
+status = "partial"
+notes = "The same call as chat, with the / kept: host.send_chat(\"/spawn\")."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/macro-keys"]

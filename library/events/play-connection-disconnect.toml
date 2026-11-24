@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents"
+member = "DISCONNECT"
+
+[to]
+hook = "client_player_logging_out"
+
+[info]
+status = "direct"
+notes = "Clear anything kept for the server here."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/macro-keys", "https://github.com/selfmonoraque5/skyblock-hud", "https://github.com/selfmonoraque5/earshot"]

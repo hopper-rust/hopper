@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "me.shedaniel.clothconfig2.api.ConfigEntryBuilder"
+member = "startIntSlider"
+
+[to]
+host = "SettingSpec::range"
+
+[info]
+status = "direct"
+notes = "SettingSpec::range(key, label, min, max, step, default), all f64. Read with host.setting_f64."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/living-hands"]

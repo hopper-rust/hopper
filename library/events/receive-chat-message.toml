@@ -1,0 +1,12 @@
+[from]
+loader = "fabric"
+class = "net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents"
+member = "CHAT"
+
+[to]
+hook = "client_chat_received"
+
+[info]
+status = "partial"
+notes = "Player messages come through the same hook as game messages: event.system is false, event.sender is the player's UUID and event.player_message the signed message."
+since_api = "0.2"

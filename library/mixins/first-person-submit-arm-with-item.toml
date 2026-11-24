@@ -1,0 +1,14 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.renderer.FirstPersonHandsAndItemsRenderer"
+member = "submitArmWithItem"
+aliases = ["net.minecraft.client.renderer.ItemInHandRenderer#renderArmWithItem", "net.minecraft.client.render.item.HeldItemRenderer#renderFirstPersonItem"]
+
+[to]
+hook = "render_hand"
+
+[info]
+status = "partial"
+notes = "render_hand gives each first-person hand's pose: add to render.translation, render.rotation and render.scale, or cancel. The rotation is about the eye, not the hand, so a few degrees move the item far."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/living-hands", "https://github.com/selfmonoraque5/first-person-body"]

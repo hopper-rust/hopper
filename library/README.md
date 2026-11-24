@@ -21,14 +21,14 @@ Name the file after the Fabric side, in kebab case: `events/hud-render-callback.
 loader = "fabric"
 class = "net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback"
 member = "EVENT"            # field or method; leave out for the whole class
-# For Minecraft classes, older names so mods built before 26.1 match too (optional),
-# e.g. aliases = ["net.minecraft.class_332"] for GuiGraphics.
+# For Minecraft classes, the Yarn names older mods use (optional), member after #.
+# aliases = ["net.minecraft.client.gui.DrawContext#fill"]
 
 # What it becomes on Horizon. Exactly one of: hook, host, missing.
 [to]
 hook = "render_gui_post"
 # host = "draw.fill"
-# missing = "https://github.com/horizon-rust/horizon/issues/..."   # the API request
+# missing = "https://github.com/horizon-rust/horizon/issues/..."   # the API request, or "unrequested"
 
 [info]
 status = "direct"           # direct | partial | missing
@@ -40,12 +40,12 @@ seen_in = ["https://github.com/selfmonoraque5/skyblock-hud"]   # a tested port t
 ### Fields
 
 - `from.loader`: `fabric` for now.
-- `from.class`: the fully qualified class name. For Minecraft classes, use the **Mojang name** (mods for 26.1 and later ship with these). Put older Yarn or intermediary names in `aliases`.
+- `from.class`: the fully qualified class name. For Minecraft classes, use the **Mojang name** (mods for 26.1 and later ship with these). Put the older Yarn names in `aliases`, as `Class` or `Class#member`.
 - `from.member`: the field or method, without arguments. Leave it out when the whole class maps.
 - `to`: exactly one of
   - `hook`: a Horizon hook name, as in the mod API's `hooks/` folder.
   - `host`: a Horizon host function or draw call, like `draw.fill` or `host.send_chat`.
-  - `missing`: a link to the request for that API. Use this when Horizon has nothing for it yet.
+  - `missing`: a link to the request for that API, or `"unrequested"` when nobody has asked yet. Use this when Horizon has nothing for it.
 - `info.status`:
   - `direct`: same idea, a port only changes names.
   - `partial`: it maps, but something works differently. Say what in `notes`.
@@ -54,4 +54,4 @@ seen_in = ["https://github.com/selfmonoraque5/skyblock-hud"]   # a tested port t
 - `info.since_api`: the mod API version you checked it on.
 - `info.seen_in`: optional, links to tested ports that use this mapping.
 
-Entries are checked against [`schema/entry.schema.json`](../schema/entry.schema.json).
+Entries are checked against [`schema/entry.schema.json`](../schema/entry.schema.json) on every push and pull request. Run the same check locally with `pip install jsonschema` and `python scripts/check_library.py`.

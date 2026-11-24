@@ -1,0 +1,14 @@
+[from]
+loader = "fabric"
+class = "net.fabricmc.fabric.api.client.screen.v1.ScreenEvents"
+member = "afterExtract"
+aliases = ["net.fabricmc.fabric.api.client.screen.v1.ScreenEvents#afterRender"]
+
+[to]
+hook = "screen_render_post"
+
+[info]
+status = "direct"
+notes = "Draw over the open screen with event.draw; event.screen.rect is its panel, event.screen.mouse the pointer."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/macro-keys", "https://github.com/selfmonoraque5/earshot"]

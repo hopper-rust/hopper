@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents"
+member = "GAME"
+
+[to]
+hook = "client_chat_received"
+
+[info]
+status = "direct"
+notes = "One hook for system and player messages: event.system is set for a game message, event.overlay for the action bar."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/skyblock-hud", "https://github.com/selfmonoraque5/earshot"]

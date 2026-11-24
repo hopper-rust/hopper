@@ -1,0 +1,14 @@
+[from]
+loader = "fabric"
+class = "net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLevelEvents"
+member = "AFTER_CLIENT_LEVEL_CHANGE"
+aliases = ["net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientWorldEvents#AFTER_CLIENT_WORLD_CHANGE"]
+
+[to]
+hook = "client_level_load"
+
+[info]
+status = "partial"
+notes = "client_level_load fires for the new level, then client_level_unload for the old one. A proxy moving the player to another backend also changes the level without a logout, so clear per-world state in client_level_unload."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/macro-keys", "https://github.com/selfmonoraque5/skyblock-hud"]

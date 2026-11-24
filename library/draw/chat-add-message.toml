@@ -1,0 +1,14 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.gui.components.ChatComponent"
+member = "addClientSystemMessage"
+aliases = ["net.minecraft.client.gui.components.ChatComponent#addMessage", "net.minecraft.client.gui.hud.ChatHud#addMessage"]
+
+[to]
+host = "host.chat_line"
+
+[info]
+status = "direct"
+notes = "host.chat_line(Text) shows a line in this client's chat only. client_chat_received doesn't hear it."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/first-person-body"]

@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents"
+member = "END_SERVER_TICK"
+
+[to]
+hook = "server_tick"
+
+[info]
+status = "direct"
+notes = "One hook for both phases: check the event's phase (ServerTickEnd). Horizon's docs name this Fabric event for the hook."
+since_api = "0.2"
+seen_in = ["https://github.com/selfmonoraque5/earshot"]
