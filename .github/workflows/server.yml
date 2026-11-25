@@ -1,0 +1,28 @@
+name: server
+
+# Builds the web server for 64-bit ARM Linux (Raspberry Pi, ARM VPS) and puts it, with the
+# library, in the `server-latest` release: the server downloads that instead of building.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  arm64:
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - uses: actions/checkout@v4
+      - run: cargo build --release --locked -p hopper-server
+      - run: |
+          mkdir -p hopper-server
+          cp target/release/hopper-server hopper-server/
+          cp -r library hopper-server/
+          tar czf hopper-server-aarch64-linux.tar.gz hopper-server
+      - env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view server-latest >/dev/null 2>&1 || gh release create server-latest --title "Server (latest main)" --notes "Built from main for 64-bit ARM Linux. Not a versioned release." --prerelease
+          gh release upload server-latest hopper-server-aarch64-linux.tar.gz --clobber
