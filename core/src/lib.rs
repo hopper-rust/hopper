@@ -3,6 +3,7 @@
 //! [`check`] takes the mod's license and its jar's bytes. The license is checked first; the
 //! jar is only read for a license that allows porting.
 
+pub mod builds;
 pub mod classfile;
 #[cfg(feature = "convert")]
 pub mod convert;

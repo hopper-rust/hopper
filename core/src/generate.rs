@@ -5,15 +5,15 @@
 //! file names, the original's lang file and license, and a README listing what wasn't ported.
 //! It ports no logic: the project builds, but does nothing until the TODOs are done.
 
+use crate::builds::{self, Build};
 use crate::library::{Entry, Library, Status};
 use crate::license::Verdict;
 use crate::{Mapped, Scan};
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 use std::fmt::Write as _;
 use std::io::{Cursor, Read};
 
 const HOOKS: &str = include_str!("../data/hooks.txt");
-const SDK: &str = include_str!("../data/sdk.toml");
 
 /// Where the project's files come from, besides the jar.
 pub struct Source<'a> {
@@ -24,6 +24,8 @@ pub struct Source<'a> {
     pub license: &'a str,
     /// What the converter made of the mod's source code, and where that code is.
     pub converted: Option<(&'a Converted, &'a str)>,
+    /// The Horizon build the project targets.
+    pub build: &'a Build,
 }
 
 /// Code converted for one hook, from one listener.
@@ -73,8 +75,39 @@ fn hook_signatures() -> BTreeMap<&'static str, &'static str> {
     HOOKS.lines().filter(|l| !l.starts_with('#')).filter_map(|l| l.split_once('\t')).collect()
 }
 
-fn sdk_value(key: &str) -> &'static str {
-    SDK.lines().filter_map(|l| l.split_once('=')).find(|(k, _)| k.trim() == key).map_or("", |(_, v)| v.trim().trim_matches('"'))
+/// The `host.x` and `draw.x` functions a line of Rust calls.
+fn calls(line: &str) -> impl Iterator<Item = &str> {
+    ["host.", "draw."].into_iter().flat_map(move |prefix| {
+        line.match_indices(prefix).filter_map(move |(i, _)| {
+            let rest = &line[i + prefix.len()..];
+            let end = rest.find(|c: char| !(c.is_ascii_alphanumeric() || c == '_')).unwrap_or(rest.len());
+            (end > 0).then(|| &rest[..end])
+        })
+    })
+}
+
+/// The hooks and host functions the finished port needs: the ones the library maps the
+/// original to, and the ones the converted code calls.
+fn needed(scan: &Scan, entries: &BTreeMap<&str, &Entry>, converted: Option<&Converted>) -> BTreeSet<String> {
+    let mut names = BTreeSet::new();
+    for m in &scan.mapped {
+        let Some(e) = entries.get(m.entry.as_str()) else { continue };
+        names.extend(e.to.hook.iter().cloned());
+        names.extend(e.to.host.iter().flat_map(|h| calls(h).map(str::to_string).collect::<Vec<_>>()));
+    }
+    if let Some(c) = converted {
+        names.extend(c.hooks.keys().cloned());
+        names.extend(c.hooks.values().flatten().flat_map(|b| &b.lines).flat_map(|l| calls(l).map(str::to_string)));
+    }
+    names
+}
+
+/// What a converted block calls that `build` doesn't have yet.
+fn too_new<'b>(block: &'b Block, build: &Build) -> Vec<&'b str> {
+    let mut out: Vec<&str> = block.lines.iter().flat_map(|l| calls(l)).filter(|n| !build.has(n)).collect();
+    out.sort();
+    out.dedup();
+    out
 }
 
 /// A Horizon mod id: `[a-z0-9_]{1,64}`.
@@ -192,7 +225,7 @@ pub fn generate(library: &Library, source: &Source, jar: &[u8]) -> Result<Projec
     files.push(("Cargo.toml".to_string(), cargo_toml(&id, &name, &license.id).into_bytes()));
     files.push((
         "horizon-mod.toml".to_string(),
-        manifest(&id, &name, &meta.description, &license.id, &credits, side).into_bytes(),
+        manifest(&id, &name, &meta.description, &license.id, &credits, side, source.build).into_bytes(),
     ));
     files.push(("src/lib.rs".to_string(), lib_rs(&id, &name, source, &scan, &entries, &keys).into_bytes()));
     if let Some(lang) = lang {
@@ -202,7 +235,8 @@ pub fn generate(library: &Library, source: &Source, jar: &[u8]) -> Result<Projec
     if let Some(text) = license_text {
         files.push(("LICENSE".to_string(), text));
     }
-    files.push(("README.md".to_string(), readme(&name, source, &license.id, &credits, &scan, has_license).into_bytes()));
+    let needs = needed(&scan, &entries, source.converted.map(|(c, _)| c));
+    files.push(("README.md".to_string(), readme(&name, source, &license.id, &credits, &scan, has_license, &needs).into_bytes()));
     files.push((".gitignore".to_string(), b"/target\n/.horizon\n".to_vec()));
     Ok(Project { id, files })
 }
@@ -227,7 +261,7 @@ horizon-mod-api = {{ path = ".horizon/sdk/api/crates/horizon-mod-api" }}
     )
 }
 
-fn manifest(id: &str, name: &str, description: &str, license: &str, credits: &str, side: &str) -> String {
+fn manifest(id: &str, name: &str, description: &str, license: &str, credits: &str, side: &str, build: &Build) -> String {
     format!(
         r#"id = {id}
 name = {name}
@@ -241,7 +275,7 @@ api = "0.2"
 side = {side}
 capabilities = ["registries"]
 
-# The Horizon build Hopper checked the library against. Pin the build you test on.
+# The Horizon build this project targets: {label}. Pin the build you test on.
 [native]
 game = {game}
 horizon = {horizon}
@@ -253,9 +287,10 @@ mixins = {mixins}
         license = toml_str(license),
         credits = toml_str(credits),
         side = toml_str(side),
-        game = toml_str(sdk_value("game")),
-        horizon = toml_str(sdk_value("horizon")),
-        mixins = toml_str(sdk_value("mixins")),
+        label = build.label(),
+        game = toml_str(&build.game),
+        horizon = toml_str(&build.horizon),
+        mixins = toml_str(&build.mixins),
     )
 }
 
@@ -283,7 +318,9 @@ fn imports(signatures: &[&str], extra: &[&str]) -> String {
 }
 
 fn lib_rs(id: &str, name: &str, source: &Source, scan: &Scan, entries: &BTreeMap<&str, &Entry>, keys: &[String]) -> String {
-    let sigs = hook_signatures();
+    let build = source.build;
+    // Only the hooks the targeted build has.
+    let sigs: BTreeMap<&str, &str> = hook_signatures().into_iter().filter(|(h, _)| build.has(h)).collect();
     // Each hook, with what of the original lands there.
     let mut by_hook: BTreeMap<&str, Vec<&Mapped>> = BTreeMap::new();
     let mut elsewhere: Vec<&Mapped> = Vec::new();
@@ -326,7 +363,9 @@ fn lib_rs(id: &str, name: &str, source: &Source, scan: &Scan, entries: &BTreeMap
         let _ = writeln!(s, "//!");
         let _ = writeln!(s, "//! Calls the original makes that become host calls or plain Rust:");
         for m in &elsewhere {
-            let _ = writeln!(s, "//! - `{}` -> {} ({})", m.fabric, m.horizon, status(m.status));
+            let newer = entries.get(m.entry.as_str()).and_then(|e| e.to.hook.as_deref()).is_some_and(|h| !build.has(h));
+            let note = if newer { ", needs a newer Horizon build" } else { "" };
+            let _ = writeln!(s, "//! - `{}` -> {} ({}{note})", m.fabric, m.horizon, status(m.status));
         }
     }
     s.push('\n');
@@ -372,8 +411,13 @@ fn lib_rs(id: &str, name: &str, source: &Source, scan: &Scan, entries: &BTreeMap
 
     for (hook, rows) in &by_hook {
         let blocks = code(hook);
-        let uses =
-            |word: &str| blocks.iter().flat_map(|b| &b.lines).any(|l| !l.trim_start().starts_with("//") && l.contains(word));
+        let uses = |word: &str| {
+            blocks
+                .iter()
+                .filter(|b| too_new(b, build).is_empty())
+                .flat_map(|b| &b.lines)
+                .any(|l| !l.trim_start().starts_with("//") && l.contains(word))
+        };
         let mut sig = sigs[hook].to_string();
         if !uses("host.") {
             sig = sig.replace("host:", "_host:");
@@ -396,6 +440,21 @@ fn lib_rs(id: &str, name: &str, source: &Source, scan: &Scan, entries: &BTreeMap
         let several = blocks.len() > 1 && blocks.iter().any(|b| b.lines.iter().any(|l| l.starts_with("return")));
         let mut ends_in_return = false;
         for (i, b) in blocks.iter().enumerate() {
+            let newer = too_new(b, build);
+            if !newer.is_empty() {
+                // Calls this build doesn't have: kept, but as comments.
+                let names = newer.iter().map(|n| format!("`{n}`")).collect::<Vec<_>>().join(", ");
+                let _ = writeln!(
+                    s,
+                    "        // TODO: converted from {}, but it calls {names}, which build {} doesn't have.",
+                    b.file,
+                    build.label()
+                );
+                for l in &b.lines {
+                    let _ = writeln!(s, "        // {l}");
+                }
+                continue;
+            }
             let _ = writeln!(s, "        // Converted from {} by Hopper's rules: check it.", b.file);
             if several && flow {
                 let _ = writeln!(s, "        // TODO: several listeners here; a return in this one skips the ones below.");
@@ -423,7 +482,15 @@ fn lib_rs(id: &str, name: &str, source: &Source, scan: &Scan, entries: &BTreeMap
     s
 }
 
-fn readme(name: &str, source: &Source, license: &str, credits: &str, scan: &Scan, has_license: bool) -> String {
+fn readme(
+    name: &str,
+    source: &Source,
+    license: &str,
+    credits: &str,
+    scan: &Scan,
+    has_license: bool,
+    needs: &BTreeSet<String>,
+) -> String {
     let mut s = String::new();
     let _ = writeln!(s, "# {name} for Horizon\n");
     let _ = writeln!(s, "{credits}\n");
@@ -442,6 +509,21 @@ fn readme(name: &str, source: &Source, license: &str, credits: &str, scan: &Scan
         let _ = writeln!(
             s,
             "{license}, as the original. **TODO:** the jar had no license file; add the original's license text as `LICENSE`.\n"
+        );
+    }
+    let build = source.build;
+    let _ = writeln!(s, "## Horizon build\n");
+    let _ = writeln!(s, "Pinned to the Horizon build {} in `horizon-mod.toml`.", build.label());
+    let oldest = builds::oldest_with(needs.iter().map(String::as_str));
+    let lacking: Vec<&str> = needs.iter().map(String::as_str).filter(|n| !build.has(n)).collect();
+    if lacking.is_empty() {
+        let _ = writeln!(s, "Everything this port needs is in Horizon builds from {} on.\n", oldest.label());
+    } else {
+        let _ = writeln!(
+            s,
+            "**This build is too old for part of the port:** it doesn't have {} yet, which the port needs. Build {} or newer has everything: pin that one, or work around it.\n",
+            lacking.iter().map(|n| format!("`{n}`")).collect::<Vec<_>>().join(", "),
+            oldest.label()
         );
     }
     if let Some((c, from)) = source.converted {
@@ -510,7 +592,7 @@ mod tests {
         let sigs = hook_signatures();
         assert!(sigs["client_tick_post"].starts_with("fn client_tick_post(&self"));
         assert!(sigs.contains_key("register"));
-        assert_eq!(sdk_value("game"), "26.3");
+        assert_eq!(builds::newest().game, "26.3");
     }
 
     #[test]

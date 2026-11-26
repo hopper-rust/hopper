@@ -20,7 +20,9 @@
   button:disabled { opacity: .6; cursor: wait; }
   .port { margin-top: 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
   .port button { background: var(--ink); color: var(--bg); }
-  .port .msg { font-size: 14px; color: var(--muted); }
+  .port .msg { font-size: 14px; color: var(--muted); flex-basis: 100%; }
+  .port label { font-size: 14px; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+  .port select { font: inherit; font-size: 14px; padding: 7px 8px; border: 1px solid var(--line); border-radius: 8px; background: var(--card); color: var(--ink); }
   .port .msg.bad { color: var(--missing); }
   .examples { font-size: 14px; color: var(--muted); }
   .examples a { color: inherit; }
@@ -187,18 +189,40 @@ function portedBanner(p) {
   return box;
 }
 
+// The Horizon builds a starter project can target, newest first.
+let BUILDS = [];
+const buildsLoaded = fetch("/api/builds").then((r) => r.json()).then((l) => { BUILDS = l.builds || []; }).catch(() => {});
+function buildPicker() {
+  const label = el("label", "", "Horizon build");
+  const pick = el("select");
+  pick.title = "The Horizon build the project is pinned to. Pick the one you play on.";
+  let saved = "";
+  try { saved = localStorage.getItem("hopper-build") || ""; } catch (e) {}
+  for (const b of BUILDS) {
+    const o = el("option", "", b.label + (b.newest ? ", newest" : ""));
+    o.value = b.short;
+    if (b.short === saved) o.selected = true;
+    pick.append(o);
+  }
+  pick.addEventListener("change", () => { try { localStorage.setItem("hopper-build", pick.value); } catch (e) {} });
+  label.append(pick);
+  return { label, pick };
+}
+
 // The starting project: fetched first, so an error shows here instead of downloading as a file.
 function portButton(c) {
   const box = el("div", "port");
   const b = el("button", "", "Download starter project");
   b.type = "button";
-  const msg = el("span", "msg", "A Horizon project with the hooks in place and TODOs for the logic.");
+  const { label, pick } = buildPicker();
+  const msg = el("span", "msg", "A Horizon project with the hooks in place and TODOs for the logic, pinned to the build you pick.");
   b.addEventListener("click", async () => {
     b.disabled = true; msg.className = "msg"; msg.textContent = "Writing the project…";
     try {
       const q = new URLSearchParams({ mod: c.slug });
       const game = $("game").value.trim();
       if (game) q.set("game", game);
+      if (pick.value) q.set("build", pick.value);
       const res = await fetch("/api/port?" + q);
       if (!res.ok) {
         const body = await res.json().catch(() => ({}));
@@ -216,7 +240,9 @@ function portButton(c) {
       b.disabled = false;
     }
   });
-  box.append(b, msg);
+  box.append(b);
+  if (BUILDS.length) box.append(label);
+  box.append(msg);
   return box;
 }
 
@@ -231,6 +257,7 @@ async function check(target, game) {
     const body = await res.json();
     if (!res.ok) throw new Error(body.error || "The check failed.");
     await portsLoaded;
+    await buildsLoaded;
     render(body);
   } catch (e) {
     out.replaceChildren(el("div", "card error", e.message));

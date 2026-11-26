@@ -1,0 +1,38 @@
+# Horizon builds a starter project can target, oldest first; written by scripts/update_builds.py.
+# `lacks`: hooks and host functions Hopper writes that this build doesn't have yet.
+# The last build is the newest: core/data/hooks.txt and sdk.toml come from it.
+
+[[build]]
+horizon = "5ef7734fdd854add5efd6817178be3c988d8d050"
+date = "2026-11-19"
+game = "26.3"
+mixins = "e59da9094f0c2fdda6c627fe9eff22dec6a906f0"
+lacks = ["camera_roll", "can_survive_v2", "can_sustain_plant_v2", "dispenser_acts", "dragon_fight_won", "ender_chest_opened", "export_ended", "get_enchantment_level_for", "get_equip_sound", "hotbar_attack_indicator_progress", "levels_reset", "may_place_on_v2", "mod_slot_changed", "mod_slot_will_change", "native_corner_shown", "player_handshake", "player_leaving", "player_login_profile", "player_move_packet", "player_pong", "registered_player_command", "replay_advanced", "replay_closed", "replay_open_failed", "replay_opened", "server_list_ping", "station_closing"]
+
+[[build]]
+horizon = "8f83e5c85ae3b9a117f742e8d91170c5c9080a06"
+date = "2026-11-21"
+game = "26.3"
+mixins = "e59da9094f0c2fdda6c627fe9eff22dec6a906f0"
+lacks = ["camera_roll", "ender_chest_opened", "export_ended", "hotbar_attack_indicator_progress", "levels_reset", "mod_slot_changed", "mod_slot_will_change", "player_leaving", "registered_player_command", "replay_advanced", "replay_closed", "replay_open_failed", "replay_opened"]
+
+[[build]]
+horizon = "f037744a79f9982c47876f49c5a3067279f88706"
+date = "2026-11-21"
+game = "26.3"
+mixins = "e59da9094f0c2fdda6c627fe9eff22dec6a906f0"
+lacks = ["ender_chest_opened", "export_ended", "hotbar_attack_indicator_progress", "levels_reset", "mod_slot_changed", "mod_slot_will_change", "registered_player_command"]
+
+[[build]]
+horizon = "2b77287de099c9316278ba7ac4d83590fdb7ef30"
+date = "2026-11-22"
+game = "26.3"
+mixins = "e59da9094f0c2fdda6c627fe9eff22dec6a906f0"
+lacks = ["export_ended", "hotbar_attack_indicator_progress", "mod_slot_changed", "mod_slot_will_change", "registered_player_command"]
+
+[[build]]
+horizon = "f1bb66f353cf67f2aa4665293fc75c8d91186fc7"
+date = "2026-11-22"
+game = "26.3"
+mixins = "e59da9094f0c2fdda6c627fe9eff22dec6a906f0"
+lacks = []

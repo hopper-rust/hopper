@@ -83,8 +83,14 @@ against the SDK (`cargo-horizon-mod horizon-mod check`, or `cargo check` with th
 The website (`server/`), the CLI (`cli/`), the checker and generator (`core/`): open an issue first,
 so we agree on the approach before you write it.
 
-When the Horizon mod API changes, `scripts/update_hooks.py` refreshes `core/data/hooks.txt` from an
-SDK build; `core/data/sdk.toml` pins the SDK the generator targets.
+When a new Horizon build comes out:
+
+1. `scripts/update_hooks.py` refreshes `core/data/hooks.txt` from the new build's SDK, and
+   `core/data/sdk.toml` gets its pins.
+2. `scripts/update_builds.py <launcher native folder>` refreshes `core/data/builds.toml`, the builds
+   people can pick on the site, from the SDK sources the Horizon launcher keeps
+   (`%APPDATA%/horizon-launcher/native` on Windows). Each build is written as the newest one minus
+   the hooks and host functions it doesn't have yet.
 
 ## Rules for every contribution
 

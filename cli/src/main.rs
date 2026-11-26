@@ -13,11 +13,13 @@ const USAGE: &str = "\
 Usage: hopper check <modrinth link | slug | file.jar> [options]
        hopper port <modrinth link | slug> --out <folder> [options]
        hopper convert <folder of Java source> [--json]
+       hopper builds                    the Horizon builds `port --build` can target
 
 Options:
   --out <folder>      where `port` writes the project (must not exist yet)
   --license <SPDX>    the license of a local jar (required for a jar)
   --game <version>    check the newest Fabric file for this Minecraft version
+  --build <commit>    the Horizon build `port` targets (default: the newest; `builds` lists them)
   --library <dir>     the library folder (default: ./library, or the repo's)
   --json              print the report as JSON
   --all               list every unknown class, not just the first 15";
@@ -29,6 +31,7 @@ struct Args {
     target: String,
     license: Option<String>,
     game: Option<String>,
+    build: Option<String>,
     library: Option<PathBuf>,
     json: bool,
     all: bool,
@@ -49,6 +52,7 @@ fn args() -> Result<Args, String> {
         target: String::new(),
         license: None,
         game: None,
+        build: None,
         library: None,
         json: false,
         all: false,
@@ -58,6 +62,7 @@ fn args() -> Result<Args, String> {
         match arg.as_str() {
             "--license" => a.license = Some(value()?),
             "--game" => a.game = Some(value()?),
+            "--build" => a.build = Some(value()?),
             "--out" => a.out = Some(value()?.into()),
             "--library" => a.library = Some(value()?.into()),
             "--json" => a.json = true,
@@ -150,6 +155,13 @@ fn print(title: &str, file: Option<&str>, report: &Report, all: bool) {
 }
 
 fn run() -> Result<(), String> {
+    if std::env::args().nth(1).as_deref() == Some("builds") {
+        for b in hopper_core::builds::all().iter().rev() {
+            let newest = if std::ptr::eq(b, hopper_core::builds::newest()) { "  (newest, the default)" } else { "" };
+            println!("{}  {}{newest}", b.short(), b.label());
+        }
+        return Ok(());
+    }
     let a = args()?;
     let dir = library_dir(a.library.clone());
     let library = Library::load(&dir)?;
@@ -226,7 +238,9 @@ fn port(library: &Library, a: &Args) -> Result<(), String> {
     if out.exists() {
         return Err(format!("{} already exists", out.display()));
     }
-    let ported = hopper_core::port::port(library, &a.target, a.game.as_deref(), MAX_JAR)?;
+    let build = hopper_core::builds::find(a.build.as_deref().unwrap_or(""))
+        .ok_or("--build: not a Horizon build Hopper knows (run `hopper builds`)")?;
+    let ported = hopper_core::port::port(library, &a.target, a.game.as_deref(), build, MAX_JAR)?;
     let (c, project) = (&ported.checked, &ported.project);
     for (path, bytes) in &project.files {
         let path = out.join(path);

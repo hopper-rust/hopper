@@ -110,7 +110,7 @@
     <h2 id="starter">The starter project</h2>
     <p>For mods that may be ported, <strong>Download starter project</strong> gives you a zip with a Horizon mod that builds:</p>
     <ul>
-      <li><code>horizon-mod.toml</code> and <code>Cargo.toml</code>, pinned to the Horizon mod API Hopper was checked against, with the original's license and credits.</li>
+      <li><code>horizon-mod.toml</code> and <code>Cargo.toml</code>, pinned to the Horizon build you pick, with the original's license and credits.</li>
       <li><code>src/lib.rs</code> with the Horizon hooks the mod needs. Each hook has a TODO saying what the original did there.</li>
       <li>Code Hopper could convert from the mod's public source code (only when the license allows it). Lines it couldn't convert stay as <code>// TODO (Java):</code> with the original line.</li>
       <li>Key bindings with the original's default keys, the original's language file and its license.</li>
@@ -145,11 +145,13 @@
 cd hopper
 cargo run -q -p hopper-cli -- check https://modrinth.com/mod/commandkeys
 cargo run -q -p hopper-cli -- port https://modrinth.com/mod/commandkeys --out commandkeys-horizon
+cargo run -q -p hopper-cli -- port https://modrinth.com/mod/commandkeys --build 8f83e5c --out old-build
+cargo run -q -p hopper-cli -- builds
 cargo run -q -p hopper-cli -- convert path/to/mod/src</code></pre>
     <p><code>check</code> also takes a <code>.jar</code> file. <code>convert</code> shows what the converter makes of Java source, for trying out rules.</p>
 
     <h3>API</h3>
-    <p>The site has a small JSON API: <code>/api/check?mod=&lt;link or slug&gt;&amp;game=26.3</code> (the report), <code>/api/port?mod=…</code> (the starter project zip), <code>/api/ports</code> (finished ports) and <code>/api/library</code> (library size). Please be gentle with it.</p>
+    <p>The site has a small JSON API: <code>/api/check?mod=&lt;link or slug&gt;&amp;game=26.3</code> (the report), <code>/api/port?mod=…&amp;build=f1bb66f</code> (the starter project zip; <code>build</code> is optional), <code>/api/builds</code> (the Horizon builds), <code>/api/ports</code> (finished ports) and <code>/api/library</code> (library size). Please be gentle with it.</p>
 
     <h2 id="contribute">Contributing</h2>
     <p>Hopper gets better one mapping, one rule and one port at a time. From easiest to hardest:</p>
@@ -171,7 +173,7 @@ cargo run -q -p hopper-cli -- convert path/to/mod/src</code></pre>
     </details>
     <details>
       <summary>Which Horizon version do the projects target?</summary>
-      <p>Each starter project is pinned to one Horizon mod API, written in its <code>horizon-mod.toml</code>, so it always builds against the API it was made for. When Horizon's API changes, Hopper's list of hooks is updated from the new SDK.</p>
+      <p>You pick it: next to <strong>Download starter project</strong>, choose the Horizon build you play on (the newest is the default). The project is pinned to that build in its <code>horizon-mod.toml</code>, so it builds against that build's mod API. Its <code>README.md</code> also says the oldest build that has everything the port needs, and warns you if the build you picked is too old for part of it. Horizon's API only grows, so a port usually keeps working on newer builds.</p>
     </details>
     <details>
       <summary>Can I port a mod with an "All rights reserved" license?</summary>

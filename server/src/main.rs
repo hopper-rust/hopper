@@ -54,6 +54,8 @@ struct CheckQuery {
     #[serde(rename = "mod")]
     target: String,
     game: Option<String>,
+    /// The Horizon build a port targets (a commit); the newest when left out.
+    build: Option<String>,
 }
 
 #[derive(Clone, Copy, PartialEq)]
@@ -118,6 +120,9 @@ async fn result(app: Arc<App>, q: CheckQuery, kind: Kind) -> Response {
     let Some(slug) = modrinth::slug(&q.target) else {
         return error(StatusCode::BAD_REQUEST, "That isn't a Modrinth link or project name.");
     };
+    let Some(build) = hopper_core::builds::find(q.build.as_deref().unwrap_or("")) else {
+        return error(StatusCode::BAD_REQUEST, "That isn't a Horizon build Hopper knows.");
+    };
     let game = q.game.filter(|g| !g.trim().is_empty());
     let resolved = match lookup(&app, slug, game).await {
         Ok(r) => r,
@@ -132,8 +137,10 @@ async fn result(app: Arc<App>, q: CheckQuery, kind: Kind) -> Response {
         }
         Resolved::Ready(project, version) => (project.clone(), version.clone()),
     };
-    let (check_key, port_key) =
-        (format!("{}/{}/check.json", project.slug, version.id), format!("{}/{}/port.zip", project.slug, version.id));
+    let (check_key, port_key) = (
+        format!("{}/{}/check.json", project.slug, version.id),
+        format!("{}/{}/port-{}.zip", project.slug, version.id, build.short()),
+    );
     let key = if kind == Kind::Check { check_key.clone() } else { port_key.clone() };
     if let Some(body) = app.cache.get(&key) {
         return answer(kind, &body, true);
@@ -156,7 +163,7 @@ async fn result(app: Arc<App>, q: CheckQuery, kind: Kind) -> Response {
         if kind == Kind::Check {
             return Ok(check);
         }
-        let (generated, _note) = hopper_core::port::generate_for(&worker.library, &project, &jar)?;
+        let (generated, _note) = hopper_core::port::generate_for(&worker.library, &project, &jar, build)?;
         let zip = zip_project(&generated).map_err(|e| e.to_string())?;
         Ok(worker.cache.put(&port_key, zip))
     })
@@ -198,6 +205,25 @@ async fn library_stats(State(app): State<Arc<App>>) -> Response {
         "missing": count(Status::Missing),
     }))
     .into_response()
+}
+
+/// The Horizon builds a port can target, newest first.
+async fn build_list() -> Response {
+    let newest = hopper_core::builds::newest();
+    let list: Vec<_> = hopper_core::builds::all()
+        .iter()
+        .rev()
+        .map(|b| {
+            serde_json::json!({
+                "horizon": b.horizon,
+                "short": b.short(),
+                "label": b.label(),
+                "date": b.date,
+                "newest": std::ptr::eq(b, newest),
+            })
+        })
+        .collect();
+    Json(serde_json::json!({ "builds": list })).into_response()
 }
 
 /// Every finished port, for the page's "already ported" banner.
@@ -318,6 +344,7 @@ async fn main() -> Result<(), String> {
         .route("/api/port", get(port))
         .route("/api/library", get(library_stats))
         .route("/api/ports", get(port_list))
+        .route("/api/builds", get(build_list))
         .layer(middleware::from_fn(no_www))
         .with_state(app);
     let listener = tokio::net::TcpListener::bind(a.listen).await.map_err(|e| format!("{}: {e}", a.listen))?;

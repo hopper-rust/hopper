@@ -1,6 +1,7 @@
 //! Porting a mod straight from Modrinth: check it, convert what its source allows, and generate
 //! the project. Shared by the command line and the website.
 
+use crate::builds::Build;
 use crate::convert::{self, JavaFile};
 use crate::generate::{self, Project, Source};
 use crate::library::Library;
@@ -16,7 +17,7 @@ pub struct Ported {
     pub source_note: Option<String>,
 }
 
-pub fn port(library: &Library, target: &str, game: Option<&str>, max_jar: u64) -> Result<Ported, String> {
+pub fn port(library: &Library, target: &str, game: Option<&str>, build: &Build, max_jar: u64) -> Result<Ported, String> {
     let f = modrinth::fetch(library, target, game, max_jar)?;
     let Some(jar) = &f.jar else {
         return Err(f.checked.report.summary.clone());
@@ -28,14 +29,19 @@ pub fn port(library: &Library, target: &str, game: Option<&str>, max_jar: u64) -
         license: f.license.clone(),
         source_url: f.source_url.clone(),
     };
-    let (project, source_note) = generate_for(library, &project, jar)?;
+    let (project, source_note) = generate_for(library, &project, jar, build)?;
     Ok(Ported { checked: f.checked, project, source_note })
 }
 
 /// The project for a downloaded jar: converts what the mod's public source allows (only called
 /// once the license allowed the jar to be downloaded), then generates. Also gives why nothing
 /// was converted, when nothing was.
-pub fn generate_for(library: &Library, p: &modrinth::Project, jar: &[u8]) -> Result<(Project, Option<String>), String> {
+pub fn generate_for(
+    library: &Library,
+    p: &modrinth::Project,
+    jar: &[u8],
+    build: &Build,
+) -> Result<(Project, Option<String>), String> {
     let url = format!("https://modrinth.com/mod/{}", p.slug);
     let (converted, source_note) = match p.source_url.as_deref() {
         None => (None, Some("The mod links no source code on Modrinth, so nothing was converted.".to_string())),
@@ -52,6 +58,7 @@ pub fn generate_for(library: &Library, p: &modrinth::Project, jar: &[u8]) -> Res
         url: &url,
         license: &p.license,
         converted: converted.as_ref().map(|(c, src)| (c, src.as_str())),
+        build,
     };
     let project = generate::generate(library, &source, jar)?;
     Ok((project, source_note))
