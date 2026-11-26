@@ -14,6 +14,7 @@ use axum::{Json, Router};
 use cache::Cache;
 use hopper_core::library::{Library, Status};
 use hopper_core::modrinth::{self, Resolved};
+use hopper_core::ports::Ports;
 use serde::Deserialize;
 use std::collections::HashMap;
 use std::net::SocketAddr;
@@ -32,6 +33,7 @@ const MAX_JAR: u64 = 50 << 20;
 
 struct App {
     library: Library,
+    ports: Ports,
     cache: Cache,
     /// Link and Minecraft version → what Modrinth said, for [`cache::LOOKUP`].
     lookups: Mutex<HashMap<String, (Instant, Arc<Resolved>)>>,
@@ -191,6 +193,11 @@ async fn library_stats(State(app): State<Arc<App>>) -> Response {
     .into_response()
 }
 
+/// Every finished port, for the page's "already ported" banner.
+async fn port_list(State(app): State<Arc<App>>) -> Response {
+    Json(&app.ports).into_response()
+}
+
 async fn page() -> Response {
     ([(header::CONTENT_TYPE, "text/html; charset=utf-8")], PAGE).into_response()
 }
@@ -202,23 +209,25 @@ async fn logo() -> Response {
 struct Args {
     listen: SocketAddr,
     library: PathBuf,
+    ports: PathBuf,
     /// Where results are kept; None keeps them in memory only.
     cache: Option<PathBuf>,
 }
 
 fn args() -> Result<Args, String> {
-    let mut a = Args { listen: ([127, 0, 0, 1], 8080).into(), library: PathBuf::from("library"), cache: Some("cache".into()) };
+    let mut a = Args { listen: ([127, 0, 0, 1], 8080).into(), library: PathBuf::from("library"), ports: PathBuf::from("ports"), cache: Some("cache".into()) };
     let mut it = std::env::args().skip(1);
     while let Some(arg) = it.next() {
         let mut value = || it.next().ok_or(format!("{arg} needs a value"));
         match arg.as_str() {
             "--listen" => a.listen = value()?.parse().map_err(|e| format!("--listen: {e}"))?,
             "--library" => a.library = value()?.into(),
+            "--ports" => a.ports = value()?.into(),
             "--cache" => a.cache = Some(value()?.into()),
             "--no-cache" => a.cache = None,
             _ => {
                 return Err(
-                    "Usage: hopper-server [--listen 127.0.0.1:8080] [--library ./library] [--cache ./cache | --no-cache]".into()
+                    "Usage: hopper-server [--listen 127.0.0.1:8080] [--library ./library] [--ports ./ports] [--cache ./cache | --no-cache]".into()
                 );
             }
         }
@@ -230,15 +239,18 @@ fn args() -> Result<Args, String> {
 async fn main() -> Result<(), String> {
     let a = args()?;
     let library = Library::load(&a.library)?;
+    let ports = Ports::load(&a.ports)?;
     let stamp = cache::stamp(&a.library);
     let kept = a.cache.as_ref().map_or("memory only".to_string(), |d| d.display().to_string());
     println!(
-        "hopper-server: {} library entries, results kept in {kept} (stamp {stamp}), listening on http://{}",
+        "hopper-server: {} library entries, {} ports, results kept in {kept} (stamp {stamp}), listening on http://{}",
         library.entries.len(),
+        ports.ports.len(),
         a.listen
     );
     let app = Arc::new(App {
         library,
+        ports,
         cache: Cache::new(a.cache, stamp),
         lookups: Mutex::default(),
         turns: Semaphore::new(AT_ONCE),
@@ -249,6 +261,7 @@ async fn main() -> Result<(), String> {
         .route("/api/check", get(check))
         .route("/api/port", get(port))
         .route("/api/library", get(library_stats))
+        .route("/api/ports", get(port_list))
         .with_state(app);
     let listener = tokio::net::TcpListener::bind(a.listen).await.map_err(|e| format!("{}: {e}", a.listen))?;
     axum::serve(listener, router)

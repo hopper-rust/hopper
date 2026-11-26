@@ -13,6 +13,7 @@ pub mod license;
 pub mod modrinth;
 #[cfg(all(feature = "modrinth", feature = "convert"))]
 pub mod port;
+pub mod ports;
 
 use classfile::Ref;
 use library::{Library, Status};

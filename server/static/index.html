@@ -40,6 +40,9 @@
   .port .msg.bad { color: var(--missing); }
   .examples { font-size: 14px; color: var(--muted); }
   .examples a { color: inherit; }
+  .ported { margin-top: 16px; padding: 14px 16px; border-radius: 10px; background: var(--direct-bg); color: var(--ink); }
+  .ported strong { color: var(--direct); }
+  .ported a { color: var(--direct); }
   .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 20px; margin-top: 20px; }
   .error { border-color: var(--missing); color: var(--missing); }
   .mod { display: flex; gap: 14px; align-items: center; }
@@ -117,6 +120,7 @@ function render(c) {
   name.append(h);
   if (c.file) name.append(el("div", "small", c.version + " · " + c.file));
   mod.append(name); card.append(mod);
+  for (const p of portsOf(c.slug)) card.append(portedBanner(p));
 
   card.append(el("div", "verdict v-" + r.verdict, VERDICT[r.verdict] || r.verdict));
   card.append(el("div", "small", r.summary));
@@ -172,6 +176,25 @@ function render(c) {
   out.append(card);
 }
 
+// Finished ports, from ports/ in the repository.
+let PORTS = [];
+const portsLoaded = fetch("/api/ports").then((r) => r.json()).then((l) => { PORTS = l.ports || []; }).catch(() => {});
+function portsOf(slug) {
+  return PORTS.filter((p) => p.fabric.modrinth.toLowerCase() === String(slug).toLowerCase());
+}
+function portedBanner(p) {
+  const box = el("div", "ported");
+  box.append(el("strong", "", "Already ported: "), p.horizon.registry + " for Horizon");
+  box.append(el("div", "small", "By " + p.info.ported_by + " · works on " + p.horizon.builds + " · tested in game " + p.info.tested));
+  if (p.info.notes) box.append(el("div", "small", p.info.notes));
+  const how = el("div", "small");
+  const a = el("a", "", "registry entry");
+  a.href = "https://github.com/horizon-rust/horizon-mods/blob/main/mods/" + encodeURIComponent(p.horizon.registry) + ".toml";
+  how.append("Install it from the Horizon launcher's mod list (", a, ").");
+  box.append(how);
+  return box;
+}
+
 // The starting project: fetched first, so an error shows here instead of downloading as a file.
 function portButton(c) {
   const box = el("div", "port");
@@ -215,6 +238,7 @@ async function check(target, game) {
     const res = await fetch("/api/check?" + q);
     const body = await res.json();
     if (!res.ok) throw new Error(body.error || "The check failed.");
+    await portsLoaded;
     render(body);
   } catch (e) {
     out.replaceChildren(el("div", "card error", e.message));

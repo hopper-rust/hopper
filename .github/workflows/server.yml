@@ -19,7 +19,7 @@ jobs:
       - run: |
           mkdir -p hopper-server
           cp target/release/hopper-server hopper-server/
-          cp -r library hopper-server/
+          cp -r library ports hopper-server/
           tar czf hopper-server-aarch64-linux.tar.gz hopper-server
       - env:
           GH_TOKEN: ${{ github.token }}
