@@ -2,7 +2,9 @@
 
 Hopper's website: the page, and a small JSON API.
 
-- `GET /`: the page.
+- `GET /`, `/docs`, `/ports`: the check page, the docs and the finished ports. They share the menu (`static/nav.html`), footer (`static/footer.html`) and `/site.css`, filled in at start.
+- `GET /api/ports`: the finished ports in `--ports <dir>` (default `./ports`).
+- `www.<site>` redirects to `<site>`.
 - `GET /api/check?mod=<Modrinth link or slug>&game=<Minecraft version>`: the checker's report, as JSON. `game` is optional; without it the newest Fabric version is checked.
 - `GET /api/port?mod=...&game=...`: a zip of the starting Horizon project the generator writes (the page's Download starter project button). Refused for licenses that stop porting.
 - `GET /api/library`: how many mappings the library has.

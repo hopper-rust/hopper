@@ -1,0 +1,40 @@
+<script>
+// Normal or Expert, remembered per browser. Set before the page draws, so nothing flickers.
+(function () {
+  var mode = "normal";
+  try { mode = localStorage.getItem("hopper-mode") || "normal"; } catch (e) {}
+  document.documentElement.dataset.mode = mode === "expert" ? "expert" : "normal";
+})();
+</script>
+<nav class="site-nav" aria-label="Site">
+  <div class="in">
+    <a class="brand" href="/"><img src="/logo.png" alt="">Hopper</a>
+    <div class="links">
+      <a href="/" data-page="check">Check a mod</a>
+      <a href="/docs" data-page="docs">Docs</a>
+      <a href="/ports" data-page="ports">Finished ports</a>
+      <a href="https://github.com/hopper-rust/hopper">GitHub</a>
+      <a href="https://discord.gg/kKqTbptz2T">Discord</a>
+    </div>
+    <div class="mode" role="group" aria-label="Detail">
+      <button type="button" data-mode="normal" title="Plain words, only what you need">Normal</button>
+      <button type="button" data-mode="expert" title="Every class, mapping and mixin">Expert</button>
+    </div>
+  </div>
+</nav>
+<script>
+(function () {
+  var buttons = document.querySelectorAll(".mode button");
+  function show() {
+    buttons.forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.mode === document.documentElement.dataset.mode)); });
+  }
+  buttons.forEach(function (b) {
+    b.addEventListener("click", function () {
+      document.documentElement.dataset.mode = b.dataset.mode;
+      try { localStorage.setItem("hopper-mode", b.dataset.mode); } catch (e) {}
+      show();
+    });
+  });
+  show();
+})();
+</script>

@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Finished ports</title>
+<meta name="description" content="Fabric mods already ported to Horizon, tested in game and published on the Horizon mod registry.">
+<link rel="icon" href="/logo.png">
+<link rel="stylesheet" href="/site.css">
+<style>
+  .lead { color: var(--muted); margin: 8px 0 24px; }
+  .list { display: grid; gap: 12px; }
+  .port { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; }
+  .port h2 { margin: 0; font-size: 18px; }
+  .port .from { color: var(--muted); font-size: 14px; margin-top: 2px; }
+  .port .meta { display: flex; flex-wrap: wrap; gap: 4px 16px; margin-top: 10px; font-size: 14px; color: var(--muted); }
+  .port p { margin: 8px 0 0; font-size: 14px; }
+  .empty { background: var(--card); border: 1px dashed var(--line); border-radius: 12px; padding: 24px; text-align: center; color: var(--muted); }
+</style>
+</head>
+<body>
+<!--NAV-->
+<main>
+  <h1>Finished ports</h1>
+  <p class="lead">Fabric mods someone already ported to Horizon, tested in game and published on the Horizon mod registry. Install them from the Horizon launcher.</p>
+  <div id="list" class="list"><div class="empty">Loading…</div></div>
+  <p class="lead" style="margin-top:24px">Ported a mod? <a href="https://github.com/hopper-rust/hopper/blob/main/ports/README.md">Add it to the list</a>.</p>
+</main>
+<!--FOOTER-->
+<script>
+function el(tag, cls, text) {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (text !== undefined) e.textContent = text;
+  return e;
+}
+fetch("/api/ports").then((r) => r.json()).then((l) => {
+  const list = document.getElementById("list");
+  list.replaceChildren();
+  if (!l.ports.length) {
+    list.append(el("div", "empty", "No finished ports yet. The first ones are being tested."));
+    return;
+  }
+  for (const p of l.ports) {
+    const box = el("div", "port");
+    box.append(el("h2", "", p.horizon.registry + " for Horizon"));
+    const from = el("div", "from", "Replaces ");
+    const a = el("a", "", p.fabric.modrinth);
+    a.href = "https://modrinth.com/mod/" + encodeURIComponent(p.fabric.modrinth);
+    from.append(a, " (Fabric)");
+    box.append(from);
+    const meta = el("div", "meta");
+    meta.append(el("span", "", "By " + p.info.ported_by), el("span", "", "Works on " + p.horizon.builds), el("span", "", "Tested " + p.info.tested));
+    const reg = el("a", "", "Registry entry");
+    reg.href = "https://github.com/horizon-rust/horizon-mods/blob/main/mods/" + encodeURIComponent(p.horizon.registry) + ".toml";
+    meta.append(reg);
+    box.append(meta);
+    if (p.info.notes) box.append(el("p", "", p.info.notes));
+    list.append(box);
+  }
+}).catch(() => {
+  document.getElementById("list").replaceChildren(el("div", "empty", "Couldn't load the list."));
+});
+</script>
+</body>
+</html>

@@ -25,7 +25,12 @@ use std::sync::{Arc, Mutex};
 use std::time::Instant;
 use tokio::sync::Semaphore;
 
-const PAGE: &str = include_str!("../static/index.html");
+const CHECK_PAGE: &str = include_str!("../static/index.html");
+const DOCS_PAGE: &str = include_str!("../static/docs.html");
+const PORTS_PAGE: &str = include_str!("../static/ports.html");
+const NAV: &str = include_str!("../static/nav.html");
+const FOOTER: &str = include_str!("../static/footer.html");
+const STYLE: &str = include_str!("../static/site.css");
 const LOGO: &[u8] = include_bytes!("../../assets/logo.png");
 
 /// Downloads and checks running at once; the rest wait their turn.
@@ -34,6 +39,8 @@ const AT_ONCE: usize = 4;
 const MAX_JAR: u64 = 50 << 20;
 
 struct App {
+    /// The pages, with the menu and footer filled in.
+    pages: Pages,
     library: Library,
     ports: Ports,
     cache: Cache,
@@ -209,8 +216,36 @@ async fn no_www(request: Request, next: Next) -> Response {
     next.run(request).await
 }
 
-async fn page() -> Response {
-    ([(header::CONTENT_TYPE, "text/html; charset=utf-8")], PAGE).into_response()
+struct Pages {
+    check: String,
+    docs: String,
+    ports: String,
+}
+
+/// A page with the shared menu (its own link marked as the current page) and footer.
+fn layout(page: &str, name: &str) -> String {
+    let nav = NAV.replace(&format!("data-page=\"{name}\""), &format!("data-page=\"{name}\" aria-current=\"page\""));
+    page.replace("<!--NAV-->", &nav).replace("<!--FOOTER-->", FOOTER)
+}
+
+fn html(page: &str) -> Response {
+    ([(header::CONTENT_TYPE, "text/html; charset=utf-8")], page.to_string()).into_response()
+}
+
+async fn check_page(State(app): State<Arc<App>>) -> Response {
+    html(&app.pages.check)
+}
+
+async fn docs_page(State(app): State<Arc<App>>) -> Response {
+    html(&app.pages.docs)
+}
+
+async fn ports_page(State(app): State<Arc<App>>) -> Response {
+    html(&app.pages.ports)
+}
+
+async fn style() -> Response {
+    ([(header::CONTENT_TYPE, "text/css; charset=utf-8"), (header::CACHE_CONTROL, "public, max-age=3600")], STYLE).into_response()
 }
 
 async fn logo() -> Response {
@@ -264,7 +299,9 @@ async fn main() -> Result<(), String> {
         ports.ports.len(),
         a.listen
     );
+    let pages = Pages { check: layout(CHECK_PAGE, "check"), docs: layout(DOCS_PAGE, "docs"), ports: layout(PORTS_PAGE, "ports") };
     let app = Arc::new(App {
+        pages,
         library,
         ports,
         cache: Cache::new(a.cache, stamp),
@@ -272,7 +309,10 @@ async fn main() -> Result<(), String> {
         turns: Semaphore::new(AT_ONCE),
     });
     let router = Router::new()
-        .route("/", get(page))
+        .route("/", get(check_page))
+        .route("/docs", get(docs_page))
+        .route("/ports", get(ports_page))
+        .route("/site.css", get(style))
         .route("/logo.png", get(logo))
         .route("/api/check", get(check))
         .route("/api/port", get(port))

@@ -6,26 +6,10 @@
 <title>Hopper: port Fabric mods to Horizon</title>
 <meta name="description" content="Paste a Modrinth link: Hopper checks the license and tells you which parts of a Fabric mod map to Horizon's mod API.">
 <link rel="icon" href="/logo.png">
+<link rel="stylesheet" href="/site.css">
 <style>
-  :root {
-    --bg: #f4f1ec; --card: #ffffff; --ink: #24262a; --muted: #5f636b; --line: #dcd6cc;
-    --accent: #d2602a; --accent-ink: #ffffff;
-    --direct: #2f7d4a; --direct-bg: #e3f1e7; --partial: #9a6a00; --partial-bg: #fbf0d4;
-    --missing: #b3261e; --missing-bg: #fbe3e1; --unknown: #5f636b; --unknown-bg: #ecebe8;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #1b1c1f; --card: #25272b; --ink: #ecebe8; --muted: #a3a6ad; --line: #3a3d42;
-      --direct: #7ccf95; --direct-bg: #1f3326; --partial: #e9c46a; --partial-bg: #3a3120;
-      --missing: #f2918a; --missing-bg: #3d2220; --unknown: #a3a6ad; --unknown-bg: #303237;
-    }
-  }
-  * { box-sizing: border-box; }
-  body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif; }
-  main { max-width: 820px; margin: 0 auto; padding: 32px 16px 48px; }
-  header { display: flex; gap: 16px; align-items: center; }
-  header img { width: 56px; height: 56px; border-radius: 12px; }
-  h1 { margin: 0; font-size: 28px; }
+  .hero { display: flex; gap: 16px; align-items: center; }
+  .hero img { width: 56px; height: 56px; border-radius: 12px; }
   .tag { margin: 2px 0 0; color: var(--muted); }
   .note { margin: 20px 0 0; font-size: 14px; color: var(--muted); }
   form { display: flex; flex-wrap: wrap; gap: 8px; margin: 24px 0 8px; }
@@ -61,25 +45,26 @@
   ul { list-style: none; margin: 0; padding: 0; }
   li { padding: 10px 0; border-top: 1px solid var(--line); }
   li:first-child { border-top: 0; }
-  code { font: 13px/1.4 ui-monospace, "Cascadia Code", Consolas, monospace; overflow-wrap: anywhere; }
   .arrow { color: var(--muted); margin: 0 6px; }
   .notes { margin: 4px 0 0; font-size: 14px; color: var(--muted); }
   details summary { cursor: pointer; font-weight: 600; margin-top: 18px; }
   .stats { display: flex; flex-wrap: wrap; gap: 8px 20px; margin-top: 12px; font-size: 14px; color: var(--muted); }
-  footer { margin-top: 40px; font-size: 14px; color: var(--muted); }
-  footer a { color: inherit; }
+  .plain { margin: 8px 0 0; }
+  .mode-hint { margin-top: 18px; font-size: 14px; color: var(--muted); }
+  .mode-hint button { font: inherit; padding: 0; background: none; color: var(--accent); text-decoration: underline; border: 0; cursor: pointer; font-weight: 400; }
 </style>
 </head>
 <body>
+<!--NAV-->
 <main>
-  <header>
+  <div class="hero">
     <img src="/logo.png" alt="">
     <div>
       <h1>Hopper</h1>
       <p class="tag">Port Fabric client mods to Horizon.</p>
     </div>
-  </header>
-  <p class="note">Paste a Modrinth link. Hopper checks the license first, then reads the names the mod uses and says which parts map to Horizon's mod API. The starter project also converts what it can of the mod's public source code, only when the license allows it. Hopper is not an official Horizon project.</p>
+  </div>
+  <p class="note">Paste a Modrinth link. Hopper checks the license first, then reads the names the mod uses and says which parts map to Horizon's mod API. The starter project also converts what it can of the mod's public source code, only when the license allows it. Hopper is not an official Horizon project. <a href="/docs">How it works</a></p>
 
   <form id="form">
     <input id="mod" name="mod" placeholder="https://modrinth.com/mod/..." autocomplete="off" required aria-label="Modrinth link or project name">
@@ -90,13 +75,8 @@
 
   <div id="out"></div>
 
-  <footer>
-    <span id="lib"></span>
-    No AI inside: Hopper is plain rules and a library written by people.
-    <a href="https://github.com/hopper-rust/hopper">GitHub</a> ·
-    <a href="https://github.com/hopper-rust/hopper/blob/main/CONTRIBUTING.md">Add a mapping</a>
-  </footer>
 </main>
+<!--FOOTER-->
 <script>
 const $ = (id) => document.getElementById(id);
 function el(tag, cls, text) {
@@ -107,6 +87,13 @@ function el(tag, cls, text) {
 }
 const VERDICT = { easy: "Easy", partial: "Partial", needs_a_person: "Needs a person", cant_port: "Can't port" };
 const LICENSE = { ok: "OK", careful: "Careful", stop: "Stop" };
+// What a verdict means, in Normal mode.
+const MEANING = {
+  easy: "Hopper knows almost everything this mod uses. A modder can port it with the starter project: most of the work is filling in a few TODOs.",
+  partial: "Hopper knows a good part of this mod. The starter project is a real head start, but some of it has to be written by hand.",
+  needs_a_person: "Hopper knows too little of this mod to help much yet. Porting it is mostly hand-work for a modder.",
+  cant_port: "This mod can't be ported: its license doesn't allow it, or it's obfuscated. You can still write your own mod inspired by it.",
+};
 
 function render(c) {
   const out = $("out");
@@ -123,7 +110,8 @@ function render(c) {
   for (const p of portsOf(c.slug)) card.append(portedBanner(p));
 
   card.append(el("div", "verdict v-" + r.verdict, VERDICT[r.verdict] || r.verdict));
-  card.append(el("div", "small", r.summary));
+  card.append(el("p", "plain normal", MEANING[r.verdict] || ""));
+  card.append(el("div", "small expert", r.summary));
   if (r.scan && r.verdict !== "cant_port") card.append(portButton(c));
 
   card.append(el("h3", "", "License"));
@@ -133,14 +121,18 @@ function render(c) {
 
   const s = r.scan;
   if (s) {
-    const st = el("div", "stats");
+    const known = s.mapped.length, unknown = s.unknown.length + s.unknown_mixins.length;
+    card.append(el("p", "small normal", "Hopper recognises " + known + " things this mod uses" + (unknown ? ", and " + unknown + " are new to it" : "") + ". Switch to Expert for the full list."));
+  }
+  if (s) {
+    const st = el("div", "stats expert");
     st.append(el("span", "", s.classes + " classes"), el("span", "", s.mixins + " mixins"),
       el("span", "", "side: " + (s.environment === "*" ? "client and server" : s.environment)));
     if (s.bundled.length) st.append(el("span", "", "bundles " + s.bundled.length + " jars (not checked)"));
     card.append(st);
 
-    card.append(el("h3", "", "Maps to Horizon (" + s.mapped.length + ")"));
-    const ul = el("ul");
+    card.append(el("h3", "expert", "Maps to Horizon (" + s.mapped.length + ")"));
+    const ul = el("ul", "expert");
     if (!s.mapped.length) ul.append(el("li", "small", "Nothing yet."));
     for (const m of s.mapped) {
       const li = el("li");
@@ -154,7 +146,7 @@ function render(c) {
     card.append(ul);
 
     if (s.unknown.length) {
-      const d = el("details");
+      const d = el("details", "expert");
       d.append(el("summary", "", "Not in the library yet: " + s.unknown.length + " classes"));
       const u = el("ul");
       for (const x of s.unknown) {
@@ -166,7 +158,7 @@ function render(c) {
       d.append(u); card.append(d);
     }
     if (s.unknown_mixins.length) {
-      const d = el("details");
+      const d = el("details", "expert");
       d.append(el("summary", "", "Mixin targets not in the library yet: " + s.unknown_mixins.length));
       const u = el("ul");
       for (const x of s.unknown_mixins) { const li = el("li"); li.append(el("code", "", x)); u.append(li); }
@@ -262,9 +254,6 @@ if (start.get("mod")) {
   if (start.get("game") !== null) $("game").value = start.get("game");
   check($("mod").value, $("game").value.trim());
 }
-fetch("/api/library").then((r) => r.json()).then((l) => {
-  $("lib").textContent = "The library knows " + l.entries + " mappings. ";
-}).catch(() => {});
 </script>
 </body>
 </html>

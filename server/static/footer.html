@@ -1,0 +1,46 @@
+<footer class="site-foot">
+  <div class="in">
+    <div class="about">
+      <a class="brand" href="/"><img src="/logo.png" alt="">Hopper</a>
+      <p>Port Fabric client mods to Horizon. No AI inside: plain rules and a library written by people.</p>
+      <p id="lib-count"></p>
+    </div>
+    <div>
+      <h2>Hopper</h2>
+      <ul>
+        <li><a href="/">Check a mod</a></li>
+        <li><a href="/docs">Docs</a></li>
+        <li><a href="/ports">Finished ports</a></li>
+        <li><a href="/docs#faq">FAQ</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2>Contribute</h2>
+      <ul>
+        <li><a href="https://github.com/hopper-rust/hopper/blob/main/CONTRIBUTING.md">Contributing guide</a></li>
+        <li><a href="https://github.com/hopper-rust/hopper/tree/main/library">The library</a></li>
+        <li><a href="https://github.com/hopper-rust/hopper/issues/new/choose">Report a problem</a></li>
+        <li><a href="https://github.com/hopper-rust/hopper/blob/main/SECURITY.md">Security</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2>Community</h2>
+      <ul>
+        <li><a href="https://discord.gg/kKqTbptz2T">Discord</a></li>
+        <li><a href="https://github.com/hopper-rust">GitHub</a></li>
+        <li><a href="https://github.com/horizon-rust/horizon">Horizon</a></li>
+        <li><a href="https://github.com/horizon-rust/horizon-mods">Horizon mod registry</a></li>
+      </ul>
+    </div>
+    <div class="legal">
+      Hopper is not an official Horizon project and is not endorsed by the Horizon team or Mojang.
+      Open source under the <a href="https://github.com/hopper-rust/hopper/blob/main/LICENSE">MIT License</a>.
+      © 2026 the Hopper contributors.
+    </div>
+  </div>
+</footer>
+<script>
+fetch("/api/library").then(function (r) { return r.json(); }).then(function (l) {
+  document.getElementById("lib-count").textContent = "The library knows " + l.entries + " mappings.";
+}).catch(function () {});
+</script>

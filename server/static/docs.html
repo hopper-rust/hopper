@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hopper docs</title>
+<meta name="description" content="How Hopper works: checking a Fabric mod, what the verdicts mean, the starter project, finished ports, and contributing.">
+<link rel="icon" href="/logo.png">
+<link rel="stylesheet" href="/site.css">
+<style>
+  main { max-width: 1040px; display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 40px; }
+  .toc { position: sticky; top: 72px; align-self: start; font-size: 14px; }
+  .toc h2 { margin: 0 0 8px; font-size: 13px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+  .toc ol { margin: 0; padding: 0; list-style: none; }
+  .toc a { display: block; padding: 4px 10px; border-radius: 6px; color: var(--muted); text-decoration: none; }
+  .toc a:hover { color: var(--ink); background: var(--soft); }
+  article { max-width: 720px; }
+  article h1 { margin-bottom: 8px; }
+  article h2 { margin: 40px 0 8px; font-size: 22px; }
+  article h3 { margin: 24px 0 6px; font-size: 17px; }
+  article p, article li { color: var(--ink); }
+  .lead { color: var(--muted); font-size: 18px; margin-top: 0; }
+  dl { margin: 0; }
+  dt { font-weight: 700; margin-top: 14px; }
+  dd { margin: 2px 0 0; }
+  .badge { display: inline-block; padding: 1px 8px; border-radius: 99px; font-size: 13px; font-weight: 600; }
+  .b-ok, .b-easy { color: var(--direct); background: var(--direct-bg); }
+  .b-careful, .b-partial { color: var(--partial); background: var(--partial-bg); }
+  .b-stop, .b-cant { color: var(--missing); background: var(--missing-bg); }
+  .b-person { color: var(--accent); background: var(--soft); }
+  pre { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; overflow-x: auto; }
+  pre code { font-size: 13px; }
+  .box { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; margin: 16px 0; }
+  details { border-top: 1px solid var(--line); padding: 10px 0; }
+  details:last-of-type { border-bottom: 1px solid var(--line); }
+  summary { cursor: pointer; font-weight: 600; }
+  details p { margin: 8px 0 0; }
+  @media (max-width: 820px) {
+    main { display: block; }
+    .toc { position: static; margin-bottom: 24px; background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 12px; }
+  }
+</style>
+</head>
+<body>
+<!--NAV-->
+<main>
+  <nav class="toc" aria-label="On this page">
+    <h2>On this page</h2>
+    <ol>
+      <li><a href="#what">What Hopper is</a></li>
+      <li><a href="#check">Checking a mod</a></li>
+      <li><a href="#verdicts">What the verdicts mean</a></li>
+      <li><a href="#licenses">Licenses</a></li>
+      <li><a href="#starter">The starter project</a></li>
+      <li><a href="#finish">Finishing a port</a></li>
+      <li><a href="#ports">Finished ports</a></li>
+      <li><a href="#modes">Normal and Expert</a></li>
+      <li><a href="#cli">Command line</a></li>
+      <li><a href="#contribute">Contributing</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ol>
+  </nav>
+
+  <article>
+    <h1>Hopper docs</h1>
+    <p class="lead">Everything about porting a Fabric mod to Horizon with Hopper, in plain words.</p>
+
+    <h2 id="what">What Hopper is</h2>
+    <p>Hopper helps move Fabric client mods (Java or Kotlin) to <a href="https://github.com/horizon-rust/horizon">Horizon</a> native mods (Rust). It has four parts:</p>
+    <ul>
+      <li><strong>The library:</strong> a list of "this Fabric thing is this Horizon thing", one small file per mapping, written by people.</li>
+      <li><strong>The checker:</strong> reads a mod and tells you whether it can be ported, and how much of it Hopper understands.</li>
+      <li><strong>The generator and converter:</strong> write a Horizon project that builds, with the code Hopper could translate and TODOs for the rest.</li>
+      <li><strong>Finished ports:</strong> mods someone already ported, tested and published, so nobody ports the same mod twice.</li>
+    </ul>
+    <p>Hopper is not an official Horizon project. It is made by mod authors, for mod authors.</p>
+
+    <h2 id="check">Checking a mod</h2>
+    <ol>
+      <li>Paste a Modrinth link (or just the project's name, like <code>commandkeys</code>) on the <a href="/">check page</a>.</li>
+      <li>Keep the Minecraft version at <code>26.3</code>, or change it to check another version's file.</li>
+      <li>Press <strong>Check</strong>. Hopper reads the license first. If it allows porting, Hopper downloads the mod's file from Modrinth and reads the names it uses.</li>
+    </ol>
+    <p>Hopper only reads names (which classes, methods and events the mod uses). It never decompiles a mod. Results are kept per mod version, so checking a popular mod again is instant.</p>
+
+    <h2 id="verdicts">What the verdicts mean</h2>
+    <dl>
+      <dt><span class="badge b-easy">Easy</span></dt>
+      <dd>Hopper knows almost everything the mod uses (90% or more), and nothing it needs is missing from Horizon. The starter project gets you most of the way.</dd>
+      <dt><span class="badge b-partial">Partial</span></dt>
+      <dd>Hopper knows a good part of it (60% or more). The starter project helps, but some of the mod is hand-work.</dd>
+      <dt><span class="badge b-person">Needs a person</span></dt>
+      <dd>Hopper knows too little yet. Most mods that change how Minecraft renders or works deep inside land here.</dd>
+      <dt><span class="badge b-cant">Can't port</span></dt>
+      <dd>The license doesn't allow it, or the mod is obfuscated. Hopper stops here.</dd>
+    </dl>
+    <p>Each thing Hopper knows is also marked <strong>direct</strong> (works the same on Horizon), <strong>partial</strong> (works differently: the note says how) or <strong>missing</strong> (Horizon has no API for it yet).</p>
+
+    <h2 id="licenses">Licenses</h2>
+    <p>Hopper checks the license before anything else:</p>
+    <dl>
+      <dt><span class="badge b-ok">OK</span></dt>
+      <dd>Open licenses like MIT, Apache or CC0. You may port the mod; credit the original.</dd>
+      <dt><span class="badge b-careful">Careful</span></dt>
+      <dd>Copyleft licenses like GPL, LGPL or MPL. You may port it, but the port must keep the same license and stay open source.</dd>
+      <dt><span class="badge b-stop">Stop</span></dt>
+      <dd>All rights reserved, custom, non-commercial or no-derivatives licenses, or no license at all. Hopper doesn't help port these. You can still write your own mod <em>inspired by</em> it, from scratch, without looking at its code.</dd>
+    </dl>
+
+    <h2 id="starter">The starter project</h2>
+    <p>For mods that may be ported, <strong>Download starter project</strong> gives you a zip with a Horizon mod that builds:</p>
+    <ul>
+      <li><code>horizon-mod.toml</code> and <code>Cargo.toml</code>, pinned to the Horizon mod API Hopper was checked against, with the original's license and credits.</li>
+      <li><code>src/lib.rs</code> with the Horizon hooks the mod needs. Each hook has a TODO saying what the original did there.</li>
+      <li>Code Hopper could convert from the mod's public source code (only when the license allows it). Lines it couldn't convert stay as <code>// TODO (Java):</code> with the original line.</li>
+      <li>Key bindings with the original's default keys, the original's language file and its license.</li>
+      <li>A <code>README.md</code> listing what wasn't ported. Start there.</li>
+    </ul>
+    <div class="box">The starter project is a starting point, not a finished mod. Hopper never builds an <code>.hmod</code> from it, because a mod with empty hooks would load and do nothing.</div>
+
+    <h2 id="finish">Finishing a port</h2>
+    <ol>
+      <li>Read the project's <code>README.md</code>, then fill in each TODO in <code>src/lib.rs</code>. The notes from the check say what each Fabric thing becomes.</li>
+      <li>Build it with Horizon's mod tools and fix any errors.</li>
+      <li><strong>Test it in game</strong>, on the Horizon build it's pinned to.</li>
+      <li>Publish it on the <a href="https://github.com/horizon-rust/horizon-mods">Horizon mod registry</a>, credited to the original mod.</li>
+      <li>Add it to Hopper's <a href="#ports">finished ports</a>, so the next person gets it straight away.</li>
+    </ol>
+
+    <h2 id="ports">Finished ports</h2>
+    <p>When a Fabric mod is already ported, the check page shows <strong>Already ported</strong> at the top, with who ported it, which Horizon builds it works on, and where to get it. You can see them all on <a href="/ports">Finished ports</a>.</p>
+    <p>Ports are only listed once they're tested in game and published on the Horizon registry. To add yours, see <a href="https://github.com/hopper-rust/hopper/blob/main/ports/README.md">ports/README.md</a>.</p>
+
+    <h2 id="modes">Normal and Expert</h2>
+    <p>The switch at the top of every page changes how much the check shows:</p>
+    <ul>
+      <li><strong>Normal:</strong> the verdict in plain words, the license, and the download. For players and anyone curious.</li>
+      <li><strong>Expert:</strong> everything: each mapping with its Fabric and Horizon names, the classes and mixin targets Hopper doesn't know yet, and the mod's stats. For modders and contributors.</li>
+    </ul>
+    <p>Your choice is remembered in this browser.</p>
+
+    <h2 id="cli">Command line</h2>
+    <p>Everything the site does also runs on your own computer. You need <a href="https://rustup.rs">Rust</a>:</p>
+<pre><code>git clone https://github.com/hopper-rust/hopper
+cd hopper
+cargo run -q -p hopper-cli -- check https://modrinth.com/mod/commandkeys
+cargo run -q -p hopper-cli -- port https://modrinth.com/mod/commandkeys --out commandkeys-horizon
+cargo run -q -p hopper-cli -- convert path/to/mod/src</code></pre>
+    <p><code>check</code> also takes a <code>.jar</code> file. <code>convert</code> shows what the converter makes of Java source, for trying out rules.</p>
+
+    <h3>API</h3>
+    <p>The site has a small JSON API: <code>/api/check?mod=&lt;link or slug&gt;&amp;game=26.3</code> (the report), <code>/api/port?mod=…</code> (the starter project zip), <code>/api/ports</code> (finished ports) and <code>/api/library</code> (library size). Please be gentle with it.</p>
+
+    <h2 id="contribute">Contributing</h2>
+    <p>Hopper gets better one mapping, one rule and one port at a time. From easiest to hardest:</p>
+    <ul>
+      <li><strong>Add a library entry:</strong> one small TOML file saying what a Fabric thing becomes on Horizon.</li>
+      <li><strong>List a finished port:</strong> one small TOML file.</li>
+      <li><strong>Add a converter rule:</strong> Rust, with a test.</li>
+    </ul>
+    <p>Every name must be real and checked, never guessed. The full guide is <a href="https://github.com/hopper-rust/hopper/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a>, and questions are welcome on the <a href="https://discord.gg/kKqTbptz2T">Discord</a>.</p>
+
+    <h2 id="faq">FAQ</h2>
+    <details>
+      <summary>Does Hopper use AI?</summary>
+      <p>No. Hopper is a dictionary and a rulebook: the library is written by people, and the tools only match names and apply rules. Nothing is sent to an AI model, so it gives the same answer every time.</p>
+    </details>
+    <details>
+      <summary>Why doesn't it just give me an .hmod?</summary>
+      <p>Most Fabric mods work by changing Minecraft's own Java code. Horizon is a different game engine written in Rust, so that code doesn't exist there. Hopper can't translate it all automatically, and a mod that builds but does nothing would be worse than no mod. So it gives a modder a head start instead, and points to finished ports when someone has already done the work.</p>
+    </details>
+    <details>
+      <summary>Which Horizon version do the projects target?</summary>
+      <p>Each starter project is pinned to one Horizon mod API, written in its <code>horizon-mod.toml</code>, so it always builds against the API it was made for. When Horizon's API changes, Hopper's list of hooks is updated from the new SDK.</p>
+    </details>
+    <details>
+      <summary>Can I port a mod with an "All rights reserved" license?</summary>
+      <p>No, and Hopper won't help. You can write your own mod with a similar idea from scratch, without reading or copying the original's code, and say it's inspired by it.</p>
+    </details>
+    <details>
+      <summary>Does Hopper decompile mods?</summary>
+      <p>No. The checker only reads the names stored in a mod's file. The converter reads a mod's public source code on GitHub, and only for licenses that allow porting.</p>
+    </details>
+    <details>
+      <summary>What does the site keep?</summary>
+      <p>Check results and starter projects, per mod version, so the same mod isn't downloaded again for every visitor. There are no accounts. Your Normal/Expert choice stays in your browser.</p>
+    </details>
+    <details>
+      <summary>Is Hopper official?</summary>
+      <p>No. Hopper is not made or endorsed by the Horizon team or Mojang.</p>
+    </details>
+  </article>
+</main>
+<!--FOOTER-->
+</body>
+</html>
