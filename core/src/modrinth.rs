@@ -1,8 +1,8 @@
 //! Checking a mod straight from Modrinth: its license first, then its newest Fabric jar
 //! when the license allows porting. Behind the `modrinth` feature (it needs the network).
 
-use crate::library::Library;
 use crate::Report;
+use crate::library::Library;
 use serde::Serialize;
 use std::io::Read;
 

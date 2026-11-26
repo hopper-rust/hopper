@@ -100,10 +100,18 @@ const MIXIN: &str = "Lorg/spongepowered/asm/mixin/Mixin;";
 fn names_target_method(ty: &str) -> Option<&'static str> {
     let simple = ty.rsplit('/').next()?.trim_end_matches(';');
     match simple {
-        "Inject" | "Redirect" | "ModifyArg" | "ModifyArgs" | "ModifyVariable" | "ModifyConstant" | "WrapOperation"
-        | "WrapWithCondition" | "ModifyExpressionValue" | "ModifyReturnValue" | "ModifyReceiver" | "WrapMethod" => {
-            Some("method")
-        }
+        "Inject"
+        | "Redirect"
+        | "ModifyArg"
+        | "ModifyArgs"
+        | "ModifyVariable"
+        | "ModifyConstant"
+        | "WrapOperation"
+        | "WrapWithCondition"
+        | "ModifyExpressionValue"
+        | "ModifyReturnValue"
+        | "ModifyReceiver"
+        | "WrapMethod" => Some("method"),
         _ => None,
     }
 }

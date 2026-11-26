@@ -163,7 +163,8 @@ impl<'a> Translator<'a> {
             let rest = code(&lines, at);
             let pad: String = lines[at].chars().take_while(|c| *c == ' ').collect();
             if !rest.iter().any(|l| word(l, &name)) {
-                let back: Vec<String> = java.lines().map(str::trim).filter(|l| !l.is_empty()).map(|l| format!("{pad}// TODO (Java): {l}")).collect();
+                let back: Vec<String> =
+                    java.lines().map(str::trim).filter(|l| !l.is_empty()).map(|l| format!("{pad}// TODO (Java): {l}")).collect();
                 lines.splice(at..=at, back);
                 self.done -= 1;
                 continue;
@@ -182,12 +183,7 @@ impl<'a> Translator<'a> {
     /// Keeps `node`'s Java as TODO comments, one per line.
     fn keep_java(&self, node: Node, depth: usize) -> Vec<String> {
         let pad = "    ".repeat(depth);
-        self.t(node)
-            .lines()
-            .map(str::trim)
-            .filter(|l| !l.is_empty())
-            .map(|l| format!("{pad}// TODO (Java): {l}"))
-            .collect()
+        self.t(node).lines().map(str::trim).filter(|l| !l.is_empty()).map(|l| format!("{pad}// TODO (Java): {l}")).collect()
     }
 
     fn block(&mut self, block: Node, depth: usize) -> Vec<String> {
@@ -377,7 +373,9 @@ impl<'a> Translator<'a> {
     fn is_screen(&self, e: Node) -> bool {
         let (object, name) = match e.kind() {
             "field_access" => (e.child_by_field_name("object"), e.child_by_field_name("field")),
-            "method_invocation" if self.arg_nodes(e).is_empty() => (e.child_by_field_name("object"), e.child_by_field_name("name")),
+            "method_invocation" if self.arg_nodes(e).is_empty() => {
+                (e.child_by_field_name("object"), e.child_by_field_name("name"))
+            }
             _ => return false,
         };
         let (Some(object), Some(name)) = (object, name) else { return false };
@@ -532,8 +530,8 @@ impl<'a> Translator<'a> {
                 "UNDERLINE" => "s.underlined = Some(true)".to_string(),
                 "STRIKETHROUGH" => "s.strikethrough = Some(true)".to_string(),
                 "OBFUSCATED" => "s.obfuscated = Some(true)".to_string(),
-                "BLACK" | "DARK_BLUE" | "DARK_GREEN" | "DARK_AQUA" | "DARK_RED" | "DARK_PURPLE" | "GOLD" | "GRAY" | "DARK_GRAY"
-                | "BLUE" | "GREEN" | "AQUA" | "RED" | "LIGHT_PURPLE" | "YELLOW" | "WHITE" => {
+                "BLACK" | "DARK_BLUE" | "DARK_GREEN" | "DARK_AQUA" | "DARK_RED" | "DARK_PURPLE" | "GOLD" | "GRAY"
+                | "DARK_GRAY" | "BLUE" | "GREEN" | "AQUA" | "RED" | "LIGHT_PURPLE" | "YELLOW" | "WHITE" => {
                     format!("s.color = Some({:?}.into())", field.to_ascii_lowercase())
                 }
                 _ => return None,
@@ -624,7 +622,8 @@ impl<'a> Translator<'a> {
             // Java's int wraps `0xFFFFFFFF` round to -1; in Rust it is a u32 (as colours are).
             "hex_integer_literal" => {
                 let n = t.trim_end_matches(['L', 'l']).replace('_', "");
-                let big = u64::from_str_radix(n.trim_start_matches("0x").trim_start_matches("0X"), 16).is_ok_and(|v| v > i32::MAX as u64);
+                let big = u64::from_str_radix(n.trim_start_matches("0x").trim_start_matches("0X"), 16)
+                    .is_ok_and(|v| v > i32::MAX as u64);
                 Some(if big { format!("{n}u32") } else { n })
             }
             "decimal_floating_point_literal" => {

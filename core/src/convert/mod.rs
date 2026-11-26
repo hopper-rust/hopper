@@ -191,7 +191,8 @@ fn key_mappings(files: &[(String, &str, tree_sitter::Tree)]) -> (BTreeMap<String
             let Some(args) = node.child_by_field_name("arguments") else { continue };
             let mut c = args.walk();
             let args: Vec<Node> = args.named_children(&mut c).collect();
-            let Some(lang) = args.first().filter(|a| a.kind() == "string_literal").map(|a| text(*a, src).trim_matches('"').to_string())
+            let Some(lang) =
+                args.first().filter(|a| a.kind() == "string_literal").map(|a| text(*a, src).trim_matches('"').to_string())
             else {
                 continue;
             };
@@ -228,10 +229,8 @@ fn key_mappings(files: &[(String, &str, tree_sitter::Tree)]) -> (BTreeMap<String
 /// generator registers it under.
 pub fn convert(_library: &Library, files: &[JavaFile], key_id: &dyn Fn(&str) -> String) -> Converted {
     let mut parser = parser();
-    let parsed: Vec<(String, &str, tree_sitter::Tree)> = files
-        .iter()
-        .filter_map(|f| Some((f.path.clone(), f.text.as_str(), parser.parse(&f.text, None)?)))
-        .collect();
+    let parsed: Vec<(String, &str, tree_sitter::Tree)> =
+        files.iter().filter_map(|f| Some((f.path.clone(), f.text.as_str(), parser.parse(&f.text, None)?))).collect();
     let (key_vars, key_defaults) = key_mappings(&parsed);
     let mut out = Converted { key_defaults, ..Converted::default() };
 
@@ -245,7 +244,8 @@ pub fn convert(_library: &Library, files: &[JavaFile], key_id: &dyn Fn(&str) -> 
             let Some(object) = call.child_by_field_name("object") else { continue };
             let (shape, layer, listener) = if name == "register" && object.kind() == "field_access" {
                 // `ClientTickEvents.END_CLIENT_TICK.register(listener)`
-                let (Some(class), Some(field)) = (object.child_by_field_name("object"), object.child_by_field_name("field")) else {
+                let (Some(class), Some(field)) = (object.child_by_field_name("object"), object.child_by_field_name("field"))
+                else {
                     continue;
                 };
                 let class = text(class, src);
@@ -286,8 +286,7 @@ pub fn convert(_library: &Library, files: &[JavaFile], key_id: &dyn Fn(&str) -> 
                 found
             };
             let Some((params, body)) = listener_body(listener, root, src) else { continue };
-            let roles: BTreeMap<String, Role> =
-                params.iter().zip(shape.params.iter()).map(|(p, r)| (p.clone(), *r)).collect();
+            let roles: BTreeMap<String, Role> = params.iter().zip(shape.params.iter()).map(|(p, r)| (p.clone(), *r)).collect();
             let mut t = Translator::new(src, roles, &key_vars, key_id, shape);
             let mut lines = t.body(body);
             if let Some(layer) = layer {

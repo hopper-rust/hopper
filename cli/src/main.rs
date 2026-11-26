@@ -42,7 +42,17 @@ fn args() -> Result<Args, String> {
         Some("convert") => (false, true),
         _ => return Err(USAGE.into()),
     };
-    let mut a = Args { port, convert, out: None, target: String::new(), license: None, game: None, library: None, json: false, all: false };
+    let mut a = Args {
+        port,
+        convert,
+        out: None,
+        target: String::new(),
+        license: None,
+        game: None,
+        library: None,
+        json: false,
+        all: false,
+    };
     while let Some(arg) = it.next() {
         let mut value = || it.next().ok_or(format!("{arg} needs a value"));
         match arg.as_str() {
@@ -189,7 +199,9 @@ fn convert(library: &Library, dir: &Path, json: bool) -> Result<(), String> {
         let hooks: serde_json::Map<String, serde_json::Value> = c
             .hooks
             .iter()
-            .map(|(h, blocks)| (h.clone(), blocks.iter().map(|b| serde_json::json!({ "file": b.file, "lines": b.lines })).collect()))
+            .map(|(h, blocks)| {
+                (h.clone(), blocks.iter().map(|b| serde_json::json!({ "file": b.file, "lines": b.lines })).collect())
+            })
             .collect();
         let out = serde_json::json!({ "statements": c.statements, "converted": c.converted, "key_defaults": c.key_defaults, "hooks": hooks });
         println!("{}", serde_json::to_string_pretty(&out).map_err(|e| e.to_string())?);

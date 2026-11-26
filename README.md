@@ -4,6 +4,8 @@
 
 Hopper helps port Fabric client mods (Java/Kotlin) to [Horizon](https://github.com/horizon-rust/horizon) native mods (Rust).
 
+**Try it: [usehopper.dev](https://usehopper.dev)** · **Chat: [Discord](https://discord.gg/kKqTbptz2T)**
+
 > **Hopper is not an official Horizon project.** It is made by mod authors, for mod authors, and is not endorsed by the Horizon team.
 
 ## What it does
@@ -18,16 +20,18 @@ Hopper keeps a **library** of mappings, each one saying "this Fabric thing is th
 | `DrawContext.fill` | `draw.fill` |
 | drawing your own body in first person | no Horizon API yet |
 
-On top of the library, Hopper will have:
+On top of the library, Hopper has:
 
 1. **Checker:** paste a Modrinth link. Hopper checks the license, looks at what the mod uses, and says which parts map to Horizon and which don't: *easy*, *partial* or *needs a person*.
 2. **Generator:** makes the Horizon mod project (`Cargo.toml`, `horizon-mod.toml`, hooks, settings, key binds, lang file, credits), with TODOs where the logic goes.
 3. **Converter:** turns common Java patterns inside those hooks into Rust, from the mod's public source code. It only converts what it has a rule for, and grows rule by rule.
 
+4. **Finished ports:** a list of Fabric mods someone already ported, tested and published on the Horizon registry. Checking one of them points you to the finished mod ([ports/](ports/README.md)).
+
 **Status:** early, and working.
 
 - The library has about 170 mappings, each checked against Horizon's SDK and Minecraft 26.3.
-- The checker works on the command line and as a website (`server/`, not online yet).
+- The checker works on the command line and as a website: [usehopper.dev](https://usehopper.dev) (`server/`).
 - The generator writes a starting project that builds against Horizon's SDK, with TODOs where the logic goes.
 - The converter reads the mod's public source code (GitHub, open licenses only) and turns the code inside the Fabric events it knows (client tick, HUD drawing and HUD elements, chat messages, client commands with their arguments, joining and leaving a server, game start and close) into Rust, one statement at a time. What it can't convert stays as a `// TODO (Java):` comment.
 
@@ -51,7 +55,7 @@ Everything in Hopper is rule-based: the library is plain files written by people
 
 ## Contributing
 
-The easiest way to help is adding a library entry: one small TOML file. See [CONTRIBUTING.md](CONTRIBUTING.md) and [library/README.md](library/README.md).
+The easiest way to help is adding a library entry: one small TOML file. Converter rules and finished ports are welcome too. Start with [CONTRIBUTING.md](CONTRIBUTING.md), and come say hi on [Discord](https://discord.gg/kKqTbptz2T).
 
 ## License
 

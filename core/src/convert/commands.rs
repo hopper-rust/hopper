@@ -124,13 +124,7 @@ pub struct Commands {
 }
 
 /// The commands a `ClientCommandRegistrationCallback` listener registers.
-pub fn commands(
-    body: Node,
-    root: Node,
-    src: &str,
-    keys: &BTreeMap<String, String>,
-    key_id: &dyn Fn(&str) -> String,
-) -> Commands {
+pub fn commands(body: Node, root: Node, src: &str, keys: &BTreeMap<String, String>, key_id: &dyn Fn(&str) -> String) -> Commands {
     let mut out = Commands { register: Vec::new(), run: Vec::new(), seen: 0, done: 0 };
     let mut stack = vec![body];
     let mut found = Vec::new();
@@ -145,7 +139,9 @@ pub fn commands(
     for executes in found {
         out.seen += 1;
         let Some(parts) = usage(executes, src) else { continue };
-        let Some(listener) = executes.child_by_field_name("arguments").and_then(|a| named(a).into_iter().next()) else { continue };
+        let Some(listener) = executes.child_by_field_name("arguments").and_then(|a| named(a).into_iter().next()) else {
+            continue;
+        };
         let Some((params, code)) = listener_body(listener, root, src) else { continue };
         out.done += 1;
         let line = usage_text(&parts);
@@ -207,7 +203,8 @@ pub fn commands(
         match &text_arg {
             // Words, then the rest of the line.
             Some(rest) => {
-                let prefix = parts.iter().filter_map(|p| if let Part::Word(w) = p { Some(w.as_str()) } else { None }).collect::<Vec<_>>();
+                let prefix =
+                    parts.iter().filter_map(|p| if let Part::Word(w) = p { Some(w.as_str()) } else { None }).collect::<Vec<_>>();
                 if prefix.len() + 1 != parts.len() {
                     // Arguments before the text: not matched by a prefix. Keep it Java.
                     out.done -= 1 + t.done;

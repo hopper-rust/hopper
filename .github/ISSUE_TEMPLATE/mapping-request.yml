@@ -1,0 +1,22 @@
+name: Mapping request
+description: A Fabric thing Hopper doesn't know yet.
+labels: [library]
+body:
+  - type: input
+    id: fabric
+    attributes:
+      label: Fabric side
+      description: The full class name, and the member if it's one method or field.
+      placeholder: net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents#END_CLIENT_TICK
+    validations:
+      required: true
+  - type: textarea
+    id: horizon
+    attributes:
+      label: Horizon side (if you know it)
+      description: The hook or host function it becomes, and how you checked.
+  - type: input
+    id: mods
+    attributes:
+      label: Mods that use it
+      description: Modrinth links, so it can be tested.

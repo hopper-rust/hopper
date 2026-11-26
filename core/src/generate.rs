@@ -74,18 +74,12 @@ fn hook_signatures() -> BTreeMap<&'static str, &'static str> {
 }
 
 fn sdk_value(key: &str) -> &'static str {
-    SDK.lines()
-        .filter_map(|l| l.split_once('='))
-        .find(|(k, _)| k.trim() == key)
-        .map_or("", |(_, v)| v.trim().trim_matches('"'))
+    SDK.lines().filter_map(|l| l.split_once('=')).find(|(k, _)| k.trim() == key).map_or("", |(_, v)| v.trim().trim_matches('"'))
 }
 
 /// A Horizon mod id: `[a-z0-9_]{1,64}`.
 fn horizon_id(fabric_id: &str) -> String {
-    let id: String = fabric_id
-        .chars()
-        .map(|c| if c.is_ascii_alphanumeric() { c.to_ascii_lowercase() } else { '_' })
-        .collect();
+    let id: String = fabric_id.chars().map(|c| if c.is_ascii_alphanumeric() { c.to_ascii_lowercase() } else { '_' }).collect();
     let id = id.trim_matches('_').chars().take(64).collect::<String>();
     if id.is_empty() { "ported_mod".into() } else { id }
 }
@@ -178,10 +172,8 @@ pub fn generate(library: &Library, source: &Source, jar: &[u8]) -> Result<Projec
         _ => "both",
     };
     let by = if meta.authors.is_empty() { String::new() } else { format!(" by {}", meta.authors.join(", ")) };
-    let credits = format!(
-        "Port of {name}{by} ({}, {}), started with Hopper. Not affiliated with {name}.",
-        license.id, source.url
-    );
+    let credits =
+        format!("Port of {name}{by} ({}, {}), started with Hopper. Not affiliated with {name}.", license.id, source.url);
 
     // Lang keys of key mappings: `key.<mod>.<action>`, not the categories.
     let keys: Vec<String> = lang
@@ -380,9 +372,8 @@ fn lib_rs(id: &str, name: &str, source: &Source, scan: &Scan, entries: &BTreeMap
 
     for (hook, rows) in &by_hook {
         let blocks = code(hook);
-        let uses = |word: &str| {
-            blocks.iter().flat_map(|b| &b.lines).any(|l| !l.trim_start().starts_with("//") && l.contains(word))
-        };
+        let uses =
+            |word: &str| blocks.iter().flat_map(|b| &b.lines).any(|l| !l.trim_start().starts_with("//") && l.contains(word));
         let mut sig = sigs[hook].to_string();
         if !uses("host.") {
             sig = sig.replace("host:", "_host:");
@@ -436,12 +427,22 @@ fn readme(name: &str, source: &Source, license: &str, credits: &str, scan: &Scan
     let mut s = String::new();
     let _ = writeln!(s, "# {name} for Horizon\n");
     let _ = writeln!(s, "{credits}\n");
-    let _ = writeln!(s, "> **Not finished.** Hopper made this project from [{}]({})'s Fabric jar: the hooks are in place, but no logic is ported yet. Do the TODOs in `src/lib.rs`, port what is listed below, and test the mod in game before publishing it.\n", source.title, source.url);
+    let _ = writeln!(
+        s,
+        "> **Not finished.** Hopper made this project from [{}]({})'s Fabric jar: the hooks are in place, but no logic is ported yet. Do the TODOs in `src/lib.rs`, port what is listed below, and test the mod in game before publishing it.\n",
+        source.title, source.url
+    );
     let _ = writeln!(s, "## License\n");
     if has_license {
-        let _ = writeln!(s, "{license}, as the original: see [LICENSE](LICENSE). Keep the original's copyright notice, and say what you changed.\n");
+        let _ = writeln!(
+            s,
+            "{license}, as the original: see [LICENSE](LICENSE). Keep the original's copyright notice, and say what you changed.\n"
+        );
     } else {
-        let _ = writeln!(s, "{license}, as the original. **TODO:** the jar had no license file; add the original's license text as `LICENSE`.\n");
+        let _ = writeln!(
+            s,
+            "{license}, as the original. **TODO:** the jar had no license file; add the original's license text as `LICENSE`.\n"
+        );
     }
     if let Some((c, from)) = source.converted {
         let _ = writeln!(s, "## Converted code\n");

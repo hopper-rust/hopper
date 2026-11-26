@@ -6,8 +6,10 @@
 
 mod cache;
 
+use axum::extract::Request;
 use axum::extract::{Query, State};
 use axum::http::{StatusCode, header};
+use axum::middleware::{self, Next};
 use axum::response::{IntoResponse, Response};
 use axum::routing::get;
 use axum::{Json, Router};
@@ -123,10 +125,8 @@ async fn result(app: Arc<App>, q: CheckQuery, kind: Kind) -> Response {
         }
         Resolved::Ready(project, version) => (project.clone(), version.clone()),
     };
-    let (check_key, port_key) = (
-        format!("{}/{}/check.json", project.slug, version.id),
-        format!("{}/{}/port.zip", project.slug, version.id),
-    );
+    let (check_key, port_key) =
+        (format!("{}/{}/check.json", project.slug, version.id), format!("{}/{}/port.zip", project.slug, version.id));
     let key = if kind == Kind::Check { check_key.clone() } else { port_key.clone() };
     if let Some(body) = app.cache.get(&key) {
         return answer(kind, &body, true);
@@ -198,6 +198,17 @@ async fn port_list(State(app): State<Arc<App>>) -> Response {
     Json(&app.ports).into_response()
 }
 
+/// `www.<site>` sends visitors to the same page on `<site>`, so there's one address to share.
+async fn no_www(request: Request, next: Next) -> Response {
+    let host = request.headers().get(header::HOST).and_then(|h| h.to_str().ok()).unwrap_or("");
+    if let Some(bare) = host.strip_prefix("www.") {
+        let path = request.uri().path_and_query().map_or("/", |p| p.as_str());
+        let to = format!("https://{bare}{path}");
+        return (StatusCode::MOVED_PERMANENTLY, [(header::LOCATION, to)]).into_response();
+    }
+    next.run(request).await
+}
+
 async fn page() -> Response {
     ([(header::CONTENT_TYPE, "text/html; charset=utf-8")], PAGE).into_response()
 }
@@ -215,7 +226,12 @@ struct Args {
 }
 
 fn args() -> Result<Args, String> {
-    let mut a = Args { listen: ([127, 0, 0, 1], 8080).into(), library: PathBuf::from("library"), ports: PathBuf::from("ports"), cache: Some("cache".into()) };
+    let mut a = Args {
+        listen: ([127, 0, 0, 1], 8080).into(),
+        library: PathBuf::from("library"),
+        ports: PathBuf::from("ports"),
+        cache: Some("cache".into()),
+    };
     let mut it = std::env::args().skip(1);
     while let Some(arg) = it.next() {
         let mut value = || it.next().ok_or(format!("{arg} needs a value"));
@@ -262,6 +278,7 @@ async fn main() -> Result<(), String> {
         .route("/api/port", get(port))
         .route("/api/library", get(library_stats))
         .route("/api/ports", get(port_list))
+        .layer(middleware::from_fn(no_www))
         .with_state(app);
     let listener = tokio::net::TcpListener::bind(a.listen).await.map_err(|e| format!("{}: {e}", a.listen))?;
     axum::serve(listener, router)

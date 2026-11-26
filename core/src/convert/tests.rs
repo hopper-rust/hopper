@@ -52,15 +52,18 @@ class A {
     }
 }"#);
     let lines = &c.hooks["client_tick_post"][0].lines;
-    assert_eq!(lines, &[
-        "if host.local_player().is_none() {",
-        "    return;",
-        "}",
-        "let mut count = 0;",
-        "count += 1;",
-        "let _ = host.chat_line(Text::literal(format!(\"{}{}\", \"Count: \", count)));",
-        "let _ = host.send_chat(&format!(\"/{}\", \"spawn\"));",
-    ]);
+    assert_eq!(
+        lines,
+        &[
+            "if host.local_player().is_none() {",
+            "    return;",
+            "}",
+            "let mut count = 0;",
+            "count += 1;",
+            "let _ = host.chat_line(Text::literal(format!(\"{}{}\", \"Count: \", count)));",
+            "let _ = host.send_chat(&format!(\"/{}\", \"spawn\"));",
+        ]
+    );
     assert_eq!(c.statements, c.converted);
 }
 
@@ -82,7 +85,10 @@ class B {
     }
 }"#);
     let hud = &c.hooks["render_gui_post"][0].lines;
-    assert_eq!(hud[0], "event.draw.fill([(2) as f32, (2) as f32, (50) as f32 - (2) as f32, (12) as f32 - (2) as f32], 0x80000000);");
+    assert_eq!(
+        hud[0],
+        "event.draw.fill([(2) as f32, (2) as f32, (50) as f32 - (2) as f32, (12) as f32 - (2) as f32], 0x80000000);"
+    );
     assert_eq!(hud[1], "event.draw.text(\"Hello\", [(4) as f32, (4) as f32], 0xFFFFFFFF, true);");
     let chat = &c.hooks["client_chat_received"][0].lines;
     assert_eq!(chat, &["if event.overlay {", "    return Flow::Cancel;", "}", "return Flow::Continue;"]);
@@ -165,16 +171,24 @@ class E {
         });
     }
 }"#);
-    assert_eq!(c.hooks["register_client_commands"][0].lines, &[
-        "event.commands.push(Command::new(\"hello\"));",
-        "event.commands.push(Command::new(\"hello times <count:integer>\"));",
-        "event.commands.push(Command::new(\"say <message:text>\"));",
-    ]);
+    assert_eq!(
+        c.hooks["register_client_commands"][0].lines,
+        &[
+            "event.commands.push(Command::new(\"hello\"));",
+            "event.commands.push(Command::new(\"hello times <count:integer>\"));",
+            "event.commands.push(Command::new(\"say <message:text>\"));",
+        ]
+    );
     let run = c.hooks["command"][0].lines.join("\n");
     assert!(run.contains("if let [\"hello\"] = event.command.split_whitespace().collect::<Vec<_>>()[..] {\n    let _ = host.chat_line(Text::literal(\"Hi!\"));\n    return Flow::Cancel;\n}"), "{run}");
     assert!(run.contains("if let [\"hello\", \"times\", count] = "), "{run}");
     assert!(run.contains("    if let Ok(count) = count.parse::<i64>() {\n        let _ = host.chat_line("), "{run}");
-    assert!(run.contains("if let Some(message) = event.command.strip_prefix(\"say \") {\n    let _ = host.chat_line(Text::literal(message));"), "{run}");
+    assert!(
+        run.contains(
+            "if let Some(message) = event.command.strip_prefix(\"say \") {\n    let _ = host.chat_line(Text::literal(message));"
+        ),
+        "{run}"
+    );
     assert_eq!(c.statements, c.converted);
 }
 

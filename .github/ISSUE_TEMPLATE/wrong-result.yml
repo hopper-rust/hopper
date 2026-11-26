@@ -1,0 +1,24 @@
+name: Wrong result
+description: Hopper said something wrong about a mod, or a generated project doesn't build.
+labels: [bug]
+body:
+  - type: input
+    id: mod
+    attributes:
+      label: Mod
+      description: The Modrinth link you checked.
+      placeholder: https://modrinth.com/mod/...
+    validations:
+      required: true
+  - type: textarea
+    id: wrong
+    attributes:
+      label: What's wrong
+      description: What Hopper said or wrote, and what it should be. For build errors, paste the error.
+    validations:
+      required: true
+  - type: input
+    id: where
+    attributes:
+      label: Where
+      description: usehopper.dev, or the CLI (with the commit you ran).

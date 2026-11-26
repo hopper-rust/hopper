@@ -21,8 +21,20 @@ pub struct LicenseCheck {
 }
 
 const PERMISSIVE: &[&str] = &[
-    "MIT", "MIT-0", "Apache-2.0", "BSD-2-Clause", "BSD-3-Clause", "ISC", "Zlib", "Unlicense", "CC0-1.0", "0BSD", "BSL-1.0",
-    "CC-BY-4.0", "CC-BY-3.0", "WTFPL",
+    "MIT",
+    "MIT-0",
+    "Apache-2.0",
+    "BSD-2-Clause",
+    "BSD-3-Clause",
+    "ISC",
+    "Zlib",
+    "Unlicense",
+    "CC0-1.0",
+    "0BSD",
+    "BSL-1.0",
+    "CC-BY-4.0",
+    "CC-BY-3.0",
+    "WTFPL",
 ];
 
 /// Copyleft families, matched by prefix (`GPL-3.0-only`, `LGPL-2.1-or-later`...).

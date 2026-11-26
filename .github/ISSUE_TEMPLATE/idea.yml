@@ -1,0 +1,11 @@
+name: Idea or code change
+description: Something new for the website, CLI, checker, generator or converter. Agree on it here before writing it.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: The idea
+      description: What it does, and why it helps people port mods.
+    validations:
+      required: true

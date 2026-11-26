@@ -53,12 +53,12 @@ pub struct Info {
 impl Entry {
     /// The names this entry answers for: its class and member, then each alias (`Class` or `Class#member`).
     pub fn keys(&self) -> impl Iterator<Item = (&str, Option<&str>)> {
-        std::iter::once((self.from.class.as_str(), self.from.member.as_deref())).chain(
-            self.from.aliases.iter().map(|a| match a.split_once('#') {
+        std::iter::once((self.from.class.as_str(), self.from.member.as_deref())).chain(self.from.aliases.iter().map(|a| {
+            match a.split_once('#') {
                 Some((c, m)) => (c, Some(m)),
                 None => (a.as_str(), None),
-            }),
-        )
+            }
+        }))
     }
 
     /// What it becomes on Horizon, in a few words.
@@ -108,9 +108,6 @@ impl Library {
 
     /// Every entry for `class` (and `member`): an entry with no member answers for the whole class.
     pub fn find(&self, class: &str, member: Option<&str>) -> Vec<&Entry> {
-        self.entries
-            .iter()
-            .filter(|e| e.keys().any(|(c, m)| c == class && (m.is_none() || m == member)))
-            .collect()
+        self.entries.iter().filter(|e| e.keys().any(|(c, m)| c == class && (m.is_none() || m == member))).collect()
     }
 }

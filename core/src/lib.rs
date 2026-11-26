@@ -99,12 +99,7 @@ pub struct CheckError(pub String);
 pub fn check(library: &Library, license: &str, jar: Option<&[u8]>) -> Result<Report, CheckError> {
     let license = license::check(license);
     if license.verdict == Verdict::Stop {
-        return Ok(Report {
-            summary: license.reason.clone(),
-            license,
-            scan: None,
-            verdict: Overall::CantPort,
-        });
+        return Ok(Report { summary: license.reason.clone(), license, scan: None, verdict: Overall::CantPort });
     }
     let Some(jar) = jar else {
         return Err(CheckError("the license allows porting, but no jar was given".into()));
