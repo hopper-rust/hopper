@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.gui.GuiGraphicsExtractor"
+member = "setTooltipForNextFrame"
+
+[to]
+host = "draw.gui_tooltip"
+
+[info]
+status = "partial"
+notes = "draw.gui_tooltip(&lines, [x, y]) draws a vanilla tooltip at that point in GUI pixels, from the draw context of a render hook."
+since_api = "0.2"
+seen_in = ["https://modrinth.com/mod/chat-heads", "https://modrinth.com/mod/shulkerboxtooltip"]

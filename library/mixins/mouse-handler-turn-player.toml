@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.MouseHandler"
+member = "turnPlayer"
+
+[to]
+hook = "calculate_player_turn"
+
+[info]
+status = "partial"
+notes = "calculate_player_turn changes the mouse sensitivity and the cinematic camera for this turn only. To set the view directly, use host.set_local_rotation."
+since_api = "0.2"
+seen_in = ["https://modrinth.com/mod/zoomify"]

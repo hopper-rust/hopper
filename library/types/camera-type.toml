@@ -1,0 +1,12 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.CameraType"
+
+[to]
+api = "mod_api::client::camera::CameraType"
+
+[info]
+status = "direct"
+notes = "FirstPerson, ThirdPersonBack, ThirdPersonFront; is_first_person() as in vanilla."
+since_api = "0.2"
+seen_in = ["https://modrinth.com/mod/zoomify"]

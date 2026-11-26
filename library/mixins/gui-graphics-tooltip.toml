@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.gui.GuiGraphicsExtractor"
+member = "tooltip"
+
+[to]
+hook = "render_tooltip_pre"
+
+[info]
+status = "partial"
+notes = "render_tooltip_pre: a laid-out tooltip about to be drawn. Move it with event.place, read its lines in event.elements and its item in event.stack, or cancel it."
+since_api = "0.2"
+seen_in = ["https://modrinth.com/mod/shulkerboxtooltip"]

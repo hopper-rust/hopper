@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.multiplayer.chat.ChatListener"
+member = "handleSystemMessage"
+
+[to]
+hook = "client_chat_received"
+
+[info]
+status = "partial"
+notes = "client_chat_received with event.system set: a system message; event.overlay means the action bar. Return Flow::Cancel to hide it."
+since_api = "0.2"
+seen_in = ["https://modrinth.com/mod/chat-heads"]

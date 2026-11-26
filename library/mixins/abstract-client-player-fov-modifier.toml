@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.player.AbstractClientPlayer"
+member = "getFieldOfViewModifier"
+
+[to]
+hook = "compute_fov_modifier"
+
+[info]
+status = "partial"
+notes = "The player's FOV scale, once per client tick, after vanilla effects and before zoom. Values outside 0.01..=10 go back to the base."
+since_api = "0.2"
+seen_in = ["https://modrinth.com/mod/zoomify"]

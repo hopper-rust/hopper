@@ -1,0 +1,12 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.network.chat.CommonComponents"
+
+[to]
+api = "mod_api::Text::translate"
+
+[info]
+status = "partial"
+notes = "Each constant is a translatable text: use Text::translate with the same key (GUI_DONE is \"gui.done\", GUI_CANCEL is \"gui.cancel\")."
+since_api = "0.2"
+seen_in = ["https://modrinth.com/mod/zoomify", "https://modrinth.com/mod/mouse-tweaks", "https://modrinth.com/mod/chat-heads", "https://modrinth.com/mod/shulkerboxtooltip"]

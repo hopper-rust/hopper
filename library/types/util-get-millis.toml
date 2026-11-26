@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.util.Util"
+member = "getMillis"
+
+[to]
+host = "host.millis"
+
+[info]
+status = "direct"
+notes = "host.millis(): milliseconds on the game's clock since it started. Only differences between two readings mean anything."
+since_api = "0.2"
+seen_in = ["https://modrinth.com/mod/shulkerboxtooltip"]

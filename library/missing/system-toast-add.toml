@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.gui.components.toasts.SystemToast"
+member = "add"
+
+[to]
+missing = "unrequested"
+
+[info]
+status = "missing"
+notes = "Horizon has no host function to show a toast yet. toast_add only lets a mod change or cancel toasts the game shows."
+since_api = "0.2"
+seen_in = ["https://modrinth.com/mod/zoomify"]

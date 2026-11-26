@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.fabricmc.fabric.api.client.rendering.v1.ClientTooltipComponentCallback"
+member = "EVENT"
+
+[to]
+hook = "tooltip_component"
+
+[info]
+status = "partial"
+notes = "Answer the image's size in GUI pixels for the stack (None keeps the vanilla tooltip), then draw it in tooltip_component_draw at the origin it gets."
+since_api = "0.2"
+seen_in = ["https://modrinth.com/mod/shulkerboxtooltip"]

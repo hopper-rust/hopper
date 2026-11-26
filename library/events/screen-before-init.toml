@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.fabricmc.fabric.api.client.screen.v1.ScreenEvents"
+member = "BEFORE_INIT"
+
+[to]
+hook = "screen_init_post"
+
+[info]
+status = "partial"
+notes = "Fabric mods use BEFORE_INIT to attach per-screen listeners. Horizon's screen_* input hooks are global instead: handle them directly and check event.screen. screen_init_post fires when a screen opens or resizes."
+since_api = "0.2"
+seen_in = ["https://modrinth.com/mod/mouse-tweaks"]

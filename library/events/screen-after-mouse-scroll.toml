@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents"
+member = "afterMouseScroll"
+
+[to]
+hook = "screen_mouse_scrolled_post"
+
+[info]
+status = "direct"
+notes = "After the screen's own scroll handlers ran: event.scroll and event.modifiers. One global hook for every screen: check event.screen yourself."
+since_api = "0.2"
+seen_in = ["https://modrinth.com/mod/mouse-tweaks"]

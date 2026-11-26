@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents"
+member = "allowMouseDrag"
+
+[to]
+hook = "screen_mouse_dragged_pre"
+
+[info]
+status = "direct"
+notes = "Return Flow::Cancel to skip the screen's drag handlers (returning false in Fabric). event.screen.mouse is the cursor, event.delta its movement. Global for every screen: check event.screen."
+since_api = "0.2"
+seen_in = ["https://modrinth.com/mod/mouse-tweaks"]

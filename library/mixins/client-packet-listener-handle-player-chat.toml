@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.multiplayer.ClientPacketListener"
+member = "handlePlayerChat"
+
+[to]
+hook = "client_chat_received"
+
+[info]
+status = "partial"
+notes = "client_chat_received: event.sender is the sending player's UUID and event.player_message the message as signed. It fires once Chat Delay lets the line through."
+since_api = "0.2"
+seen_in = ["https://modrinth.com/mod/chat-heads"]

@@ -1,0 +1,13 @@
+[from]
+loader = "fabric"
+class = "net.minecraft.client.Options"
+member = "getCameraType"
+
+[to]
+host = "host.camera_type"
+
+[info]
+status = "direct"
+notes = "host.camera_type() gives the camera type (with its latest pending request); host.set_camera_type sets it without cycling."
+since_api = "0.2"
+seen_in = ["https://modrinth.com/mod/zoomify"]
